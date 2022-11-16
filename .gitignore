@@ -1,8 +1,8 @@
-# directories
+# Directories
 node_modules
 
-# files
+# Files
 package-lock.json
 
-# hidden files
+# API keys and secrets
 .env
