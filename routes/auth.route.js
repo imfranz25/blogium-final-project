@@ -1,7 +1,11 @@
+/* 3rd Party Module(s) */
 const express = require('express');
 const router = express.Router();
-const { authControllers } = require('../controllers');
 
-router.get('/signup', authControllers.getSignUp);
+/* File Imports */
+const { authControllers } = require('../controllers');
+const { userValidator } = require('../validators');
+
+router.post('/signup', userValidator.signUpValidator, authControllers.postSignUp);
 
 module.exports = router;
