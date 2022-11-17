@@ -5,7 +5,7 @@ const SECRET_PASSKEY = process.env.SECRET_PASSKEY;
 
 /**
  * Hash Generator with MD5 library
- * userId + password -> hashed password
+ * userId + password + secret key -> hashed password
  * @param {string} userId
  * @param {string} password
  * @returns {string} -> hashed password
@@ -15,7 +15,7 @@ exports.generateHash = (userId, password) => {
 };
 
 /**
- * Generate a hash with usedId and password user input
+ * Generate a hash with usedId, password user input, and secret key
  * then compare it with hashedPassword (stored in database)
  * @param {string} userId
  * @param {string} password
