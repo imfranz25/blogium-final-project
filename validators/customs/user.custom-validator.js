@@ -2,13 +2,13 @@ const { User } = require('../../models');
 
 exports.checkEmailExistence = async (value) => {
   try {
-    const isEmailExist = User.findOne({ email: value });
+    const isEmailExist = await User.findOne({ email: value });
 
     if (isEmailExist) {
-      Promise.reject(); // equivalent -> return false
+      return Promise.reject(); // equivalent -> return false
     }
   } catch (error) {
-    Promise.reject(); // equivalent -> return false
+    return Promise.reject(); // equivalent -> return false
   }
 };
 
@@ -20,7 +20,7 @@ exports.checkUsernameExistence = async (value) => {
       return Promise.reject(); // equivalent -> return false
     }
   } catch (error) {
-    Promise.reject(); // equivalent -> return false
+    return Promise.reject(); // equivalent -> return false
   }
 };
 
