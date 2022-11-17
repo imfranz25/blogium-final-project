@@ -19,8 +19,13 @@ app.use(express.json());
 useRoutes(app);
 
 /* Connect to MongoDB */
-mongoose.connect(MONGO_URI).catch((err) => {
-  console.log(`MongoDB connection error -> ${err}`);
-});
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log('Database connected');
+  })
+  .catch((err) => {
+    console.log(`MongoDB connection error -> ${err}`);
+  });
 
 module.exports = app;
