@@ -11,18 +11,29 @@ let userId;
 let userEmail;
 let userName;
 
-/* Database connection waiting time -> 5 secs */
+const userInput = {
+  first_name: 'Francis',
+  last_name: 'Ong',
+  email: 'francis.ong25unique@gmail.com',
+  username: 'francis25unique',
+  password: 'Stratpoint123!',
+  confirm_password: 'Stratpoint123!',
+  profile_picture_url: 'sample.png',
+};
+
+/* Database connection waiting time -> 10 secs */
 before((done) => {
   console.log('Waiting for database to connect...\n');
   setTimeout(() => {
     done();
-  }, 5000);
+  }, 10000);
 });
 
 describe('Auth API', () => {
   describe('POST /signup', () => {
     it('should return a status of 422 -> empty field "first name"', async () => {
       const response = await request.post('/signup').send({
+        ...userInput,
         first_name: '', // empty first name
       });
 
@@ -35,7 +46,8 @@ describe('Auth API', () => {
 
     it('should return a status of 422 -> invalid field "first name with number" ', async () => {
       const response = await request.post('/signup').send({
-        first_name: 'francis25', // empty first name
+        ...userInput,
+        first_name: 'francis25', // first name with number
       });
 
       const responseTextObject = JSON.parse(response.text);
@@ -45,16 +57,73 @@ describe('Auth API', () => {
       expect(responseTextObject.errors[0].msg).to.equal('Invalid first name');
     });
 
-    it('should return a status of 201 with json data property users', async () => {
+    it('should return a status of 422 -> empty field "last name" ', async () => {
       const response = await request.post('/signup').send({
-        first_name: 'Francis',
-        last_name: 'Ong',
-        email: 'francis.ong25@gmail.com',
-        username: 'francis25',
-        password: 'Stratpoint123!',
-        confirm_password: 'Stratpoint123!',
-        profile_picture_url: 'sample.png',
+        ...userInput,
+        last_name: '', // empty last name
       });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Last name is required');
+    });
+
+    it('should return a status of 422 -> invalid field "last name with number" ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        last_name: 'ong25', // last name with number
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Invalid last name');
+    });
+
+    it('should return a status of 422 -> invalid field "email" ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'invalid-email-xd', // invalid email format
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Invalid email format');
+    });
+
+    it('should return a status of 422 -> invalid username (3 characters) ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        username: '333', // 3 chracters only
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Username must be 4 characters and above');
+    });
+
+    it('should return a status of 422 -> invalid username (with special characters) ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        username: 'userName@@@@', // invalid username
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Special characters are not allowed');
+    });
+
+    it('should return a status of 201 with json data property users', async () => {
+      const response = await request.post('/signup').send(userInput);
 
       const responseTextObject = JSON.parse(response.text);
 
@@ -63,6 +132,127 @@ describe('Auth API', () => {
 
       /* Store the newly created userId -> delete later */
       userId = responseTextObject.user.id;
+      userEmail = responseTextObject.user.email;
+      userName = responseTextObject.user.username;
+    });
+
+    it('should return a status of 422 -> email already taken ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: userEmail, // email already taken
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Email is already taken');
+    });
+
+    it('should return a status of 422 -> username already taken ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'dummyemail@gmail.com',
+        username: userName, // username already taken
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Username is already taken');
+    });
+
+    it('should return a status of 422 -> password (no uppercase) ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'dummyemail@gmail.com',
+        username: 'dummyusername',
+        password: 'stratpoint123!', // no uppercase
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+    });
+
+    it('should return a status of 422 -> password (no lowercase) ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'dummyemail@gmail.com',
+        username: 'dummyusername',
+        password: 'STRATPOINT123!', // no lowercase
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+    });
+
+    it('should return a status of 422 -> password (no number) ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'dummyemail@gmail.com',
+        username: 'dummyusername',
+        password: 'Stratpoint!', // no number
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+    });
+
+    it('should return a status of 422 -> password (no special character) ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'dummyemail@gmail.com',
+        username: 'dummyusername',
+        password: 'Stratpoint123', // no special character
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+    });
+
+    it('should return a status of 422 -> password (7 characters only) ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'dummyemail@gmail.com',
+        username: 'dummyusername',
+        password: 'Stra12!', // 7 chars only
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+    });
+
+    it('should return a status of 422 -> password and confirm pass does not match', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'dummyemail@gmail.com',
+        username: 'dummyusername',
+        confirm_password: 'Notmatched!', // not matched with password
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal(
+        'Password and confirm password does not match'
+      );
     });
   });
 });
