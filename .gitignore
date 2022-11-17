@@ -1,6 +1,5 @@
 # Directories
 node_modules
-test
 
 # Files
 package-lock.json
