@@ -17,7 +17,7 @@ exports.checkUsernameExistence = async (value) => {
     const isUsernameExist = await User.findOne({ username: value });
 
     if (isUsernameExist) {
-      Promise.reject(); // equivalent -> return false
+      return Promise.reject(); // equivalent -> return false
     }
   } catch (error) {
     Promise.reject(); // equivalent -> return false
