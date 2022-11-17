@@ -1,5 +1,8 @@
+/* 3rd Party Module(s) */
 const { body } = require('express-validator');
-const { User } = require('../models');
+
+/* Custom Validators */
+const { userCustomValidators } = require('./customs');
 
 const signUpValidator = [
   body('first_name')
@@ -9,6 +12,7 @@ const signUpValidator = [
     .withMessage('First name is required')
     .isAlpha('en-US', { ignore: ' ' })
     .withMessage('Invalid first name'),
+
   body('last_name')
     .trim()
     .not()
@@ -16,41 +20,32 @@ const signUpValidator = [
     .withMessage('Last name is required')
     .isAlpha('en-US', { ignore: ' ' })
     .withMessage('Invalid last name'),
-  body('username')
-    .trim()
-    .isLength({ min: 4 })
-    .withMessage('Username must be 4 characters and above')
-    .custom((value, { req }) => {
-      User.findOne({ username: value })
-        .then((user) => {
-          if (user) {
-            return false;
-          }
 
-          /* Username doest not exist -> pass this validation  */
-          return true;
-        })
-        .catch(() => {
-          return false;
-        });
-    }),
   body('email')
     .trim()
     .isEmail()
     .withMessage('Invalid email format')
     .normalizeEmail()
-    .custom((value, { req }) => {
-      User.findOne({ email: value })
-        .then((user) => {
-          if (user) {
-            return false;
-          }
+    .custom(userCustomValidators.checkEmailExistence)
+    .withMessage('Email is already taken'),
 
-          /* Username doest not exist -> pass this validation  */
-          return true;
-        })
-        .catch(() => {
-          return false;
-        });
-    }),
+  body('username')
+    .trim()
+    .isLength({ min: 4 })
+    .withMessage('Username must be 4 characters and above')
+    .isAlphanumeric()
+    .withMessage('Special characters are not allowed')
+    .custom(userCustomValidators.checkUsernameExistence)
+    .withMessage('Username is already taken'),
+
+  body('password').trim().isStrongPassword().withMessage('Weak Password'),
+
+  body('confirm_password')
+    .trim()
+    .custom(userCustomValidators.checkConfirmPassword)
+    .withMessage('Password and confirm password does not match'),
 ];
+
+module.exports = {
+  signUpValidator,
+};
