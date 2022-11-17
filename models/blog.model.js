@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const blogSchema = new Schema({
-  _id: {
+  _d: {
     type: String,
     unique: true,
     required: true,
