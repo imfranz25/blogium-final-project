@@ -34,6 +34,7 @@ const userSchema = new Schema(
     },
     deleted_at: {
       type: String,
+      default: null,
     },
     password_chances: {
       type: Number,
