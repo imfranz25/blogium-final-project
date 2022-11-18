@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 
 /* Models & Helpers */
 const { User } = require('../models');
-const { hashGen } = require('../helpers');
+const { passGen } = require('../helpers');
 
 /**
  * Create a new user
@@ -20,7 +20,7 @@ exports.postSignUp = async (req, res, _next) => {
 
   try {
     const id = uuidv4();
-    const hashedPassword = hashGen.generateHash(id, password);
+    const hashedPassword = passGen.generateHash(id, password);
     const newUser = new User({ ...req.body, id: id, password: hashedPassword });
 
     await newUser.save();
