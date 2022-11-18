@@ -25,7 +25,7 @@ exports.signUpValidator = [
     .trim()
     .isEmail()
     .withMessage('Invalid email format')
-    .normalizeEmail()
+    .normalizeEmail({ gmail_remove_dots: false })
     .custom(userCustomValidators.checkEmailExistence)
     .withMessage('Email is already taken'),
 
@@ -38,7 +38,11 @@ exports.signUpValidator = [
     .custom(userCustomValidators.checkUsernameExistence)
     .withMessage('Username is already taken'),
 
-  body('password').trim().isStrongPassword().withMessage('Weak Password'),
+  // prettier-ignore
+  body('password')
+    .trim()
+    .isStrongPassword()
+    .withMessage('Weak Password'),
 
   body('confirm_password')
     .trim()
@@ -47,7 +51,17 @@ exports.signUpValidator = [
 ];
 
 exports.loginValidator = [
-  body('email').trim().isEmail().withMessage('Please input a valid email').normalizeEmail(),
+  // prettier-ignore
+  body('email')
+    .trim()
+    .isEmail()
+    .withMessage('Please input a valid email')
+    .normalizeEmail({ gmail_remove_dots: false }),
 
-  body('password').trim().not().isEmpty().withMessage('Password is required'),
+  // prettier-ignore
+  body('password')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('Password is required'),
 ];
