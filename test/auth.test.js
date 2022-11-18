@@ -1,4 +1,5 @@
 /* Testing Libraries, imported server */
+const { generateUsername } = require('unique-username-generator');
 const server = require('../server');
 const request = require('supertest')(server);
 const expect = require('chai').expect;
@@ -7,15 +8,18 @@ const expect = require('chai').expect;
 const { User } = require('../models');
 
 /* Global variables -> to be used on later tests */
-let userId;
-let userEmail;
-let userName;
+const userName = generateUsername();
+const userEmail = `${userName}@gmail.com`;
+let userId; // to be populate later once user is already created
 
+/**
+ * Valid User Data Inputs
+ */
 const userInput = {
   first_name: 'Francis',
   last_name: 'Ong',
-  email: 'francis.ong25unique@gmail.com',
-  username: 'francis25unique',
+  email: userEmail,
+  username: userName,
   password: 'Stratpoint123!',
   confirm_password: 'Stratpoint123!',
   profile_picture_url: 'sample.png',
@@ -229,8 +233,6 @@ describe('Auth API', () => {
 
       /* Store the newly created userId -> delete later */
       userId = responseTextObject.user.id;
-      userEmail = responseTextObject.user.email;
-      userName = responseTextObject.user.username;
     });
 
     it('should return a status of 422 -> email already taken ', async () => {
