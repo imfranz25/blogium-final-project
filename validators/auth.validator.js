@@ -4,7 +4,7 @@ const { body } = require('express-validator');
 /* Custom Validators */
 const { userCustomValidators } = require('./customs');
 
-const signUpValidator = [
+exports.signUpValidator = [
   body('first_name')
     .trim()
     .not()
@@ -46,6 +46,8 @@ const signUpValidator = [
     .withMessage('Password and confirm password does not match'),
 ];
 
-module.exports = {
-  signUpValidator,
-};
+exports.loginValidator = [
+  body('email').trim().isEmail().withMessage('Please input a valid email').normalizeEmail(),
+
+  body('password').trim().not().isEmpty().withMessage('Password is required'),
+];
