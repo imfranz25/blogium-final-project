@@ -4,8 +4,19 @@ const router = express.Router();
 
 /* File Imports */
 const { blogControllers } = require('../controllers');
-// const { blogValidator } = require('../validators');
+const { authMiddleware } = require('../middlewares');
+const { blogValidators } = require('../validators');
 
-router.get('/:blogId', blogControllers.getBlog);
+// prettier-ignore
+router
+  .route('/blog')
+  .all(authMiddleware.isAuth)
+  .get(blogControllers.getBlogs);
+
+router
+  .route('/:blogId')
+  .all(authMiddleware.isAuth)
+  .all(blogValidators.createBlogValidator)
+  .get(blogControllers.getBlog);
 
 module.exports = router;

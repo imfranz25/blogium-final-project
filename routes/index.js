@@ -6,8 +6,8 @@ const { errorControllers } = require('../controllers');
 let errorHandler;
 
 /* Error handlers -> Based on the environment */
-if (process.env.ENV === 'DEVELOPMENT') {
-  errorHandler = errorControllers.developmentErrors;
+if (process.env.NODE_ENV === 'DEVELOPMENT') {
+  errorHandler = errorControllers.developmentErrorsHandler;
 } else {
   errorHandler = errorControllers.productionErrorHandler;
 }

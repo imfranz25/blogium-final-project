@@ -4,10 +4,10 @@ const router = express.Router();
 
 /* File Imports */
 const { authControllers } = require('../controllers');
-const { authValidator } = require('../validators');
+const { authValidators } = require('../validators');
 
-router.post('/signup', authValidator.signUpValidator, authControllers.postSignUp);
+router.route('/signup').all(authValidators.signUpValidator).post(authControllers.postSignUp);
 
-router.post('/login', authValidator.loginValidator, authControllers.postLogin);
+router.route('/login').all(authValidators.loginValidator).post(authControllers.postLogin);
 
 module.exports = router;
