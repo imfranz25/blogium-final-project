@@ -30,6 +30,11 @@ before((done) => {
 });
 
 describe('Auth API', () => {
+  /**
+   * ------------------------------------------------------------------------------
+   * POST SIGNUP (USER CREATION)
+   * ------------------------------------------------------------------------------
+   */
   describe('POST /signup', () => {
     it('should return a status of 422 -> empty field "first name"', async () => {
       const response = await request.post('/signup').send({
@@ -122,47 +127,6 @@ describe('Auth API', () => {
       expect(responseTextObject.errors[0].msg).to.equal('Special characters are not allowed');
     });
 
-    it('should return a status of 201 with json data property users', async () => {
-      const response = await request.post('/signup').send(userInput);
-
-      const responseTextObject = JSON.parse(response.text);
-
-      expect(response.status).to.equal(201);
-      expect(responseTextObject).to.have.an.property('user');
-
-      /* Store the newly created userId -> delete later */
-      userId = responseTextObject.user.id;
-      userEmail = responseTextObject.user.email;
-      userName = responseTextObject.user.username;
-    });
-
-    it('should return a status of 422 -> email already taken ', async () => {
-      const response = await request.post('/signup').send({
-        ...userInput,
-        email: userEmail, // email already taken
-      });
-
-      const responseTextObject = JSON.parse(response.text);
-
-      expect(response.status).to.equal(422);
-      expect(responseTextObject).to.have.an.property('errors');
-      expect(responseTextObject.errors[0].msg).to.equal('Email is already taken');
-    });
-
-    it('should return a status of 422 -> username already taken ', async () => {
-      const response = await request.post('/signup').send({
-        ...userInput,
-        email: 'dummyemail@gmail.com',
-        username: userName, // username already taken
-      });
-
-      const responseTextObject = JSON.parse(response.text);
-
-      expect(response.status).to.equal(422);
-      expect(responseTextObject).to.have.an.property('errors');
-      expect(responseTextObject.errors[0].msg).to.equal('Username is already taken');
-    });
-
     it('should return a status of 422 -> password (no uppercase) ', async () => {
       const response = await request.post('/signup').send({
         ...userInput,
@@ -253,6 +217,118 @@ describe('Auth API', () => {
       expect(responseTextObject.errors[0].msg).to.equal(
         'Password and confirm password does not match'
       );
+    });
+
+    it('should return a status of 201 with json data property users', async () => {
+      const response = await request.post('/signup').send(userInput);
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(201);
+      expect(responseTextObject).to.have.an.property('user');
+
+      /* Store the newly created userId -> delete later */
+      userId = responseTextObject.user.id;
+      userEmail = responseTextObject.user.email;
+      userName = responseTextObject.user.username;
+    });
+
+    it('should return a status of 422 -> email already taken ', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: userEmail, // email already taken
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Email is already taken');
+    });
+
+    it('should return a status of 422 -> username already taken', async () => {
+      const response = await request.post('/signup').send({
+        ...userInput,
+        email: 'dummyemail@gmail.com',
+        username: userName, // username already taken
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Username is already taken');
+    });
+  });
+
+  /**
+   * ------------------------------------------------------------------------------
+   * POST LOGIN
+   * ------------------------------------------------------------------------------
+   */
+  describe('POST /login', () => {
+    it('should return a status of 422 -> invalid email format (including empty email fields)', async () => {
+      const response = await request.post('/login').send({
+        email: 'InvalidEmail', // invalid email
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Please input a valid email');
+    });
+
+    it('should return a status of 422 -> empty password field', async () => {
+      const response = await request.post('/login').send({
+        email: userInput.email,
+        password: '', // empty password
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(422);
+      expect(responseTextObject).to.have.an.property('errors');
+      expect(responseTextObject.errors[0].msg).to.equal('Password is required');
+    });
+
+    it('should return a status of 401 -> email not registered', async () => {
+      const response = await request.post('/login').send({
+        email: 'dummy123notexisitng@gmail.com', // valid email but not registered
+        password: userInput.password,
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(401);
+      expect(responseTextObject).to.have.an.property('message');
+      expect(responseTextObject.message).to.equal('Invalid username or password');
+    });
+
+    it('should return a status of 401 -> wrong password', async () => {
+      const response = await request.post('/login').send({
+        email: userInput.email, // registered email
+        password: 'invalidPass :(', // wrong password
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(401);
+      expect(responseTextObject).to.have.an.property('message');
+      expect(responseTextObject.message).to.equal('Invalid username or password');
+    });
+
+    it('should return a status of 200 -> valid email & password', async () => {
+      const response = await request.post('/login').send({
+        email: userInput.email, // valid email
+        password: userInput.password, // valid pass
+      });
+
+      const responseTextObject = JSON.parse(response.text);
+
+      expect(response.status).to.equal(200);
+      expect(responseTextObject).to.have.an.property('token');
+      expect(responseTextObject.token).to.have.an.string('Bearer ');
     });
   });
 });
