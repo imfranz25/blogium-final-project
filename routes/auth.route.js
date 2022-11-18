@@ -4,8 +4,10 @@ const router = express.Router();
 
 /* File Imports */
 const { authControllers } = require('../controllers');
-const { userValidator } = require('../validators');
+const { authValidator } = require('../validators');
 
-router.post('/signup', userValidator.signUpValidator, authControllers.postSignUp);
+router.post('/signup', authValidator.signUpValidator, authControllers.postSignUp);
+
+router.post('/login', authValidator.loginValidator, authControllers.postLogin);
 
 module.exports = router;
