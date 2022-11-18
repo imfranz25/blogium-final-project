@@ -15,13 +15,13 @@ exports.postSignUp = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
+    return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });
   }
 
   try {
     const id = uuidv4();
     const hashedPassword = passGen.generateHash(id, password);
-    const newUser = new User({ ...req.body, id: id, password: hashedPassword });
+    const newUser = new User({ ...req.body, id, password: hashedPassword });
 
     await newUser.save();
     res.status(201).json({ message: 'Sign-up success', user: newUser });
