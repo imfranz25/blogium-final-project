@@ -19,4 +19,10 @@ router
   .get(blogControllers.getBlog)
   .delete(blogControllers.deleteBlog);
 
+router
+  .route('/blog/add')
+  .all(authMiddleware.isAuth)
+  .all(blogValidators.createBlogValidator)
+  .post(blogControllers.postBlog);
+
 module.exports = router;
