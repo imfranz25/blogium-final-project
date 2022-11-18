@@ -16,7 +16,6 @@ router
 router
   .route('/:blogId')
   .all(authMiddleware.isAuth)
-  .all(blogValidators.createBlogValidator)
   .get(blogControllers.getBlog)
   .delete(blogControllers.deleteBlog);
 
