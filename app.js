@@ -20,8 +20,7 @@ useRoutes(app);
 
 /* Connect to MongoDB */
 mongoose
-  .connect(MONGO_URI)
-  .then(() => {
+  .connect(MONGO_URI, () => {
     console.log('Database connected');
   })
   .catch((err) => {
