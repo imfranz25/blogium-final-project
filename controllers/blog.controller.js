@@ -1,6 +1,6 @@
 /* 3rd Party Module(s) */
-// const { validationResult } = require('express-validator');
-// const { v4: uuidv4 } = require('uuid');
+const { validationResult } = require('express-validator');
+const { v4: uuidv4 } = require('uuid');
 
 /* Models & Helpers */
 const { Blog } = require('../models');
@@ -34,6 +34,28 @@ exports.getBlogs = async (req, res, next) => {
     const blogs = await Blog.find({ deleted_at: null });
 
     res.status(200).json({ message: 'Blogs fetched', blogs });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Create a new blog
+ * @route POST /blog/add
+ */
+exports.postBlog = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ message: 'Invalid Inputs', errors: errors.array() });
+  }
+
+  try {
+    const id = uuidv4();
+    const newBlog = new Blog({ ...req.body, id });
+
+    await newBlog.save();
+    res.status(201).json({ message: 'Blog created', blog: newBlog });
   } catch (error) {
     next(error);
   }
