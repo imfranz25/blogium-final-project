@@ -1,5 +1,5 @@
-const hashGen = require('./hash-handler');
+const passGen = require('./password-generator');
 
 module.exports = {
-  hashGen,
+  passGen,
 };

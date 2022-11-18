@@ -1,6 +1,8 @@
+/* 3rd Party Module(s) */
 const md5 = require('md5');
 require('dotenv').config();
 
+/* Random Strings -> to be added in salt */
 const SECRET_PASSKEY = process.env.SECRET_PASSKEY;
 
 /**
