@@ -38,3 +38,26 @@ exports.getBlogs = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Soft Delete -> Selected Blog (update delete_at with current date time)
+ * @route DELETE /:blogId
+ */
+exports.deleteBlog = async (req, res, next) => {
+  const { blogId } = req.params;
+
+  try {
+    const blog = await Blog.findById(blogId);
+
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+
+    blog.deleted_at = new Date().toISOString();
+
+    await blog.save();
+    res.status(200).json({ message: 'Blog deleted', blog });
+  } catch (error) {
+    next(error);
+  }
+};
