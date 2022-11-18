@@ -37,7 +37,7 @@ exports.postSignUp = async (req, res, next) => {
  * @route POST /login
  */
 exports.postLogin = async (req, res, next) => {
-  const { emailOrUsername, password } = req.body;
+  const { email, password } = req.body;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -45,9 +45,7 @@ exports.postLogin = async (req, res, next) => {
   }
 
   try {
-    const existingUser = await User.findOne({
-      $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
-    });
+    const existingUser = await User.findOne({ email });
 
     if (!existingUser) {
       return res.status(401).json({ message: 'Invalid username or password' });
@@ -64,7 +62,7 @@ exports.postLogin = async (req, res, next) => {
       email: existingUser.email,
     });
 
-    res.send(200).json({ message: 'Login success', token });
+    res.status(200).json({ message: 'Login success', token });
   } catch (error) {
     next(error);
   }

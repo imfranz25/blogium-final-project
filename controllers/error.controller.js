@@ -1,6 +1,5 @@
 /**
  * Send 404 - Page not found -> unregistered routes
- * @route *
  */
 exports.pageNotFound = (_req, res, _next) => {
   res.status(404).json({ message: 'Page not found' });
