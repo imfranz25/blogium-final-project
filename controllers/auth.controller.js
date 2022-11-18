@@ -4,8 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 
 /* Models & Helpers */
 const { User } = require('../models');
-const { passGen } = require('../helpers');
-const { tokenGenerator } = require('../helpers');
+const { passGen, tokenGenerator } = require('../helpers');
 
 /**
  * Create a new user
@@ -51,7 +50,12 @@ exports.postLogin = async (req, res, next) => {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
 
-    const isPasswordMatched = passGen.compareHash(existingUser.id, password, existingUser.password);
+    // prettier-ignore
+    const isPasswordMatched = passGen.compareHash(
+      existingUser.id, 
+      password, 
+      existingUser.password
+    );
 
     if (!isPasswordMatched) {
       return res.status(401).json({ message: 'Invalid username or password' });
