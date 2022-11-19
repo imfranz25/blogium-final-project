@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 /**
  * Get token from authorization header
  * Bearer (thisIsTheToken) -> then check if it's a valid token
