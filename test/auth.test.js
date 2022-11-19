@@ -25,12 +25,12 @@ const userInput = {
   profile_picture_url: 'sample.png',
 };
 
-/* Database connection waiting time -> 10 secs */
+/* Database connection waiting time -> 15 secs */
 before((done) => {
   console.log('Waiting for database to connect...\n');
   setTimeout(() => {
     done();
-  }, 10000);
+  }, 15000);
 });
 
 describe('Auth API', () => {
