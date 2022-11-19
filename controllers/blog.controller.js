@@ -51,8 +51,9 @@ exports.postBlog = async (req, res, next) => {
   }
 
   try {
-    const id = uuidv4();
-    const newBlog = new Blog({ ...req.body, id });
+    const blogId = uuidv4();
+    const userId = req.user.userId;
+    const newBlog = new Blog({ ...req.body, id: blogId, user_id: userId });
 
     await newBlog.save();
     res.status(201).json({ message: 'Blog created', blog: newBlog });
