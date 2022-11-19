@@ -17,6 +17,7 @@ const blogSchema = new Schema(
     },
     cover_picture_url: {
       type: String,
+      required: true,
     },
     user_id: {
       type: String,
@@ -25,7 +26,7 @@ const blogSchema = new Schema(
     },
     deleted_at: {
       type: String,
-      required: null,
+      default: null,
     },
     is_draft: {
       type: Boolean,
