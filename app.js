@@ -9,8 +9,14 @@ const useRoutes = require('./routes');
 const app = express();
 require('dotenv').config();
 
-/* Database Configs */
-const MONGO_URI = process.env.MONGO_URI;
+/* Database Configs -> set database URI based on the node environment */
+let MONGO_URI;
+
+if (process.env.NODE_ENV === 'TEST') {
+  MONGO_URI = process.env.MONGO_URI_TEST;
+} else {
+  MONGO_URI = process.env.MONGO_URI;
+}
 
 /* Express Set-up -> Configs */
 app.use(express.json());

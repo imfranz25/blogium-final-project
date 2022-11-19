@@ -4,7 +4,7 @@
   "description": "To make it easy for you to get started with GitLab, here's a list of recommended next steps.",
   "main": "index.js",
   "scripts": {
-    "test": "env NODE_ENV=TEST mocha --timeout 20000",
+    "test": "env NODE_ENV=TEST mocha --sort --timeout 20000 test/index.test.js",
     "start": " env NODE_ENV=PRODUCTION node server.js",
     "dev": "env NODE_ENV=DEVELOPMENT nodemon server.js"
   },
