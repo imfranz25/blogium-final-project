@@ -1,5 +1,6 @@
 /* Route Imports */
 const authRoute = require('./auth.route');
+const blogRoute = require('./blog.route');
 
 /* Error Handlers */
 const { errorControllers } = require('../controllers');
@@ -15,6 +16,7 @@ if (process.env.NODE_ENV === 'DEVELOPMENT') {
 /* Use all imported routes with app (express) */
 const useRoutes = (app) => {
   app.use(authRoute);
+  app.use(blogRoute);
   app.use('*', errorControllers.pageNotFound);
   app.use(errorHandler);
 };
