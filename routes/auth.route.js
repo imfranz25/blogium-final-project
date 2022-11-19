@@ -6,8 +6,16 @@ const router = express.Router();
 const { authControllers } = require('../controllers');
 const { authValidators } = require('../validators');
 
-router.route('/signup').all(authValidators.signUpValidator).post(authControllers.postSignUp);
+// prettier-ignore
+router
+  .route('/signup')
+  .all(authValidators.signUpValidator)
+  .post(authControllers.postSignUp);
 
-router.route('/login').all(authValidators.loginValidator).post(authControllers.postLogin);
+// prettier-ignore
+router
+  .route('/login')
+  .all(authValidators.loginValidator)
+  .post(authControllers.postLogin);
 
 module.exports = router;
