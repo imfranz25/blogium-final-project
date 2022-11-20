@@ -21,7 +21,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('First name is required');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('First name is required');
   });
 
   it('should return a status of 422 -> invalid field "first name with number" ', async () => {
@@ -33,7 +34,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Invalid first name');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Invalid first name');
   });
 
   it('should return a status of 422 -> empty field "last name" ', async () => {
@@ -57,7 +59,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Invalid last name');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Invalid last name');
   });
 
   it('should return a status of 422 -> invalid field "email" ', async () => {
@@ -69,7 +72,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Invalid email format');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Invalid email format');
   });
 
   it('should return a status of 422 -> invalid username (3 characters) ', async () => {
@@ -81,7 +85,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Username must be 4 characters and above');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Username must be 4 characters and above');
   });
 
   it('should return a status of 422 -> invalid username (with special characters) ', async () => {
@@ -93,7 +98,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Special characters are not allowed');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Special characters are not allowed');
   });
 
   it('should return a status of 422 -> password (no uppercase) ', async () => {
@@ -107,7 +113,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Weak Password');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
   });
 
   it('should return a status of 422 -> password (no lowercase) ', async () => {
@@ -121,7 +128,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Weak Password');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
   });
 
   it('should return a status of 422 -> password (no number) ', async () => {
@@ -135,7 +143,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Weak Password');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
   });
 
   it('should return a status of 422 -> password (no special character) ', async () => {
@@ -149,7 +158,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Weak Password');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
   });
 
   it('should return a status of 422 -> password (7 characters only) ', async () => {
@@ -163,7 +173,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Weak Password');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
   });
 
   it('should return a status of 422 -> password and confirm pass does not match', async () => {
@@ -177,12 +188,13 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal(
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal(
       'Password and confirm password does not match'
     );
   });
 
-  it('should return a status of 201 -> with json data property users', async () => {
+  it('should return a status of 201 -> with json data property user', async () => {
     const response = await request.post('/signup').send(signUpInput);
 
     const responseTextObject = JSON.parse(response.text);
@@ -200,7 +212,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Email is already taken');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Email is already taken');
   });
 
   it('should return a status of 422 -> username already taken', async () => {
@@ -213,7 +226,8 @@ describe('POST /signup', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Username is already taken');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Username is already taken');
   });
 });
 
@@ -231,7 +245,8 @@ describe('POST /login', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Please input a valid email');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Please input a valid email');
   });
 
   it('should return a status of 422 -> empty password field', async () => {
@@ -243,7 +258,8 @@ describe('POST /login', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Password is required');
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Password is required');
   });
 
   it('should return a status of 401 -> email not registered', async () => {
