@@ -26,8 +26,8 @@ You will be creating a blog site, the user should be able to view added blogs, a
 
 # Requirements
 
-Checklist | Pages | Feature | Route
+Pages | Feature | Route | Finished
 ------------ | ------------- | ------------- | -------------
-- [ ] | Homepage | Able to view Blog list created by admin | www.example.com
-- [ ] | ------------ | Able to select blog by clicking the blog item. | ------------
+Homepage | Able to view Blog list created by admin | www.example.com | &cross;
+------------ | Able to select blog by clicking the blog item. | ------------ | &cross;
 
