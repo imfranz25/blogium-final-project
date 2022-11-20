@@ -24,4 +24,10 @@ router
   .all(authValidators.profileValidator)
   .patch(authControllers.updateProfile);
 
+// prettier-ignore
+router
+  .route('/password')
+  .all(authValidators.passwordValidator)
+  .patch(authControllers.updatePassword);
+
 module.exports = router;
