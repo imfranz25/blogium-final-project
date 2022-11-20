@@ -63,6 +63,37 @@ exports.postBlog = async (req, res, next) => {
 };
 
 /**
+ * Update blog details
+ * @route PATCH /blog/:blogId
+ */
+exports.updateBlog = async (req, res, next) => {
+  const { blogId } = req.params;
+  const { title, description } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });
+  }
+
+  try {
+    const existingBlog = await Blog.findOne({ id: blogId });
+
+    if (!existingBlog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+
+    existingBlog.title = title;
+    existingBlog.description = description;
+
+    await existingBlog.save();
+
+    res.status(200).json({ message: 'Blog updated', blog: existingBlog });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Soft Delete -> Selected Blog (update delete_at with current date time)
  * @route DELETE /:blogId
  */
@@ -70,7 +101,7 @@ exports.deleteBlog = async (req, res, next) => {
   const { blogId } = req.params;
 
   try {
-    const blog = await Blog.findById(blogId);
+    const blog = await Blog.find({ id: blogId });
 
     if (!blog) {
       return res.status(404).json({ message: 'Blog not found' });
