@@ -62,6 +62,33 @@ exports.updateProfile = async (req, res, next) => {
 };
 
 /**
+ * Update User Password -> 3 chances only
+ * @route PATCH /password
+ */
+exports.updatePassword = async (req, res, next) => {
+  const { password } = req.body;
+  const { userId } = req.user;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });
+  }
+
+  try {
+    const existingUser = await User.findOne({ id: userId });
+    const newHashedPassword = passGen.generateHash(userId, password);
+
+    existingUser.password = newHashedPassword;
+
+    await existingUser.save();
+
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Check email and password
  * generate jwt token for valid email & password
  * @route POST /login
