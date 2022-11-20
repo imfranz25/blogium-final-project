@@ -101,7 +101,7 @@ exports.deleteBlog = async (req, res, next) => {
   const { blogId } = req.params;
 
   try {
-    const blog = await Blog.find({ id: blogId });
+    const blog = await Blog.findOne({ id: blogId });
 
     if (!blog) {
       return res.status(404).json({ message: 'Blog not found' });
