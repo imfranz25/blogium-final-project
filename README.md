@@ -26,7 +26,7 @@ You will be creating a blog site, the user should be able to view added blogs, a
 
 # Requirements
 
-First Header | Second Header
------------- | -------------
-Content from cell 1 | Content from cell 2
-Content in the first column | Content in the second column
+Checklist | Pages | Feature | Route
+------------ | ------------- | ------------- | -------------
+[] | Homepage | Able to view Blog list created by admin | www.example.com
+
