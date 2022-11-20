@@ -4,10 +4,9 @@ You will be creating a blog site, the user should be able to view added blogs, a
 
 # Technology used
 
-- Nodejs
-- ejs
-- any frontend library of your choice (ex. bootstrap)
-- mysql (Sequelize) / Mongodb (moongose)
+- Nodejs -> Express
+- any frontend library of your choice (ex. bootstrap) -> React
+- Mongodb (moongose)
 - jwt
 - heroku
 - multer (file upload)
