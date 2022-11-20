@@ -64,6 +64,10 @@ exports.postLogin = async (req, res, next) => {
     const token = tokenGenerator({
       userId: existingUser.id,
       email: existingUser.email,
+      username: existingUser.username,
+      image: existingUser.profile_picture_url,
+      first_name: existingUser.first_name,
+      last_name: existingUser.last_name,
     });
 
     res.status(200).json({ message: 'Login success', token });
