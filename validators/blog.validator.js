@@ -1,7 +1,7 @@
 /* 3rd Party Module(s) */
 const { body } = require('express-validator');
 
-exports.createBlogValidator = [
+exports.blogInputValidator = [
   // prettier-ignore
   body('title')
     .trim()
