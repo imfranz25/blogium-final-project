@@ -20,8 +20,8 @@ describe('Blog API', function () {
 /* Data Clean Up -> delete clear all the details */
 after(async () => {
   try {
-    await User.deleteMany({});
-    await Blog.deleteMany({});
+    await User.deleteMany();
+    await Blog.deleteMany();
   } catch (error) {
     console.log(error);
   }
