@@ -8,6 +8,9 @@ const { signUpInput, userBlogInput } = require('./data');
 let token;
 let blogId;
 
+/**
+ * Login first using the newly created user from auth test
+ * */
 before(async () => {
   const response = await request.post('/login').send({
     email: signUpInput.email, // valid email
@@ -47,12 +50,13 @@ describe('POST /blog/add', () => {
     const response = await request
       .post('/blog/add')
       .set('Authorization', token)
-      .send({ ...userBlogInput, title: '' }); // no title
+      .send({ title: '' }); // no title
 
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Blog title is required');
+    expect(responseTextObject).to.have.an.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Blog title is required');
   });
 
   it('should return a status of 422 -> empty blog description', async () => {
@@ -64,7 +68,8 @@ describe('POST /blog/add', () => {
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(422);
-    expect(responseTextObject.errors[0]?.msg).to.equal('Description is required');
+    expect(responseTextObject).to.have.an.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Description is required');
   });
 
   it('should return a status of 201 -> with json object blog', async () => {
@@ -130,5 +135,80 @@ describe('GET /blog', () => {
 
     expect(response.status).to.equal(200);
     expect(responseTextObject.blogs).to.have.an.lengthOf(1); // we have only 1 blog created
+  });
+});
+
+/**
+ * UPDATE BLOG
+ */
+describe('PATCH /blog/:blogId', () => {
+  it('should return a status of 401 -> not authenticated', async () => {
+    const response = await request.patch(`/blog/${blogId}`);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(401);
+    expect(responseTextObject.message).to.equal('Log in first');
+  });
+
+  it('should return a status of 404 -> blog not found', async () => {
+    const response = await request
+      .patch(`/blog/someRandomBlogId`)
+      .set('Authorization', token)
+      .send(userBlogInput);
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(404);
+    expect(responseTextObject.message).to.equal('Blog not found');
+  });
+
+  it('should return a status of 422 -> empty blog title', async () => {
+    const response = await request
+      .patch(`/blog/${blogId}`)
+      .set('Authorization', token)
+      .send({ title: '' });
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.an.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Blog title is required');
+  });
+
+  it('should return a status of 422 -> empty blog description', async () => {
+    const response = await request
+      .patch(`/blog/${blogId}`)
+      .set('Authorization', token)
+      .send({ ...userBlogInput, description: '' });
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Description is required');
+  });
+
+  it('should return a status of 200 -> update title', async () => {
+    const response = await request
+      .patch(`/blog/${blogId}`)
+      .set('Authorization', token)
+      .send({ ...userBlogInput, title: 'Updated Blog Title' });
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(200);
+    expect(responseTextObject.blog?.title).to.equal('Updated Blog Title');
+  });
+
+  it('should return a status of 200 -> update title', async () => {
+    const response = await request
+      .patch(`/blog/${blogId}`)
+      .set('Authorization', token)
+      .send({ ...userBlogInput, description: 'I updated the blog description' });
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(200);
+    expect(responseTextObject.blog?.description).to.equal('I updated the blog description');
   });
 });
