@@ -23,3 +23,10 @@ You will be creating a blog site, the user should be able to view added blogs, a
 - [ ] retrieving of blogs must exclude deleted or is_draft true records
 - [ ] must be deployed to heroku for actual testing
 - [X] must be deployed to atlas(mongodb) or freemysqlhosting(mysql)
+
+# Requirements
+
+First Header | Second Header
+------------ | -------------
+Content from cell 1 | Content from cell 2
+Content in the first column | Content in the second column
