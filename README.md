@@ -26,7 +26,7 @@ You will be creating a blog site, the user should be able to view added blogs, a
 
 # Feature  - Requirement(s)
 
-Checklist | Table | Feature | Route
+Checklist| Table| Feature| Route
 ------------ | -------------
 [] | Users | Able to view Blog list created by admin | www.example.com
 [] |  | Able to select blog by clicking the blog item.	
