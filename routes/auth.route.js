@@ -18,4 +18,10 @@ router
   .all(authValidators.loginValidator)
   .post(authControllers.postLogin);
 
+// prettier-ignore
+router
+  .route('/profile')
+  .all(authValidators.profileValidator)
+  .patch(authControllers.updateProfile);
+
 module.exports = router;
