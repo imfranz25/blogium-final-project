@@ -24,9 +24,16 @@ You will be creating a blog site, the user should be able to view added blogs, a
 - [ ] must be deployed to heroku for actual testing
 - [X] must be deployed to atlas(mongodb) or freemysqlhosting(mysql)
 
-# Requirements
+# Feature  - Requirement(s)
 
-First Header | Second Header
+Checklist | Table | Feature | Route
 ------------ | -------------
-Content from cell 1 | Content from cell 2
-Content in the first column | Content in the second column
+[] | Users | Able to view Blog list created by admin | www.example.com
+[] |  | Able to select blog by clicking the blog item.	
+[] |  | Navigation to login if not authenticated	
+[] |  | Navigation to Dashboard if authenticated
+[] |  | able to search blogs via title
+
+
+
+
