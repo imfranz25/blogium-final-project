@@ -4,7 +4,23 @@ const { body } = require('express-validator');
 /* Custom Validators */
 const { userCustomValidators } = require('./customs');
 
-exports.signUpValidator = [
+const loginValidator = [
+  // prettier-ignore
+  body('email')
+    .trim()
+    .isEmail()
+    .withMessage('Please input a valid email')
+    .normalizeEmail({ gmail_remove_dots: false }),
+
+  // prettier-ignore
+  body('password')
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage('Password is required'),
+];
+
+const signUpValidator = [
   body('first_name')
     .trim()
     .not()
@@ -50,18 +66,26 @@ exports.signUpValidator = [
     .withMessage('Password and confirm password does not match'),
 ];
 
-exports.loginValidator = [
-  // prettier-ignore
-  body('email')
-    .trim()
-    .isEmail()
-    .withMessage('Please input a valid email')
-    .normalizeEmail({ gmail_remove_dots: false }),
-
-  // prettier-ignore
-  body('password')
-    .trim()
-    .not()
-    .isEmpty()
-    .withMessage('Password is required'),
+const profileValidator = [
+  signUpValidator[0], // first_name
+  signUpValidator[1], // last_name
+  signUpValidator[2], // email
+  signUpValidator[3], // username
 ];
+
+const passwordValidator = [
+  signUpValidator[4], // new password
+  signUpValidator[5], // confirm_password
+
+  body('old_password')
+    .trim()
+    .custom(userCustomValidators.checkOldPassword)
+    .withMessage('Incorrect Password'),
+];
+
+module.exports = {
+  loginValidator,
+  signUpValidator,
+  profileValidator,
+  passwordValidator,
+};
