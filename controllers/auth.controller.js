@@ -31,6 +31,37 @@ exports.postSignUp = async (req, res, next) => {
 };
 
 /**
+ * Update User Profile details
+ * @route PATCH /profile
+ */
+exports.updateProfile = async (req, res, next) => {
+  const userId = req.user.userId;
+  const { first_name, last_name, email, username } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });
+  }
+
+  try {
+    const existingUser = await User.findOne({ id: userId });
+
+    /* Update User details */
+    existingUser.first_name = first_name;
+    existingUser.last_name = last_name;
+    existingUser.email = email;
+    existingUser.username = username;
+
+    const updatedUser = await existingUser.save();
+    const token = tokenGenerator(updatedUser);
+
+    res.status(200).json({ message: 'Profile details updated', token });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Check email and password
  * generate jwt token for valid email & password
  * @route POST /login
@@ -61,14 +92,7 @@ exports.postLogin = async (req, res, next) => {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
 
-    const token = tokenGenerator({
-      userId: existingUser.id,
-      email: existingUser.email,
-      username: existingUser.username,
-      image: existingUser.profile_picture_url,
-      first_name: existingUser.first_name,
-      last_name: existingUser.last_name,
-    });
+    const token = tokenGenerator(existingUser);
 
     res.status(200).json({ message: 'Login success', token });
   } catch (error) {
