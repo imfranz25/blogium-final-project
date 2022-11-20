@@ -212,3 +212,45 @@ describe('PATCH /blog/:blogId', () => {
     expect(responseTextObject.blog?.description).to.equal('I updated the blog description');
   });
 });
+
+/**
+ * DELETE A BLOG
+ */
+describe('DELETE /:blogId', () => {
+  it('should return a status of 401 -> not authenticated', async () => {
+    const response = await request.delete(`/${blogId}`);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(401);
+    expect(responseTextObject.message).to.equal('Log in first');
+  });
+
+  it('should return a status of 404 -> blog to be delete -> does not exist', async () => {
+    const response = await request.delete(`/someRandomBlogId`).set('Authorization', token);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(404);
+    expect(responseTextObject.message).to.equal('Blog not found');
+  });
+
+  it('should return a status of 200 -> to confirm if blog exist before deleting', async () => {
+    const response = await request.get(`/${blogId}`).set('Authorization', token);
+    expect(response.status).to.equal(200);
+  });
+
+  it('should return a status of 200 -> with json deleted blog', async () => {
+    const response = await request.delete(`/${blogId}`).set('Authorization', token);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(200);
+    expect(responseTextObject.blog?.deleted_at).to.not.equal(null); // null -> updated to date
+  });
+
+  it('should return a status of 404 -> from API "GET /:blogId"', async () => {
+    const response = await request.get(`/${blogId}`).set('Authorization', token);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(404);
+    expect(responseTextObject.message).to.equal('Blog not found');
+  });
+});
