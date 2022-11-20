@@ -6,6 +6,7 @@ const router = express.Router();
 const { blogControllers } = require('../controllers');
 const { authMiddleware } = require('../middlewares');
 const { blogValidators } = require('../validators');
+const { route } = require('./auth.route');
 
 // prettier-ignore
 router
@@ -24,5 +25,11 @@ router
   .all(authMiddleware.isAuth)
   .all(blogValidators.createBlogValidator)
   .post(blogControllers.postBlog);
+
+router
+  .route('/blog/:blogId')
+  .all(authMiddleware.isAuth)
+  .all(blogValidators.blogInputValidator)
+  .patch(blogControllers.updateBlog);
 
 module.exports = router;
