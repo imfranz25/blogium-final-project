@@ -111,3 +111,24 @@ describe('GET /:blog', () => {
     expect(responseTextObject.blog?.title).to.equal('Test Blog');
   });
 });
+
+/**
+ * GET ALL BLOG
+ */
+describe('GET /blog', () => {
+  it('should return a status of 401 -> not authenticated', async () => {
+    const response = await request.get(`/blog`);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(401);
+    expect(responseTextObject.message).to.equal('Log in first');
+  });
+
+  it('should return a status of 200 -> with json blogs', async () => {
+    const response = await request.get(`/blog`).set('Authorization', token);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(200);
+    expect(responseTextObject.blogs).to.have.an.lengthOf(1); // we have only 1 blog created
+  });
+});
