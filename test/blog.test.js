@@ -200,7 +200,7 @@ describe('PATCH /blog/:blogId', () => {
     expect(responseTextObject.blog?.title).to.equal('Updated Blog Title');
   });
 
-  it('should return a status of 200 -> update title', async () => {
+  it('should return a status of 200 -> update description', async () => {
     const response = await request
       .patch(`/blog/${blogId}`)
       .set('Authorization', token)

@@ -69,6 +69,7 @@ exports.postBlog = async (req, res, next) => {
 exports.updateBlog = async (req, res, next) => {
   const { blogId } = req.params;
   const { title, description } = req.body;
+  const { userId } = req.user;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -80,6 +81,11 @@ exports.updateBlog = async (req, res, next) => {
 
     if (!existingBlog) {
       return res.status(404).json({ message: 'Blog not found' });
+    }
+
+    /* Can only update user's own post blog */
+    if (userId !== existingBlog.user_id) {
+      return res.status(401).json({ message: 'Unauthorized action' });
     }
 
     existingBlog.title = title;
@@ -99,18 +105,24 @@ exports.updateBlog = async (req, res, next) => {
  */
 exports.deleteBlog = async (req, res, next) => {
   const { blogId } = req.params;
+  const { userId } = req.user;
 
   try {
-    const blog = await Blog.findOne({ id: blogId });
+    const existingBlog = await Blog.findOne({ id: blogId });
 
-    if (!blog) {
+    if (!existingBlog) {
       return res.status(404).json({ message: 'Blog not found' });
     }
 
-    blog.deleted_at = new Date().toISOString();
+    /* Can only delete user's own post blog */
+    if (userId !== existingBlog.user_id) {
+      return res.status(401).json({ message: 'Unauthorized action' });
+    }
 
-    await blog.save();
-    res.status(200).json({ message: 'Blog deleted', blog });
+    existingBlog.deleted_at = new Date().toISOString();
+
+    await existingBlog.save();
+    res.status(200).json({ message: 'Blog deleted', existingBlog });
   } catch (error) {
     next(error);
   }
