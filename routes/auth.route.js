@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 /* File Imports */
+const { authMiddleware } = require('../middlewares');
 const { authControllers } = require('../controllers');
 const { authValidators } = require('../validators');
 
@@ -21,12 +22,14 @@ router
 // prettier-ignore
 router
   .route('/profile')
+  .all(authMiddleware.isAuth)
   .all(authValidators.profileValidator)
   .patch(authControllers.updateProfile);
 
 // prettier-ignore
 router
   .route('/password')
+  .all(authMiddleware.isAuth)
   .all(authValidators.passwordValidator)
   .patch(authControllers.updatePassword);
 
