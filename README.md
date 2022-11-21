@@ -29,5 +29,9 @@ You will be creating a blog site, the user should be able to view added blogs, a
 Pages | Feature | Route | Finished
 ------------ | ------------- | ------------- | -------------
 Homepage | Able to view Blog list created by admin | www.example.com | &cross;
------------- | Able to select blog by clicking the blog item. | ------------ | &cross;
+ | Able to select blog by clicking the blog item. |  | &cross;
+ | Navigation to login if not authenticated |  | &cross;
+ | Navigation to Dashboard if authenticated |  | &cross;
+ | able to search blogs via title |  | &cross;
 
+	
