@@ -29,9 +29,41 @@ You will be creating a blog site, the user should be able to view added blogs, a
 Pages | Feature | Route | Finished
 ------------ | ------------- | ------------- | -------------
 Homepage | Able to view Blog list created by admin | www.example.com | &cross;
- | Able to select blog by clicking the blog item. |  | &cross;
- | Navigation to login if not authenticated |  | &cross;
- | Navigation to Dashboard if authenticated |  | &cross;
- | able to search blogs via title |  | &cross;
+&nbsp; | Able to select blog by clicking the blog item. |  | &cross;
+&nbsp; | Navigation to login if not authenticated | &nbsp; | &cross;
+&nbsp; | Navigation to Dashboard if authenticated | &nbsp; | &cross;
+&nbsp; | able to search blogs via title | &nbsp; | &cross;
+------------ | ------------- | ------------- | -------------
+Blog Details | Able to view blog details | www.example.com/:blog_id | &cross;
+&nbsp; | Navigation to login if not authenticated | &nbsp; | &cross;
+&nbsp; | Navigation to Dashboard if authenticated| &nbsp; | &cross;
+------------ | ------------- | ------------- | -------------
+Login | Able to sign in existing users | www.example.com/login | &cross;
+&nbsp; | ble to show validation errors| &nbsp; | &cross;
+------------ | ------------- | ------------- | -------------
+SignUp | Able to signup users | www.example.com/signup | &cross;
+&nbsp; | Able to upload profile_picture | &nbsp; | &cross;
+&nbsp; | Able to show validation errors | &nbsp; | &cross;
+------------ | ------------- | ------------- | -------------
+Dashboard - Blog | Able to view blogs created by your user | www.example.com/dashboard/blog/:blog_id | &cross;
+&nbsp; | Able to modify existing blogs | &nbsp; | &cross;
+&nbsp; | able to deleted existing blogs | &nbsp; | &cross;
+&nbsp; | able to search blogs via title | &nbsp; | &cross;
+&nbsp; | should only be accessible if the user is logged in | &nbsp; | &cross;
+&nbsp; | sNavigation to Dashboard - Profile / Signout | &nbsp; | &cross;
+------------ | ------------- | ------------- | -------------
+Dashboard - Profile | Able to view user profile details | www.example.com/dashboard/profile | &cross;
+&nbsp; | Able to modify user profile details | &nbsp; | &cross;
+&nbsp; | able to change password for 3 chances | &nbsp; | &cross;
+&nbsp; | Display validation errors on modification failed | &nbsp; | &cross;
+&nbsp; | should only be accessible if the user is logged in | &nbsp; | &cross;
+&nbsp; | Navigation to Dashboard - Blog / Signout | &nbsp; | &cross;
+	
+
 
 	
+	
+	
+	
+	
+
