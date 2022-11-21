@@ -63,6 +63,28 @@ exports.postBlog = async (req, res, next) => {
 };
 
 /**
+ * Update is_draft value -> toggle (set to true if false and false if true)
+ * @route POST /:blogId
+ */
+exports.postDraft = async (req, res, next) => {
+  const { blogId } = req.params;
+  try {
+    const existingBlog = await Blog.findOne({ id: blogId });
+
+    if (!existingBlog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+
+    existingBlog.is_draft = !existingBlog.is_draft; // negate the current value
+    await existingBlog.save();
+
+    res.status(200).json({ message: 'Blog update successfully', blog: existingBlog });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Update blog details
  * @route PATCH /blog/:blogId
  */
