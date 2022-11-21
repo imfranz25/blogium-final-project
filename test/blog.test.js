@@ -9,21 +9,13 @@ let firstUserToken;
 let secondUserToken;
 let blogId;
 
-/**
- * Create another user
- * Login first using the newly created user from auth test
- * */
+/**  Login first using the newly created user from auth test */
 before(async () => {
-  /* create another user */
-  await request.post('/signup').send(secondUser);
-
   /* Login -> first User */
   const firstLogin = await request.post('/login').send({
     email: updateProfileInput.email, // valid updated email
     password: updateProfileInput.password, // valid updated pass
   });
-
-  firstUserToken = JSON.parse(firstLogin.text).token;
 
   /* login -> 2nd user */
   const secondLogin = await request.post('/login').send({
@@ -31,6 +23,8 @@ before(async () => {
     password: secondUser.password, // valid pass
   });
 
+  /* Fetch Tokens  */
+  firstUserToken = JSON.parse(firstLogin.text).token;
   secondUserToken = JSON.parse(secondLogin.text).token;
 });
 
