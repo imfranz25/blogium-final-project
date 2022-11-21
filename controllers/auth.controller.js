@@ -76,8 +76,7 @@ exports.updatePassword = async (req, res, next) => {
 
   try {
     const existingUser = await User.findOne({ id: userId });
-
-    if (existingUser.password_chances === 3) {
+    if (existingUser.password_chances === 0) {
       return res
         .status(403)
         .json({ message: 'Unable to reset password, you have reached the limit' });
@@ -86,8 +85,7 @@ exports.updatePassword = async (req, res, next) => {
     const newHashedPassword = passGen.generateHash(userId, password);
 
     existingUser.password = newHashedPassword;
-    existingUser.password_chances += 1;
-
+    existingUser.password_chances -= 1;
     await existingUser.save();
 
     res.status(200).json({ message: 'Password changed successfully' });
