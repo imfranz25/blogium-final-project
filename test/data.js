@@ -20,6 +20,9 @@ const updateProfileInput = {
   last_name: 'Doe',
   email: 'johndoe@stratpoint.com',
   username: 'johndoe25',
+  password: 'NewStratpoint123!',
+  confirm_password: 'NewStratpoint123!',
+  old_password: 'Stratpoint123!',
 };
 
 const userBlogInput = {

@@ -304,7 +304,7 @@ describe('POST /login', () => {
 
 /**
  * ------------------------------------------------------------------------------
- * POST LOGIN
+ * PATCH PROFILE -> UPDATE USER DETAILS (USERNAME, EMAIL, FIRST & LAST NAME)
  * ------------------------------------------------------------------------------
  */
 describe('PATCH /profile', () => {
@@ -404,6 +404,32 @@ describe('PATCH /profile', () => {
     expect(responseTextObject.errors[0].msg).to.equal('Special characters are not allowed');
   });
 
+  it('should return a status of 422 -> email already taken ', async () => {
+    const response = await request
+      .patch('/profile')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, email: signUpInput.email }); // email already taken
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Email is already taken');
+  });
+
+  it('should return a status of 422 -> username already taken', async () => {
+    const response = await request
+      .patch('/profile')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, username: signUpInput.username }); // username already taken
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Username is already taken');
+  });
+
   it('should return a status of 200 -> with updated token', async () => {
     const response = await request
       .patch('/profile')
@@ -414,5 +440,140 @@ describe('PATCH /profile', () => {
 
     expect(response.status).to.equal(200);
     expect(responseTextObject.token).to.have.a.string('Bearer ');
+  });
+});
+
+/**
+ * ------------------------------------------------------------------------------
+ * PATCH PASSWORD -> UPDATE USER PASSWORD
+ * ------------------------------------------------------------------------------
+ */
+describe('PATCH /password', () => {
+  it('should return a status of 401 -> not logged in"', async () => {
+    const response = await request.patch('/password').send(updateProfileInput);
+    expect(response.status).to.equal(401);
+  });
+
+  it('should return a status of 422 -> password (no uppercase) ', async () => {
+    const response = await request
+      .patch('/password')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, password: 'stratpoint123!' }); // no uppercase
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+  });
+
+  it('should return a status of 422 -> password (no lowercase) ', async () => {
+    const response = await request
+      .patch('/password')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, password: 'STRATPOINT123!' }); // no lowercase
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+  });
+
+  it('should return a status of 422 -> password (no number) ', async () => {
+    const response = await request
+      .patch('/password')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, password: 'Stratpoint!' }); // no number
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+  });
+
+  it('should return a status of 422 -> password (no special character) ', async () => {
+    const response = await request
+      .patch('/password')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, password: 'Stratpoint123' }); // no special character
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+  });
+
+  it('should return a status of 422 -> password (7 characters only) ', async () => {
+    const response = await request
+      .patch('/password')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, password: 'Stra12!' }); // 7 chars only
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Weak Password');
+  });
+
+  it('should return a status of 422 -> password and confirm pass does not match', async () => {
+    const response = await request
+      .patch('/password')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, confirm_password: 'Notmatched!' }); // not matched
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal(
+      'Password and confirm password does not match'
+    );
+  });
+
+  it('should return a status of 422 -> invalid old password', async () => {
+    const response = await request
+      .patch('/password')
+      .set('Authorization', userToken)
+      .send({ ...updateProfileInput, old_password: 'invalid' }); // use invalid old password
+
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(422);
+    expect(responseTextObject).to.have.a.property('errors');
+    expect(responseTextObject.errors[0].msg).to.equal('Incorrect Password');
+  });
+
+  it('should return a status of 200 -> password changed successfully', async () => {
+    const response = await request
+      .patch('/password')
+      .set('Authorization', userToken)
+      .send(updateProfileInput); // valid inputs
+
+    expect(response.status).to.equal(200);
+    expect(JSON.parse(response.text).message).to.equal('Password changed successfully');
+  });
+
+  it("should return a status of 403 -> password reset react it's limit", async () => {
+    let response;
+
+    /* Change Password 3 times -> for the 3rd time expect that it will not change the password */
+    for (let index = 1; index <= 3; index++) {
+      response = await request
+        .patch('/password')
+        .set('Authorization', userToken)
+        .send({
+          ...updateProfileInput,
+          old_password: updateProfileInput.password,
+        }); // use the updated password -> old password
+    }
+
+    expect(response.status).to.equal(403);
+    expect(JSON.parse(response.text).message).to.equal(
+      'Unable to reset password, you have reached the limit'
+    );
   });
 });
