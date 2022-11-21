@@ -17,7 +17,8 @@ router
   .route('/:blogId')
   .all(authMiddleware.isAuth)
   .get(blogControllers.getBlog)
-  .delete(blogControllers.deleteBlog);
+  .delete(blogControllers.deleteBlog)
+  .post(blogControllers.postDraft);
 
 router
   .route('/blog/add')
