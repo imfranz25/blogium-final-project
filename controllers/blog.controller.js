@@ -116,7 +116,7 @@ exports.deleteBlog = async (req, res, next) => {
 
     /* Can only delete user's own post blog */
     if (userId !== existingBlog.user_id) {
-      return res.status(401).json({ message: 'Unauthorized action' });
+      return res.status(403).json({ message: 'Unauthorized action' });
     }
 
     existingBlog.deleted_at = new Date().toISOString();
