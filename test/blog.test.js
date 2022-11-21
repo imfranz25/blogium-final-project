@@ -4,21 +4,34 @@ const request = require('supertest')(server);
 const expect = require('chai').expect;
 
 /* User Input */
-const { signUpInput, userBlogInput } = require('./data');
-let token;
+const { signUpInput, userBlogInput, secondUser } = require('./data');
+let firstUserToken;
+let secondUserToken;
 let blogId;
 
 /**
+ * Create another user
  * Login first using the newly created user from auth test
  * */
 before(async () => {
-  const response = await request.post('/login').send({
+  /* create another user */
+  await request.post('/signup').send(secondUser);
+
+  /* Login -> first User */
+  const firstLogin = await request.post('/login').send({
     email: signUpInput.email, // valid email
     password: signUpInput.password, // valid pass
   });
 
-  const responseTextObject = JSON.parse(response.text);
-  token = responseTextObject.token;
+  firstUserToken = JSON.parse(firstLogin.text).token;
+
+  /* login -> 2nd user */
+  const secondLogin = await request.post('/login').send({
+    email: secondUser.email, // valid email
+    password: secondUser.password, // valid pass
+  });
+
+  secondUserToken = JSON.parse(secondLogin.text).token;
 });
 
 /**
@@ -49,7 +62,7 @@ describe('POST /blog/add', () => {
   it('should return a status of 422 -> empty blog title', async () => {
     const response = await request
       .post('/blog/add')
-      .set('Authorization', token)
+      .set('Authorization', firstUserToken)
       .send({ title: '' }); // no title
 
     const responseTextObject = JSON.parse(response.text);
@@ -62,7 +75,7 @@ describe('POST /blog/add', () => {
   it('should return a status of 422 -> empty blog description', async () => {
     const response = await request
       .post('/blog/add')
-      .set('Authorization', token)
+      .set('Authorization', firstUserToken)
       .send({ ...userBlogInput, description: '' }); // no description
 
     const responseTextObject = JSON.parse(response.text);
@@ -75,7 +88,7 @@ describe('POST /blog/add', () => {
   it('should return a status of 201 -> with json object blog', async () => {
     const response = await request
       .post('/blog/add')
-      .set('Authorization', token)
+      .set('Authorization', firstUserToken)
       .send(userBlogInput);
 
     const responseTextObject = JSON.parse(response.text);
@@ -100,7 +113,7 @@ describe('GET /:blog', () => {
   });
 
   it('should return a status of 404 -> blog not found', async () => {
-    const response = await request.get(`/randomBlogId`).set('Authorization', token);
+    const response = await request.get(`/randomBlogId`).set('Authorization', firstUserToken);
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(404);
@@ -108,7 +121,7 @@ describe('GET /:blog', () => {
   });
 
   it('should return a status of 200 -> with json blog', async () => {
-    const response = await request.get(`/${blogId}`).set('Authorization', token);
+    const response = await request.get(`/${blogId}`).set('Authorization', firstUserToken);
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(200);
@@ -130,7 +143,7 @@ describe('GET /blog', () => {
   });
 
   it('should return a status of 200 -> with json blogs', async () => {
-    const response = await request.get(`/blog`).set('Authorization', token);
+    const response = await request.get(`/blog`).set('Authorization', firstUserToken);
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(200);
@@ -153,7 +166,7 @@ describe('PATCH /blog/:blogId', () => {
   it('should return a status of 404 -> blog not found', async () => {
     const response = await request
       .patch(`/blog/someRandomBlogId`)
-      .set('Authorization', token)
+      .set('Authorization', firstUserToken)
       .send(userBlogInput);
 
     const responseTextObject = JSON.parse(response.text);
@@ -165,7 +178,7 @@ describe('PATCH /blog/:blogId', () => {
   it('should return a status of 422 -> empty blog title', async () => {
     const response = await request
       .patch(`/blog/${blogId}`)
-      .set('Authorization', token)
+      .set('Authorization', firstUserToken)
       .send({ title: '' });
 
     const responseTextObject = JSON.parse(response.text);
@@ -178,7 +191,7 @@ describe('PATCH /blog/:blogId', () => {
   it('should return a status of 422 -> empty blog description', async () => {
     const response = await request
       .patch(`/blog/${blogId}`)
-      .set('Authorization', token)
+      .set('Authorization', firstUserToken)
       .send({ ...userBlogInput, description: '' });
 
     const responseTextObject = JSON.parse(response.text);
@@ -188,10 +201,19 @@ describe('PATCH /blog/:blogId', () => {
     expect(responseTextObject.errors[0].msg).to.equal('Description is required');
   });
 
+  it('should return a status of 403 -> unathorized, not his/her own blog post', async () => {
+    const response = await request
+      .patch(`/blog/${blogId}`)
+      .set('Authorization', secondUser) // second user
+      .send(userBlogInput);
+
+    expect(response.status).to.equal(403);
+  });
+
   it('should return a status of 200 -> update title', async () => {
     const response = await request
       .patch(`/blog/${blogId}`)
-      .set('Authorization', token)
+      .set('Authorization', firstUserToken)
       .send({ ...userBlogInput, title: 'Updated Blog Title' });
 
     const responseTextObject = JSON.parse(response.text);
@@ -203,7 +225,7 @@ describe('PATCH /blog/:blogId', () => {
   it('should return a status of 200 -> update description', async () => {
     const response = await request
       .patch(`/blog/${blogId}`)
-      .set('Authorization', token)
+      .set('Authorization', firstUserToken)
       .send({ ...userBlogInput, description: 'I updated the blog description' });
 
     const responseTextObject = JSON.parse(response.text);
@@ -226,7 +248,7 @@ describe('DELETE /:blogId', () => {
   });
 
   it('should return a status of 404 -> blog to be delete -> does not exist', async () => {
-    const response = await request.delete(`/someRandomBlogId`).set('Authorization', token);
+    const response = await request.delete(`/someRandomBlogId`).set('Authorization', firstUserToken);
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(404);
@@ -234,12 +256,17 @@ describe('DELETE /:blogId', () => {
   });
 
   it('should return a status of 200 -> to confirm if blog exist before deleting', async () => {
-    const response = await request.get(`/${blogId}`).set('Authorization', token);
+    const response = await request.get(`/${blogId}`).set('Authorization', firstUserToken);
     expect(response.status).to.equal(200);
   });
 
+  it('should return a status of 403 -> unathorized, not his/her own blog post', async () => {
+    const response = await request.delete(`/${blogId}`).set('Authorization', secondUserToken);
+    expect(response.status).to.equal(403);
+  });
+
   it('should return a status of 200 -> with json deleted blog', async () => {
-    const response = await request.delete(`/${blogId}`).set('Authorization', token);
+    const response = await request.delete(`/${blogId}`).set('Authorization', firstUserToken);
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(200);
@@ -247,7 +274,7 @@ describe('DELETE /:blogId', () => {
   });
 
   it('should return a status of 404 -> from API "GET /:blogId"', async () => {
-    const response = await request.get(`/${blogId}`).set('Authorization', token);
+    const response = await request.get(`/${blogId}`).set('Authorization', firstUserToken);
     const responseTextObject = JSON.parse(response.text);
 
     expect(response.status).to.equal(404);
