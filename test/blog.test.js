@@ -4,7 +4,7 @@ const request = require('supertest')(server);
 const expect = require('chai').expect;
 
 /* User Input */
-const { signUpInput, userBlogInput, secondUser } = require('./data');
+const { updateProfileInput, signUpInput, userBlogInput, secondUser } = require('./data');
 let firstUserToken;
 let secondUserToken;
 let blogId;
@@ -19,7 +19,7 @@ before(async () => {
 
   /* Login -> first User */
   const firstLogin = await request.post('/login').send({
-    email: signUpInput.email, // valid email
+    email: updateProfileInput.email, // valid updated email
     password: signUpInput.password, // valid pass
   });
 

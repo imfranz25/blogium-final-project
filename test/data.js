@@ -2,7 +2,7 @@
 const signUpInput = {
   first_name: 'Francis',
   last_name: 'Ong',
-  email: 'francis25ong@gmail.com',
+  email: 'francis25ong@stratpoint.com',
   username: 'francis25',
   password: 'Stratpoint123!',
   confirm_password: 'Stratpoint123!',
@@ -11,8 +11,15 @@ const signUpInput = {
 
 const secondUser = {
   ...signUpInput,
-  email: '2ndaccount@gmail.com',
+  email: '2ndaccount@stratpoint.com',
   username: '2ndaccount',
+};
+
+const updateProfileInput = {
+  first_name: 'John',
+  last_name: 'Doe',
+  email: 'johndoe@stratpoint.com',
+  username: 'johndoe25',
 };
 
 const userBlogInput = {
@@ -25,4 +32,5 @@ module.exports = {
   signUpInput,
   userBlogInput,
   secondUser,
+  updateProfileInput,
 };
