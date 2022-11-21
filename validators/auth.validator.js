@@ -2,7 +2,7 @@
 const { body } = require('express-validator');
 
 /* Custom Validators */
-const { userCustomValidators } = require('./customs');
+const { userCustom } = require('./customs');
 
 const loginValidator = [
   // prettier-ignore
@@ -10,7 +10,7 @@ const loginValidator = [
     .trim()
     .isEmail()
     .withMessage('Please input a valid email')
-    .normalizeEmail({ gmail_remove_dots: false }),
+    .normalizeEmail(),
 
   // prettier-ignore
   body('password')
@@ -41,8 +41,8 @@ const signUpValidator = [
     .trim()
     .isEmail()
     .withMessage('Invalid email format')
-    .normalizeEmail({ gmail_remove_dots: false })
-    .custom(userCustomValidators.checkEmailExistence)
+    .normalizeEmail()
+    .custom(userCustom.checkEmailExistence)
     .withMessage('Email is already taken'),
 
   body('username')
@@ -51,7 +51,7 @@ const signUpValidator = [
     .withMessage('Username must be 4 characters and above')
     .isAlphanumeric()
     .withMessage('Special characters are not allowed')
-    .custom(userCustomValidators.checkUsernameExistence)
+    .custom(userCustom.checkUsernameExistence)
     .withMessage('Username is already taken'),
 
   // prettier-ignore
@@ -62,24 +62,40 @@ const signUpValidator = [
 
   body('confirm_password')
     .trim()
-    .custom(userCustomValidators.checkConfirmPassword)
+    .custom(userCustom.checkConfirmPassword)
     .withMessage('Password and confirm password does not match'),
 ];
 
 const profileValidator = [
   signUpValidator[0], // first_name
   signUpValidator[1], // last_name
-  signUpValidator[2], // email
-  signUpValidator[3], // username
+
+  body('email')
+    .trim()
+    .isEmail()
+    .withMessage('Invalid email format')
+    .normalizeEmail({ gmail_remove_dots: false })
+    .custom(userCustom.checkEmailUpdate)
+    .withMessage('Email is already taken'),
+
+  body('username')
+    .trim()
+    .isLength({ min: 4 })
+    .withMessage('Username must be 4 characters and above')
+    .isAlphanumeric()
+    .withMessage('Special characters are not allowed')
+    .custom(userCustom.checkUsernameUpdate)
+    .withMessage('Username is already taken'),
 ];
 
 const passwordValidator = [
   signUpValidator[4], // new password
   signUpValidator[5], // confirm_password
 
+  // prettier-ignore
   body('old_password')
     .trim()
-    .custom(userCustomValidators.checkOldPassword)
+    .custom(userCustom.checkOldPassword)
     .withMessage('Incorrect Password'),
 ];
 

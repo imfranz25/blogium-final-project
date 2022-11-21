@@ -69,3 +69,43 @@ exports.checkOldPassword = async (value, { req }) => {
     return Promise.reject(); // equivalent -> return false
   }
 };
+
+/**
+ * Check if email input is already exist in the database
+ * except if it's his/her own email
+ * @param {string} value
+ * @param {any} {req}
+ * @returns {any}
+ */
+exports.checkEmailUpdate = async (value, { req }) => {
+  try {
+    const isEmailExist = await User.findOne({ email: value });
+    const isOwnEmail = isEmailExist?.id === req.user.userId;
+
+    if (isEmailExist && !isOwnEmail) {
+      return Promise.reject(); // equivalent -> return false
+    }
+  } catch (error) {
+    return Promise.reject(); // equivalent -> return false
+  }
+};
+
+/**
+ * Check if username input already exist in the database
+ * except if it's his/her own username
+ * @param {string} value
+ * @param {any} {req}
+ * @returns {promise}
+ */
+exports.checkUsernameUpdate = async (value, { req }) => {
+  try {
+    const isUsernameExist = await User.findOne({ username: value });
+    const isOwnUsername = isUsernameExist?.id === req.user.userId;
+
+    if (isUsernameExist && !isOwnUsername) {
+      return Promise.reject(); // equivalent -> return false
+    }
+  } catch (error) {
+    return Promise.reject(); // equivalent -> return false
+  }
+};

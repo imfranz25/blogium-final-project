@@ -1,5 +1,5 @@
-const userCustomValidators = require('./user.custom-validator');
+const userCustom = require('./user.custom-validator');
 
 module.exports = {
-  userCustomValidators,
+  userCustom,
 };
