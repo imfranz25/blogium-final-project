@@ -63,22 +63,25 @@ exports.postBlog = async (req, res, next) => {
 };
 
 /**
- * Update is_draft value -> toggle (set to true if false and false if true)
- * @route POST /:blogId
+ * Create a Blog with Draft state
+ * @route POST /blog/draft
  */
-exports.postDraft = async (req, res, next) => {
-  const { blogId } = req.params;
+exports.postDraftBlog = async (req, res, next) => {
+  const title = req.body.title || '[Draft]';
+  const description = req.body.description || '[Draft]';
+
   try {
-    const existingBlog = await Blog.findOne({ id: blogId });
+    const blogId = uuidv4();
+    const userId = req.user.userId;
+    const newDraftBLog = await Blog.create({
+      id: blogId,
+      title: title,
+      description: description,
+      user_id: userId,
+      is_draft: true,
+    });
 
-    if (!existingBlog) {
-      return res.status(404).json({ message: 'Blog not found' });
-    }
-
-    existingBlog.is_draft = !existingBlog.is_draft; // negate the current value
-    await existingBlog.save();
-
-    res.status(200).json({ message: 'Blog update successfully', blog: existingBlog });
+    res.status(201).json({ message: 'Blog has been moved to draft', blog: newDraftBLog });
   } catch (error) {
     next(error);
   }
