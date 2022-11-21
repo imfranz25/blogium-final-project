@@ -1,13 +1,27 @@
+/* 3rd Party Modules */
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { RouterProvider } from 'react-router-dom';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+/* Module Imports */
+import router from './router';
+import rootReducer from './reducers';
+import './index.css';
+
+/* React & Strore Set-up */
+const container = document.getElementById('root');
+const root = createRoot(container);
+const store = configureStore({ reducer: rootReducer });
+
+/* Render App */
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 
