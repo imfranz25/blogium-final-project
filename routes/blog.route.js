@@ -17,14 +17,19 @@ router
   .route('/:blogId')
   .all(authMiddleware.isAuth)
   .get(blogControllers.getBlog)
-  .delete(blogControllers.deleteBlog)
-  .post(blogControllers.postDraft);
+  .delete(blogControllers.deleteBlog);
 
 router
   .route('/blog/add')
   .all(authMiddleware.isAuth)
   .all(blogValidators.blogInputValidator)
   .post(blogControllers.postBlog);
+
+// prettier-ignore
+router
+  .route('/blog/draft')
+  .all(authMiddleware.isAuth)
+  .post(blogControllers.postDraftBlog);
 
 router
   .route('/blog/:blogId')
