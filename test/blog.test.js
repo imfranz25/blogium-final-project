@@ -236,33 +236,37 @@ describe('PATCH /blog/:blogId', () => {
 });
 
 /**
- * UPDATE BLOG IS_DRAFT STATE
+ * CREATE BLOG WITH DRAFT STATE
  */
-describe('POST /:blogId', () => {
+describe('POST /blog/draft', () => {
   it('should return a status of 401 -> not authenticated', async () => {
-    const response = await request.post(`/${blogId}`);
+    const response = await request.post(`/blog/draft`);
     expect(response.status).to.equal(401);
   });
 
-  it('should return a status of 404 -> blog not found', async () => {
-    const response = await request.post(`/randomBlogId`).set('Authorization', firstUserToken);
-    expect(response.status).to.equal(404);
-  });
+  it('should return a status of 200 -> blog created with draft state', async () => {
+    const response = await request
+      .post(`/blog/draft`)
+      .set('Authorization', firstUserToken)
+      .send(userBlogInput);
 
-  it('should return a status of 200 -> blog has been set to draft', async () => {
-    const response = await request.post(`/${blogId}`).set('Authorization', firstUserToken);
     const responseTextObject = JSON.parse(response.text);
-
-    expect(response.status).to.equal(200);
+    expect(response.status).to.equal(201);
     expect(responseTextObject.blog?.is_draft).to.equal(true);
   });
 
-  it('should return a status of 200 -> blog draft state has been toggled back', async () => {
-    const response = await request.post(`/${blogId}`).set('Authorization', firstUserToken);
+  it('should return a status of 200 -> blog created with empty title & description', async () => {
+    const response = await request
+      .post(`/blog/draft`)
+      .set('Authorization', firstUserToken)
+      .send({ title: '', description: '' });
+
     const responseTextObject = JSON.parse(response.text);
 
-    expect(response.status).to.equal(200);
-    expect(responseTextObject.blog?.is_draft).to.equal(false);
+    expect(response.status).to.equal(201);
+    expect(responseTextObject.blog?.is_draft).to.equal(true);
+    expect(responseTextObject.blog?.title).to.equal('[Draft]');
+    expect(responseTextObject.blog?.description).to.equal('[Draft]');
   });
 });
 
