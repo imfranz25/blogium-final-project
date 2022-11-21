@@ -236,15 +236,43 @@ describe('PATCH /blog/:blogId', () => {
 });
 
 /**
+ * UPDATE BLOG IS_DRAFT STATE
+ */
+describe('POST /:blogId', () => {
+  it('should return a status of 401 -> not authenticated', async () => {
+    const response = await request.post(`/${blogId}`);
+    expect(response.status).to.equal(401);
+  });
+
+  it('should return a status of 404 -> blog not found', async () => {
+    const response = await request.post(`/randomBlogId`).set('Authorization', firstUserToken);
+    expect(response.status).to.equal(404);
+  });
+
+  it('should return a status of 200 -> blog has been set to draft', async () => {
+    const response = await request.post(`/${blogId}`).set('Authorization', firstUserToken);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(200);
+    expect(responseTextObject.blog?.is_draft).to.equal(true);
+  });
+
+  it('should return a status of 200 -> blog draft state has been toggled back', async () => {
+    const response = await request.post(`/${blogId}`).set('Authorization', firstUserToken);
+    const responseTextObject = JSON.parse(response.text);
+
+    expect(response.status).to.equal(200);
+    expect(responseTextObject.blog?.is_draft).to.equal(false);
+  });
+});
+
+/**
  * DELETE A BLOG
  */
 describe('DELETE /:blogId', () => {
   it('should return a status of 401 -> not authenticated', async () => {
     const response = await request.delete(`/${blogId}`);
-    const responseTextObject = JSON.parse(response.text);
-
     expect(response.status).to.equal(401);
-    expect(responseTextObject.message).to.equal('Log in first');
   });
 
   it('should return a status of 404 -> blog to be delete -> does not exist', async () => {
