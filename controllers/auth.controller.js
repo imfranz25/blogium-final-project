@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 /* Models & Helpers */
 const { User } = require('../models');
 const { passGen, tokenGenerator } = require('../helpers');
-const { multerUpload } = require('../helpers');
+const { request } = require('../app');
 /**
  * Create a new user
  * @route POST /signup
@@ -30,7 +30,7 @@ exports.postSignUp = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     if (image) {
-      const imageFileName = multerUpload.imageId + '-' + image.originalname;
+      const imageFileName = req.imageId + '-' + image.originalname;
       const imagePath = path.join('public', 'uploads', 'profiles', imageFileName);
 
       fs.unlink(imagePath, (error) => {

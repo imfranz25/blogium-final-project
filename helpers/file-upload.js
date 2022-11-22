@@ -2,7 +2,7 @@ const path = require('path');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
-const imageId = uuidv4();
+let imageId;
 
 const fileStorage = multer.diskStorage({
   destination: (_req, file, callBack) => {
@@ -12,7 +12,9 @@ const fileStorage = multer.diskStorage({
       callBack(null, path.join('public', 'uploads', 'blogs'));
     }
   },
-  filename: (_req, file, callBack) => {
+  filename: (req, file, callBack) => {
+    const imageId = uuidv4();
+    req.imageId = imageId;
     callBack(null, imageId + '-' + file.originalname);
   },
 });
@@ -32,5 +34,4 @@ const fileFilter = (_req, file, callBack) => {
 module.exports = {
   fileStorage,
   fileFilter,
-  imageId,
 };
