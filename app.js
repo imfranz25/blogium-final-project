@@ -28,12 +28,33 @@ if (process.env.NODE_ENV === 'TEST') {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'images')));
+
+/* prettier-ignore */
+app.use(
+  'public/uploads/profiles',
+  express.static(path.join(__dirname, 'public', 'uploads', 'profiles'))
+);
+/* prettier-ignore */
+app.use(
+  'public/uploads/blogs', 
+  express.static(path.join(__dirname, 'public', 'uploads', 'blogs')
+));
+
+/* File Upload for Profile Picture */
 app.use(
   multer({
     storage: multerUpload.fileStorage,
     fileFilter: multerUpload.fileFilter,
-  }).single('profile_picture_url')
+  }).fields([
+    {
+      name: 'profile_picture_url',
+      maxCount: 1,
+    },
+    {
+      name: 'cover_picture_url',
+      maxCount: 1,
+    },
+  ])
 );
 
 /* Use all routes -> app.use(routes...) */
