@@ -4,7 +4,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import Home from '../pages/Home.js';
 import SignUp from '../pages/SignUp';
 import Login from '../pages/Login';
-import Blogs from '../pages/Blogs';
 
 const routes = [
   {
@@ -21,7 +20,7 @@ const routes = [
   },
   {
     path: '/dashboard/blog',
-    element: <Blogs />,
+    element: <Home />,
   },
 ];
 
