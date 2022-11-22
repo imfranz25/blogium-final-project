@@ -1,3 +1,6 @@
+/* Core Modules */
+const path = require('path');
+
 /* 3rd Party Modules */
 const express = require('express');
 const mongoose = require('mongoose');
