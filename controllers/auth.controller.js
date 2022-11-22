@@ -1,3 +1,7 @@
+/* Core Modules */
+const fs = require('fs');
+const path = require('path');
+
 /* 3rd Party Module(s) */
 const { validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
@@ -5,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 /* Models & Helpers */
 const { User } = require('../models');
 const { passGen, tokenGenerator } = require('../helpers');
-
+const { multerUpload } = require('../helpers');
 /**
  * Create a new user
  * @route POST /signup
@@ -13,15 +17,40 @@ const { passGen, tokenGenerator } = require('../helpers');
 exports.postSignUp = async (req, res, next) => {
   const { password } = req.body;
   const errors = validationResult(req);
+  const { files } = req;
+
+  /* Check files property if it contains uplod from profile_picture_url field */
+  if (!files['profile_picture_url']) {
+    const imgError = { msg: 'No uploaded profile' };
+    return res.status(422).json({ message: 'Invalid Input', errors: [imgError] });
+  }
+
+  /* Get File Image Properties */
+  const image = req.files['profile_picture_url'][0];
 
   if (!errors.isEmpty()) {
+    if (image) {
+      const imageFileName = multerUpload.imageId + '-' + image.originalname;
+      const imagePath = path.join('public', 'uploads', 'profiles', imageFileName);
+
+      fs.unlink(imagePath, (error) => {
+        if (error) {
+          return res.status(500).json({ message: 'Internal Server Error' });
+        }
+      });
+    }
     return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });
   }
 
   try {
     const id = uuidv4();
     const hashedPassword = passGen.generateHash(id, password);
-    const newUser = new User({ ...req.body, id, password: hashedPassword });
+    const newUser = new User({
+      ...req.body,
+      id,
+      password: hashedPassword,
+      profile_picture_url: image.path,
+    });
 
     await newUser.save();
     res.status(201).json({ message: 'Sign-up success', user: newUser });
