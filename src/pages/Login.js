@@ -24,17 +24,18 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(loginFormData);
   };
 
   return (
-    <Container component="main" maxWidth="xs" sx={{ mt: 10 }}>
+    <Container component="main" maxWidth="xs" sx={{ my: 10 }}>
       <Paper elevation={3} sx={{ p: 5 }}>
         <Grid container sx={{ justifyContent: 'center' }}>
           <Avatar sx={{ backgroundColor: 'red' }}>
             <LockOutlinedIcon />
           </Avatar>
         </Grid>
-        <Typography variant="h5" sx={{ textAlign: 'center', py: 3 }} fullWidth>
+        <Typography variant="h5" sx={{ textAlign: 'center', py: 3 }}>
           Login
         </Typography>
         <form onSubmit={handleSubmit}>
