@@ -1,9 +1,13 @@
+/* 3rd Party Libraries */
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import Input from '../components/Input';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+/* Components & Actions */
+import Input from '../components/Input';
+import { loginUser } from '../actions/auth.action.js';
 
 /* Global Variable(s) */
 const initialLoginState = {
@@ -28,7 +32,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(loginFormData, navigate);
+    dispatch(loginUser(loginFormData, navigate));
   };
 
   return (

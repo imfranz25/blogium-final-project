@@ -1,5 +1,5 @@
 import * as api from '../api';
-// import { CREATE_USER } from '../constants/actionTypes.js';
+import { AUTH } from '../constants/actionTypes.js';
 
 const signUpUser = (userData, navigate) => async (_dispatch) => {
   let userFormData = new FormData();
@@ -29,7 +29,11 @@ const signUpUser = (userData, navigate) => async (_dispatch) => {
 const loginUser = (userCredentials, navigate) => async (dispatch) => {
   try {
     const { data } = await api.loginUser(userCredentials);
-    console.log(data);
+
+    alert(data.message);
+
+    dispatch({ type: AUTH, payload: data });
+    navigate('/');
   } catch (error) {
     if (error.response.status === 422) {
       alert(error.response?.data?.errors[0].msg);
