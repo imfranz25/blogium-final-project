@@ -4,5 +4,11 @@ node_modules
 # Files
 package-lock.json
 
+
+# images
+*.png
+*.jpg
+*.jpeg
+
 # API keys and secrets
 .env
