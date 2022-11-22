@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ImageIcon from '@mui/icons-material/Image';
 
@@ -25,6 +26,7 @@ const initialSignUpState = {
 function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [signUpFormState, setSignUpFormState] = useState(initialSignUpState);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -81,7 +83,9 @@ function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     dispatch(signUpUser(signUpFormState, navigate));
+    setLoading(false);
   };
 
   return (
@@ -165,9 +169,19 @@ function SignUp() {
               handleShowPassword={handleShowConfirmPassword}
             />
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
+              <LoadingButton
+                type="submit"
+                loading={loading}
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth
+              >
                 Sign-up
-              </Button>
+              </LoadingButton>
+              {/* <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
+                Sign-up
+              </Button> */}
             </Grid>
             <Grid justifyContent="center" marginTop={3} container>
               <Grid item>

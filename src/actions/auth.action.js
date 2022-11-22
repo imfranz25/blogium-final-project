@@ -14,7 +14,7 @@ const signUpUser = (userData, navigate) => async (_dispatch) => {
   userFormData.append('profile_picture_url', userData.profile_picture_url);
 
   try {
-    await api.createUser(userFormData);
+    await api.signUpUser(userFormData);
 
     navigate('/login');
   } catch (error) {
@@ -26,4 +26,17 @@ const signUpUser = (userData, navigate) => async (_dispatch) => {
   }
 };
 
-export { signUpUser };
+const loginUser = (userCredentials, navigate) => async (dispatch) => {
+  try {
+    const { data } = await api.loginUser(userCredentials);
+    console.log(data);
+  } catch (error) {
+    if (error.response.status === 422) {
+      alert(error.response?.data?.errors[0].msg);
+    } else {
+      alert(error.response?.data?.message);
+    }
+  }
+};
+
+export { signUpUser, loginUser };

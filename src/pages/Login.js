@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '../components/Input';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
+/* Global Variable(s) */
 const initialLoginState = {
   email: '',
   password: '',
@@ -11,6 +13,8 @@ const initialLoginState = {
 };
 
 function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [loginFormData, setLoginFormData] = useState(initialLoginState);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -24,7 +28,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(loginFormData);
+    dispatch(loginFormData, navigate);
   };
 
   return (
