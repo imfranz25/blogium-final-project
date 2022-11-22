@@ -1,6 +1,7 @@
 /* 3rd Party Modules */
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 /* File Imports */
 const useRoutes = require('./routes');
@@ -19,7 +20,9 @@ if (process.env.NODE_ENV === 'TEST') {
 }
 
 /* Express Set-up -> Configs */
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 /* Use all routes -> app.use(routes...) */
 useRoutes(app);
