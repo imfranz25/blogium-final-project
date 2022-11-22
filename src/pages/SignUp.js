@@ -1,24 +1,66 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '../components/Input';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ImageIcon from '@mui/icons-material/Image';
 
+/* Form initial value */
 const initialSignUpState = {
   first_name: '',
   last_name: '',
   username: '',
   email: '',
   password: '',
-  confrim_password: '',
+  confirm_password: '',
   profile_picture_url: '',
 };
 
+const imageMimeType = /image\/(png|jpg|jpeg)/i;
+
 function SignUp() {
+  const navigate = useNavigate();
   const [signUpFormState, setSignUpFormState] = useState(initialSignUpState);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  /* File */
+  const [file, setFile] = useState(null);
+  const [fileDataURL, setFileDataURL] = useState(`https://mui.com/static/images/avatar/1.jpg`);
+
+  const imageChangeHandler = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      alert('No file selected');
+      return;
+    }
+    if (!file.type.match(imageMimeType)) {
+      alert('Image type is not valid');
+      return;
+    }
+    setFile(file);
+    setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.value });
+  };
+
+  useEffect(() => {
+    let fileReader,
+      isCancel = false;
+    if (file) {
+      fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        const { result } = e.target;
+        if (result && !isCancel) {
+          setFileDataURL(result);
+        }
+      };
+      fileReader.readAsDataURL(file);
+    }
+    return () => {
+      isCancel = true;
+      if (fileReader && fileReader.readyState === 1) {
+        fileReader.abort();
+      }
+    };
+  }, [file]);
 
   const handleChange = (e) => {
     setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.value });
@@ -35,6 +77,7 @@ function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(signUpFormState);
+    navigate('/login');
   };
 
   return (
@@ -52,7 +95,7 @@ function SignUp() {
           <Grid container sx={{ justifyContent: 'center', mb: 3 }}>
             <Avatar
               alt="Remy Sharp"
-              src="https://mui.com/static/images/avatar/1.jpg"
+              src={fileDataURL}
               sx={{ width: { xs: 100, md: 150 }, height: { xs: 100, md: 150 } }}
             />
           </Grid>
@@ -64,7 +107,12 @@ function SignUp() {
               sx={{ textTransform: 'unset' }}
             >
               Upload Picture
-              <Input name="profile_picture_url" handleChange={handleChange} type="file" hidden />
+              <Input
+                name="profile_picture_url"
+                handleChange={imageChangeHandler}
+                type="file"
+                hidden
+              />
             </Button>
           </Grid>
           <Grid container spacing={2}>
@@ -90,7 +138,13 @@ function SignUp() {
               handleChange={handleChange} 
               label="Email" 
               type="email" 
-              autoFocus 
+            />
+            {/* prettier-ignore */}
+            <Input 
+              name="username" 
+              handleChange={handleChange} 
+              label="Username" 
+              type="text" 
             />
             <Input
               name="password"
@@ -106,7 +160,7 @@ function SignUp() {
               type={showConfirmPassword ? 'text' : 'password'}
               handleShowPassword={handleShowConfirmPassword}
             />
-            <Grid item sm={12}>
+            <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
                 Sign-up
               </Button>

@@ -12,9 +12,11 @@ function Input({ half, name, handleChange, label, autoFocus, type, handleShowPas
       </InputAdornment>
     ),
   };
+  let fileProps = {};
+  const isFileInput = name === 'profile_picture_url';
 
-  if (name === 'profile_picture_url') {
-    inputProps = { accept: 'image/jpg' };
+  if (isFileInput) {
+    fileProps = { accept: 'image/*' };
   }
 
   if (name !== 'password' && name !== 'confirm_password') {
@@ -31,10 +33,10 @@ function Input({ half, name, handleChange, label, autoFocus, type, handleShowPas
         label={label}
         autoFocus={autoFocus}
         type={type}
-        className="input-field__auth"
+        required={!isFileInput}
+        InputProps={inputProps} // props for text/password input
+        inputProps={fileProps} // propsfor file input
         fullWidth
-        required
-        InputProps={inputProps}
       />
     </Grid>
   );

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = 'http://localhost:8080';
+const API = process.env.REACT_APP_BACKEND_URL;
 
 // Post API Endpoints
-export const fetchBlogs = () => axios.get(`${URL}/blog`);
+export const fetchBlogs = () => axios.get(`${API}/blog`);
