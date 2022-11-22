@@ -1,24 +1,27 @@
-import { createBrowserRouter, Link } from 'react-router-dom';
-import App from '../App';
+import { createBrowserRouter } from 'react-router-dom';
+
+/* Pages */
+import Home from '../pages/Home.js';
+import SignUp from '../pages/SignUp';
+import Login from '../pages/Login';
+import Blogs from '../pages/Blogs';
 
 const routes = [
   {
     path: '/',
-    element: (
-      <div>
-        <h1>Hello World</h1>
-        <Link to="about">About Us</Link>
-        <Link to="app">App</Link>
-      </div>
-    ),
+    element: <Home />,
   },
   {
-    path: 'about',
-    element: <div>About</div>,
+    path: '/signup',
+    element: <SignUp />,
   },
   {
-    path: 'app',
-    element: <App />,
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/dashboard/blog',
+    element: <Blogs />,
   },
 ];
 
