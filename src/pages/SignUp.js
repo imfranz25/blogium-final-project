@@ -1,11 +1,17 @@
+/* 3rd party Modules */
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import Input from '../components/Input';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ImageIcon from '@mui/icons-material/Image';
 
-/* Form initial value */
+/* Components & Actions */
+import Input from '../components/Input';
+import { signUpUser } from '../actions/auth.action.js';
+
+/* Global Variables */
+const imageMimeType = /image\/(png|jpg|jpeg)/i;
 const initialSignUpState = {
   first_name: '',
   last_name: '',
@@ -16,16 +22,15 @@ const initialSignUpState = {
   profile_picture_url: '',
 };
 
-const imageMimeType = /image\/(png|jpg|jpeg)/i;
-
 function SignUp() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [signUpFormState, setSignUpFormState] = useState(initialSignUpState);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   /* File */
   const [file, setFile] = useState(null);
-  const [fileDataURL, setFileDataURL] = useState(`https://mui.com/static/images/avatar/1.jpg`);
+  const [fileDataURL, setFileDataURL] = useState(null);
 
   const imageChangeHandler = (e) => {
     const file = e.target.files[0];
@@ -38,7 +43,7 @@ function SignUp() {
       return;
     }
     setFile(file);
-    setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.value });
+    setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.files[0] });
   };
 
   useEffect(() => {
@@ -76,8 +81,7 @@ function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(signUpFormState);
-    navigate('/login');
+    dispatch(signUpUser(signUpFormState, navigate));
   };
 
   return (
@@ -91,10 +95,10 @@ function SignUp() {
         <Typography variant="h5" sx={{ textAlign: 'center', py: 3 }}>
           Sign Up
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <Grid container sx={{ justifyContent: 'center', mb: 3 }}>
             <Avatar
-              alt="Remy Sharp"
+              alt="Blogium"
               src={fileDataURL}
               sx={{ width: { xs: 100, md: 150 }, height: { xs: 100, md: 150 } }}
             />

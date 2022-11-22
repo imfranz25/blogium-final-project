@@ -26,6 +26,7 @@ function Input({ half, name, handleChange, label, autoFocus, type, handleShowPas
   return (
     <Grid item xs={half ? 6 : 12} md={half ? 6 : 12} sx={hidden && { display: 'none' }}>
       <TextField
+        autoComplete="off"
         variant="outlined"
         size="small"
         name={name}
