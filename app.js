@@ -2,9 +2,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const multer = require('multer');
 
 /* File Imports */
 const useRoutes = require('./routes');
+const { multerUpload } = require('./helpers');
 
 /* Initialization */
 const app = express();
@@ -23,6 +25,13 @@ if (process.env.NODE_ENV === 'TEST') {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'images')));
+app.use(
+  multer({
+    storage: multerUpload.fileStorage,
+    fileFilter: multerUpload.fileFilter,
+  }).single('profile_picture_url')
+);
 
 /* Use all routes -> app.use(routes...) */
 useRoutes(app);
