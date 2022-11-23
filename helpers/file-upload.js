@@ -31,7 +31,19 @@ const fileFilter = (_req, file, callBack) => {
   }
 };
 
+const fileFields = [
+  {
+    name: 'profile_picture_url',
+    maxCount: 1,
+  },
+  {
+    name: 'cover_picture_url',
+    maxCount: 1,
+  },
+];
+
 module.exports = {
   fileStorage,
   fileFilter,
+  fileFields,
 };
