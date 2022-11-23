@@ -1,8 +1,7 @@
 import axios from 'axios';
 
+/* Back-end API URL */
 const API = process.env.REACT_APP_BACKEND_URL;
-
-/* Post API Endpoints */
 
 /* Auth */
 export const loginUser = (userCredentials) => axios.post(`${API}/login`, userCredentials);
@@ -18,6 +17,16 @@ export const fetchBlogs = (token) =>
   axios({
     method: 'get',
     url: `${API}/blog`,
+    headers: {
+      Authorization: token,
+    },
+  });
+
+export const createBlog = (blogData, token) =>
+  axios({
+    method: 'post',
+    url: `${API}/blog/add`,
+    data: blogData,
     headers: {
       Authorization: token,
     },
