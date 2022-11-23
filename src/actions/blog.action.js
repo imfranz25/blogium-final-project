@@ -3,7 +3,9 @@ import { FETCH_ALL } from '../constants/actionTypes.js';
 
 const getBlogs = (navigate) => async (dispatch) => {
   try {
-    const { data } = await api.fetchBlogs();
+    const token = localStorage.getItem('token');
+    const { data } = await api.fetchBlogs(token);
+
     dispatch({ type: FETCH_ALL, payload: data });
   } catch (error) {
     if (error.response.status === 401) {

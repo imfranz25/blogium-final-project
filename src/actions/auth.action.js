@@ -30,9 +30,7 @@ const loginUser = (userCredentials, navigate) => async (dispatch) => {
   try {
     const { data } = await api.loginUser(userCredentials);
 
-    alert(data.message);
-
-    dispatch({ type: AUTH, payload: data });
+    dispatch({ type: AUTH, payload: data.token });
     navigate('/');
   } catch (error) {
     if (error.response.status === 422) {

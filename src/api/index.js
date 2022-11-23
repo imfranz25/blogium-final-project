@@ -14,4 +14,11 @@ export const signUpUser = (userData) =>
   });
 
 /* Blogs */
-export const fetchBlogs = () => axios.get(`${API}/blog`);
+export const fetchBlogs = (token) =>
+  axios({
+    method: 'get',
+    url: `${API}/blog`,
+    headers: {
+      Authorization: token,
+    },
+  });

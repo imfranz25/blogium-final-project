@@ -12,7 +12,7 @@ import Navigation from '../components/Navigation';
 import { getBlogs } from '../actions/blog.action.js';
 
 function Home() {
-  const [isLoading, setLoading] = useState();
+  const [isLoading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

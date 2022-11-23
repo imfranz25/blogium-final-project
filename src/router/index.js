@@ -1,15 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 /* Pages */
+import PrivateRoutes from '../utils/PrivateRoutes';
 import Home from '../pages/Home.js';
 import SignUp from '../pages/SignUp';
 import Login from '../pages/Login';
 
 const routes = [
-  {
-    path: '/',
-    element: <Home />,
-  },
   {
     path: '/signup',
     element: <SignUp />,
@@ -19,8 +16,17 @@ const routes = [
     element: <Login />,
   },
   {
-    path: '/dashboard/blog',
-    element: <Home />,
+    element: <PrivateRoutes />,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+      },
+      {
+        path: 'dashboard/blog',
+        element: <h1>blogggg</h1>,
+      },
+    ],
   },
 ];
 

@@ -1,16 +1,20 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
+import { useLocation } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  MenuItem,
+  Menu,
+  InputBase,
+} from '@mui/material';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -52,9 +56,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+function Navigation() {
+  const location = useLocation();
+  const [user, setUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('token');
+    const decodedUserData = jwtDecode(userData);
+
+    setUser(decodedUserData);
+  }, [location]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -126,6 +139,7 @@ export default function PrimarySearchAppBar() {
             >
               <AccountCircle />
             </IconButton>
+            {user?.username}
           </Box>
         </Toolbar>
       </AppBar>
@@ -133,3 +147,5 @@ export default function PrimarySearchAppBar() {
     </Box>
   );
 }
+
+export default Navigation;
