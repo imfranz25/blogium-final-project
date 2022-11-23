@@ -31,12 +31,12 @@ app.use(express.urlencoded({ extended: false }));
 
 /* prettier-ignore */
 app.use(
-  'public/uploads/profiles',
+  '/public/uploads/profiles',
   express.static(path.join(__dirname, 'public', 'uploads', 'profiles'))
 );
 /* prettier-ignore */
 app.use(
-  'public/uploads/blogs', 
+  '/public/uploads/blogs', 
   express.static(path.join(__dirname, 'public', 'uploads', 'blogs')
 ));
 
