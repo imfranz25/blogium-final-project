@@ -5,17 +5,13 @@ const getBlogs = (navigate) => async (dispatch) => {
   try {
     const token = localStorage.getItem('token');
     const { data } = await api.fetchBlogs(token);
+    console.log(data);
 
     dispatch({ type: FETCH_ALL, payload: data.blogs });
   } catch (error) {
-    if (error.response?.status === 403) {
-      localStorage.clear();
-      navigate('/login');
-    } else if (error.response?.status === 500) {
-      alert(error.response?.message);
-    } else {
-      alert(error.response?.data?.errors[0].msg);
-    }
+    console.log(error);
+    localStorage.clear();
+    navigate('/login');
   }
 };
 
@@ -34,16 +30,11 @@ const createBlog = (blogData, navigate) => async (dispatch) => {
     alert(data.message);
 
     dispatch({ type: CREATE, payload: data.blog });
-    navigate('/sds');
+    navigate('/');
   } catch (error) {
-    if (error.response?.status === 403) {
-      console.log('Session Timeout');
-      navigate('/login');
-    } else if (error.response?.status === 500) {
-      alert(error.response?.message);
-    } else {
-      alert(error.response?.data?.errors[0].msg);
-    }
+    console.log(error);
+    localStorage.clear();
+    navigate('/login');
   }
 };
 
