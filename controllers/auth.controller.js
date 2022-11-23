@@ -21,7 +21,7 @@ exports.postSignUp = async (req, res, next) => {
 
   /* Check files property if it contains uplod from profile_picture_url field */
   if (!files['profile_picture_url']) {
-    const imgError = { msg: 'No uploaded profile' };
+    const imgError = { msg: 'No uploaded profile, also check image size limit (10mb)' };
     return res.status(422).json({ message: 'Invalid Input', errors: [imgError] });
   }
 

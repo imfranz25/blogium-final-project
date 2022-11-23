@@ -45,8 +45,29 @@ exports.getBlogs = async (_req, res, next) => {
  */
 exports.postBlog = async (req, res, next) => {
   const errors = validationResult(req);
+  const { files } = req;
+
+  /* Check files property if it contains uplod from profile_picture_url field */
+  if (!files['cover_picture_url']) {
+    const imgError = { msg: 'No uploaded profile, also check image size limit (10mb)' };
+    return res.status(422).json({ message: 'Invalid Input', errors: [imgError] });
+  }
+
+  /* Get File Image Properties */
+  const image = req.files['cover_picture_url'][0];
 
   if (!errors.isEmpty()) {
+    if (image) {
+      const imageFileName = req.imageId + '-' + image.originalname;
+      const imagePath = path.join('public', 'uploads', 'blogs', imageFileName);
+
+      fs.unlink(imagePath, (error) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).json({ message: 'Internal Server Error' });
+        }
+      });
+    }
     return res.status(422).json({ message: 'Invalid Inputs', errors: errors.array() });
   }
 

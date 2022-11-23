@@ -45,16 +45,8 @@ app.use(
   multer({
     storage: multerUpload.fileStorage,
     fileFilter: multerUpload.fileFilter,
-  }).fields([
-    {
-      name: 'profile_picture_url',
-      maxCount: 1,
-    },
-    {
-      name: 'cover_picture_url',
-      maxCount: 1,
-    },
-  ])
+    limits: { fileSize: 1024 * 1000 * 10 }, // file limit 10 mb
+  }).fields(multerUpload.fileFields)
 );
 
 /* Use all routes -> app.use(routes...) */
