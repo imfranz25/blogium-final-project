@@ -8,11 +8,9 @@ const getBlogs = (navigate) => async (dispatch) => {
 
     dispatch({ type: FETCH_ALL, payload: data });
   } catch (error) {
-    if (error.response.status === 401) {
-      navigate('/login');
-    } else {
-      alert(error.response?.data?.message);
-    }
+    alert(error.response?.data?.message);
+    localStorage.clear();
+    navigate('/login');
   }
 };
 

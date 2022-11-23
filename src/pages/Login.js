@@ -1,5 +1,5 @@
 /* 3rd Party Libraries */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
@@ -19,8 +19,15 @@ const initialLoginState = {
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
   const [loginFormData, setLoginFormData] = useState(initialLoginState);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (token) {
+      navigate('/');
+    }
+  });
 
   const handleChange = (e) => {
     setLoginFormData({ ...loginFormData, [e.target.name]: e.target.value });

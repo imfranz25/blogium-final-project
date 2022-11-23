@@ -91,11 +91,6 @@ function SignUp() {
   return (
     <Container component="main" maxWidth="sm" sx={{ my: 10 }}>
       <Paper elevation={5} sx={{ p: 5 }}>
-        <Grid container sx={{ justifyContent: 'center' }}>
-          <Avatar sx={{ backgroundColor: 'blue' }}>
-            <AccountCircleOutlinedIcon />
-          </Avatar>
-        </Grid>
         <Typography variant="h5" sx={{ textAlign: 'center', py: 3 }}>
           Sign Up
         </Typography>

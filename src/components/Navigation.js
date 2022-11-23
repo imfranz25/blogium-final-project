@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 import {
+  Avatar,
   AppBar,
   Box,
   Toolbar,
@@ -15,6 +18,9 @@ import {
   Menu,
   InputBase,
 } from '@mui/material';
+
+/* Action Type -> Dispatch Logout */
+import { LOGOUT } from '../constants/actionTypes';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -57,6 +63,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navigation() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -77,6 +85,12 @@ function Navigation() {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    dispatch({ type: LOGOUT });
+    setAnchorEl(null);
+    navigate('/login');
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -94,8 +108,14 @@ function Navigation() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <AccountCircle sx={{ mr: 1 }} />
+        Profile
+      </MenuItem>
+      <MenuItem onClick={handleLogout}>
+        <LogoutIcon sx={{ mr: 1 }} />
+        Logout
+      </MenuItem>
     </Menu>
   );
 
@@ -137,9 +157,19 @@ function Navigation() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <Avatar
+                alt={user?.first_name}
+                src={user?.profile_picture_url}
+                sx={{
+                  mx: 1,
+                  width: { xs: 35, md: 40 },
+                  height: { xs: 35, md: 40 },
+                  backgroundColor: 'purple',
+                }}
+              >
+                {user?.first_name.charAt(0)}
+              </Avatar>
             </IconButton>
-            {user?.username}
           </Box>
         </Toolbar>
       </AppBar>
