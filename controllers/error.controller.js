@@ -10,6 +10,7 @@ exports.pageNotFound = (_req, res, _next) => {
  * Show detailed error message
  */
 exports.developmentErrorsHandler = (error, _req, res, _next) => {
+  console.log(error);
   res.status(error.status || 500).json({ error });
 };
 

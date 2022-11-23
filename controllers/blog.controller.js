@@ -1,3 +1,7 @@
+/* Core Modules */
+const path = require('path');
+const fs = require('fs');
+
 /* 3rd Party Module(s) */
 const { validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
@@ -63,7 +67,6 @@ exports.postBlog = async (req, res, next) => {
 
       fs.unlink(imagePath, (error) => {
         if (error) {
-          console.log(error);
           return res.status(500).json({ message: 'Internal Server Error' });
         }
       });
@@ -74,7 +77,12 @@ exports.postBlog = async (req, res, next) => {
   try {
     const blogId = uuidv4();
     const userId = req.user.userId;
-    const newBlog = new Blog({ ...req.body, id: blogId, user_id: userId });
+    const newBlog = new Blog({
+      ...req.body,
+      id: blogId,
+      user_id: userId,
+      cover_picture_url: image.path,
+    });
 
     await newBlog.save();
     res.status(201).json({ message: 'Blog created', blog: newBlog });
