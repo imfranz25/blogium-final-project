@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import ImageIcon from '@mui/icons-material/Image';
 
 /* Components & Actions */
@@ -174,9 +173,6 @@ function SignUp() {
               >
                 Sign-up
               </LoadingButton>
-              {/* <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
-                Sign-up
-              </Button> */}
             </Grid>
             <Grid justifyContent="center" marginTop={3} container>
               <Grid item>

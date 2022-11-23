@@ -32,10 +32,8 @@ function Home() {
               <CircularProgress sx={{ py: 10 }} />
             </Grid>
           ) : (
-            <Grid container justify="space-between" alignItems="stretch" spacing={3}>
-              <Grid item xs={12} md={8}>
-                <Blogs />
-              </Grid>
+            <Grid container justifyContent="center">
+              <Blogs />
             </Grid>
           )}
         </Container>
