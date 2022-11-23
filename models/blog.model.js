@@ -17,7 +17,7 @@ const blogSchema = new Schema(
     },
     cover_picture_url: {
       type: String,
-      default: 'images/profile.png',
+      required: true,
     },
     user_id: {
       type: String,

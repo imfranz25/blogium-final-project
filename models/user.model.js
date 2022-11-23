@@ -31,6 +31,7 @@ const userSchema = new Schema(
     },
     profile_picture_url: {
       type: String,
+      required: true,
     },
     deleted_at: {
       type: String,
