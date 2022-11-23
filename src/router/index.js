@@ -5,8 +5,23 @@ import PrivateRoutes from '../utils/PrivateRoutes';
 import Home from '../pages/Home.js';
 import SignUp from '../pages/SignUp';
 import Login from '../pages/Login';
+import BlogForm from '../pages/BlogForm';
 
 const routes = [
+  {
+    element: <PrivateRoutes />,
+    errorElement: <h1>Page not Found</h1>,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+      },
+      {
+        path: '/blog/add',
+        element: <BlogForm />,
+      },
+    ],
+  },
   {
     path: '/signup',
     element: <SignUp />,
@@ -14,19 +29,6 @@ const routes = [
   {
     path: '/login',
     element: <Login />,
-  },
-  {
-    element: <PrivateRoutes />,
-    children: [
-      {
-        path: '/',
-        element: <Home />,
-      },
-      {
-        path: 'dashboard/blog',
-        element: <h1>blogggg</h1>,
-      },
-    ],
   },
 ];
 
