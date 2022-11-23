@@ -5,7 +5,7 @@ const reducer = (blogs = [], action) => {
     case FETCH_ALL:
       return action.payload;
     case CREATE:
-      return blogs.push(action.payload);
+      return [...blogs, action.payload];
     default:
       return blogs;
   }
