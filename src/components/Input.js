@@ -2,7 +2,18 @@ import { TextField, Grid, InputAdornment, IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-function Input({ half, name, handleChange, label, autoFocus, type, handleShowPassword, hidden }) {
+function Input({
+  half,
+  name,
+  handleChange,
+  label,
+  autoFocus,
+  type,
+  handleShowPassword,
+  hidden,
+  multiline,
+  rows = 1,
+}) {
   let inputProps = {
     endAdornment: (
       <InputAdornment position="end">
@@ -13,7 +24,7 @@ function Input({ half, name, handleChange, label, autoFocus, type, handleShowPas
     ),
   };
   let fileProps = {};
-  const isFileInput = name === 'profile_picture_url';
+  const isFileInput = type === 'file';
 
   if (isFileInput) {
     fileProps = { accept: 'image/*' };
@@ -37,6 +48,8 @@ function Input({ half, name, handleChange, label, autoFocus, type, handleShowPas
         required={!isFileInput}
         InputProps={inputProps} // props for text/password input
         inputProps={fileProps} // propsfor file input
+        multiline={multiline}
+        rows={rows}
         fullWidth
       />
     </Grid>

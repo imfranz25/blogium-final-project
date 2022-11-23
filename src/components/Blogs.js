@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Grid, Typography, Container } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import Blog from './Blog.js';
 
 function Blogs() {
@@ -9,17 +9,15 @@ function Blogs() {
   });
 
   return !blogs.length ? (
-    <Container>
-      <Grid justifyContent="center">
-        <Typography variant="h6" color="text.secondary">
-          No blogs available
-        </Typography>
-      </Grid>
-    </Container>
+    <Grid justifyContent="center" sx={{ my: 10 }}>
+      <Typography variant="h6" color="text.secondary" textAlign="center">
+        No blogs available
+      </Typography>
+    </Grid>
   ) : (
-    <Grid alignItems="stretch" sx={{ my: 5 }} container>
+    <Grid container>
       {blogs.map((blog) => (
-        <Grid key={blog.id} xs={12} sm={6} item>
+        <Grid key={blog.id} xs={12} sm={6} md={4} xlg={3} sx={{ p: 5 }} item>
           <Blog blog={blog} />
         </Grid>
       ))}

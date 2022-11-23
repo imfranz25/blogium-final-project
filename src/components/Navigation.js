@@ -1,5 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
@@ -7,6 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import {
   Avatar,
   AppBar,
@@ -17,6 +19,7 @@ import {
   MenuItem,
   Menu,
   InputBase,
+  Button,
 } from '@mui/material';
 
 /* Action Type -> Dispatch Logout */
@@ -128,25 +131,40 @@ function Navigation() {
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2, display: { xs: 'block', sm: 'none' } }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+          <Button
+            component={Link}
+            to="/"
+            sx={{
+              textTransform: 'unset',
+              alignItems: 'center',
+              color: 'white',
+              display: { xs: 'none', sm: 'block' },
+            }}
           >
-            Blogium
-          </Typography>
+            <Typography variant="h6" noWrap component="div">
+              Blogium
+            </Typography>
+          </Button>
+          <Button
+            component={Link}
+            to="/blog/add"
+            variant="text"
+            sx={{ textTransform: 'unset', alignItems: 'center', color: 'white' }}
+          >
+            <PostAddIcon sx={{ mr: 0.5 }} />
+            <Typography variant="body1">Add Blog</Typography>
+          </Button>
+          <Box sx={{ flexGrow: 1 }} />
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
           </Search>
-          <Box sx={{ flexGrow: 1 }} />
           <Box>
             <IconButton
               size="large"
