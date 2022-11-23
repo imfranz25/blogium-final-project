@@ -15,14 +15,18 @@ import {
 } from '@mui/material';
 
 function Blog({ blog }) {
+  const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
+  const userProfile = blog.user_id?.profile_picture_url;
+  const profileImage = `${URL_BACKEND}/${userProfile}`;
+  const blogImage = `${URL_BACKEND}/${blog.cover_picture_url}`;
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
           <Avatar
-            sx={{ bgcolor: red[500] }}
-            src={blog.user_id.profile_picture_url}
-            alt={blog.user_id.username}
+            sx={{ bgcolor: red[500], border: '1px solid black' }}
+            src={profileImage}
+            alt={blog.user_id.first_name.charAt(0)}
           />
         }
         action={
@@ -30,10 +34,10 @@ function Blog({ blog }) {
             <MoreVertIcon />
           </IconButton>
         }
-        title={blog.user_id.username}
+        title={blog.user_id?.username}
         subheader={moment(blog.createdAt).fromNow()}
       />
-      <CardMedia component="img" height="194" image={blog.cover_picture_url} alt={blog.title} />
+      <CardMedia component="img" height="194" image={blogImage} alt={blog.title} />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
           {blog.title}
