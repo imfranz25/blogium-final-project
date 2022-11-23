@@ -17,7 +17,7 @@ exports.getBlog = async (req, res, next) => {
   const { blogId } = req.params;
 
   try {
-    const blog = await Blog.findOne({ id: blogId, deleted_at: null });
+    const blog = await Blog.findOne({ id: blogId, deleted_at: null }).populate('user_id');
 
     if (!blog) {
       return res.status(404).json({ message: 'Blog not found' });
@@ -35,7 +35,7 @@ exports.getBlog = async (req, res, next) => {
  */
 exports.getBlogs = async (_req, res, next) => {
   try {
-    const blogs = await Blog.find({ deleted_at: null });
+    const blogs = await Blog.find({ deleted_at: null }).populate('user_id');
 
     res.status(200).json({ message: 'Blogs fetched', blogs });
   } catch (error) {
@@ -76,11 +76,10 @@ exports.postBlog = async (req, res, next) => {
 
   try {
     const blogId = uuidv4();
-    const userId = req.user.userId;
     const newBlog = new Blog({
       ...req.body,
       id: blogId,
-      user_id: userId,
+      user_id: req.user._id, // mongoose ID -> use to populate later on
       cover_picture_url: image.path,
     });
 
