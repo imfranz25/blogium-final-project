@@ -13,6 +13,11 @@ router
   .all(authMiddleware.isAuth)
   .get(blogControllers.getBlogs);
 
+// prettier-ignore
+router.route('/myblog')
+  .all(authMiddleware.isAuth)
+  .get(blogControllers.getMyBlogs);
+
 router
   .route('/:blogId')
   .all(authMiddleware.isAuth)

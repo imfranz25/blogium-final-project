@@ -9,7 +9,7 @@ const multer = require('multer');
 
 /* File Imports */
 const useRoutes = require('./routes');
-const { multerUpload } = require('./helpers');
+const { multerUpload } = require('./utils');
 
 /* Initialization */
 const app = express();
@@ -45,7 +45,7 @@ app.use(
   multer({
     storage: multerUpload.fileStorage,
     fileFilter: multerUpload.fileFilter,
-    limits: { fileSize: 1024 * 1000 * 10 }, // file limit 10 mb
+    limits: multerUpload.fileLimits, // file limit 10 mb
   }).fields(multerUpload.fileFields)
 );
 

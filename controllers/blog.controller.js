@@ -30,14 +30,29 @@ exports.getBlog = async (req, res, next) => {
 };
 
 /**
- * Get all blogs -> delete_at property of each blog must be null (not deleted)
+ * Get all blogs -> delete_at property of each blog must be null (not deleted) & not draft
  * @route GET /blog
  */
 exports.getBlogs = async (_req, res, next) => {
   try {
-    const blogs = await Blog.find({ deleted_at: null }).populate('user_id');
+    const blogs = await Blog.find({ deleted_at: null, is_draft: false }).populate('user_id');
 
     res.status(200).json({ message: 'Blogs fetched', blogs });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get all blogs of the logged in user
+ * @route GET /myblog
+ */
+exports.getMyBlogs = async (req, res, next) => {
+  try {
+    const userId = req.user._id.toString();
+    const blogs = await Blog.find({ user_id: userId }).populate('user_id');
+
+    res.status(200).json({ message: 'User Blogs fetched', blogs });
   } catch (error) {
     next(error);
   }

@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 
 /* Models & Helpers */
 const { User } = require('../models');
-const { passGen, tokenGenerator } = require('../helpers');
+const { passGen, tokenGenerator } = require('../utils');
 const { request } = require('../app');
 /**
  * Create a new user
