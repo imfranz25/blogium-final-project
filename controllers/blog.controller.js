@@ -185,24 +185,26 @@ exports.updateBlog = async (req, res, next) => {
  */
 exports.deleteBlog = async (req, res, next) => {
   const { blogId } = req.params;
-  const { userId } = req.user;
+  const { _id } = req.user;
 
   try {
-    const existingBlog = await Blog.findOne({ id: blogId });
+    const existingBlog = await Blog.findOne({ id: blogId }).populate('user_id');
+    const userId = existingBlog.user_id._id.toString();
 
     if (!existingBlog) {
       return res.status(404).json({ message: 'Blog not found' });
     }
 
     /* Can only delete user's own post blog */
-    if (userId !== existingBlog.user_id) {
+    if (_id.toString() !== userId) {
       return res.status(403).json({ message: 'Unauthorized action' });
     }
 
     existingBlog.deleted_at = new Date().toISOString();
 
     await existingBlog.save();
-    res.status(200).json({ message: 'Blog deleted', existingBlog });
+
+    res.status(200).json({ message: 'Blog deleted', blog: existingBlog });
   } catch (error) {
     next(error);
   }
