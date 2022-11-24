@@ -1,17 +1,37 @@
 import * as api from '../api';
-import { FETCH_ALL, CREATE } from '../constants/actionTypes.js';
+import { FETCH_ALL, CREATE, FETCH_MY_BLOG, FETCH } from '../constants/actionTypes.js';
+import errorHandler from '../utils/errorHandler';
 
 const getBlogs = (navigate) => async (dispatch) => {
   try {
     const token = localStorage.getItem('token');
     const { data } = await api.fetchBlogs(token);
-    console.log(data);
 
     dispatch({ type: FETCH_ALL, payload: data.blogs });
   } catch (error) {
-    console.log(error);
-    localStorage.clear();
-    navigate('/login');
+    errorHandler(error, navigate);
+  }
+};
+
+const getMyBlogs = (navigate) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const { data } = await api.fetchMyBlogs(token);
+
+    dispatch({ type: FETCH_MY_BLOG, payload: data.blogs });
+  } catch (error) {
+    errorHandler(error, navigate);
+  }
+};
+
+const getBlog = (blogId, navigate) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const { data } = await api.fetchBlog(blogId, token);
+
+    dispatch({ type: FETCH, payload: data.blog });
+  } catch (error) {
+    errorHandler(error, navigate);
   }
 };
 
@@ -32,10 +52,28 @@ const createBlog = (blogData, navigate) => async (dispatch) => {
     dispatch({ type: CREATE, payload: data.blog });
     navigate('/');
   } catch (error) {
-    console.log(error);
-    localStorage.clear();
-    navigate('/login');
+    errorHandler(error, navigate);
   }
 };
 
-export { getBlogs, createBlog };
+const draftBlog = (blogData, navigate) => async (dispatch) => {
+  const blogFormData = new FormData();
+
+  /* Append data -> newly created FormData */
+  blogFormData.append('title', blogData.title);
+  blogFormData.append('description', blogData.description);
+  blogFormData.append('cover_picture_url', blogData.cover_picture_url);
+
+  try {
+    const token = localStorage.getItem('token');
+    const { data } = await api.draftBlog(blogFormData, token);
+
+    alert(data.message);
+
+    navigate('/dashboard/blog');
+  } catch (error) {
+    errorHandler(error, navigate);
+  }
+};
+
+export { getBlogs, createBlog, draftBlog, getMyBlogs, getBlog };

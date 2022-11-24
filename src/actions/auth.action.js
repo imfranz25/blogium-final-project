@@ -1,5 +1,6 @@
 import * as api from '../api';
 import { AUTH } from '../constants/actionTypes.js';
+import errorHandler from '../utils/errorHandler';
 
 const signUpUser = (userData, navigate) => async (_dispatch) => {
   let userFormData = new FormData();
@@ -18,11 +19,7 @@ const signUpUser = (userData, navigate) => async (_dispatch) => {
 
     navigate('/login');
   } catch (error) {
-    if (error.response.status === 422) {
-      alert(error.response?.data?.errors[0].msg);
-    } else {
-      alert(error.response?.data?.message);
-    }
+    errorHandler(error, navigate);
   }
 };
 
@@ -33,11 +30,7 @@ const loginUser = (userCredentials, navigate) => async (dispatch) => {
     dispatch({ type: AUTH, payload: data.token });
     navigate('/');
   } catch (error) {
-    if (error.response.status === 422) {
-      alert(error.response?.data?.errors[0].msg);
-    } else {
-      alert(error.response?.data?.message);
-    }
+    errorHandler(error, navigate);
   }
 };
 
