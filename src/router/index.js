@@ -6,6 +6,8 @@ import Home from '../pages/Home.js';
 import SignUp from '../pages/SignUp';
 import Login from '../pages/Login';
 import BlogForm from '../pages/BlogForm';
+import MyBlogs from '../pages/MyBlogs';
+import BlogDetails from '../pages/BlogDetails';
 
 const routes = [
   {
@@ -17,8 +19,16 @@ const routes = [
         element: <Home />,
       },
       {
+        path: '/dashboard/blog',
+        element: <MyBlogs />,
+      },
+      {
         path: '/blog/add',
         element: <BlogForm />,
+      },
+      {
+        path: '/:blogId',
+        element: <BlogDetails />,
       },
     ],
   },
