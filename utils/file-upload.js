@@ -31,6 +31,8 @@ const fileFilter = (_req, file, callBack) => {
   }
 };
 
+const fileLimits = { fileSize: 1024 * 1000 * 10 };
+
 const fileFields = [
   {
     name: 'profile_picture_url',
@@ -46,4 +48,5 @@ module.exports = {
   fileStorage,
   fileFilter,
   fileFields,
+  fileLimits,
 };
