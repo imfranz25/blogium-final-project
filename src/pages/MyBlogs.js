@@ -8,16 +8,16 @@ import { useDispatch } from 'react-redux';
 import Blogs from '../components/Blogs';
 
 /* Actions */
-import { getBlogs } from '../actions/blog.action.js';
+import { getMyBlogs } from '../actions/blog.action.js';
 
-function Home() {
+function MyBlogs() {
   const [isLoading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
-    dispatch(getBlogs(navigate));
+    dispatch(getMyBlogs(navigate));
     setLoading(false);
   }, [dispatch, navigate]);
 
@@ -31,7 +31,7 @@ function Home() {
             </Grid>
           ) : (
             <Grid container justifyContent="center">
-              <Blogs />
+              <Blogs ownBlog={true} />
             </Grid>
           )}
         </Container>
@@ -40,4 +40,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default MyBlogs;

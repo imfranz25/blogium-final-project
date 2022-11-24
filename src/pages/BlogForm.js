@@ -7,9 +7,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import ImageIcon from '@mui/icons-material/Image';
 
 /* Components & Actions */
-import Navigation from '../components/Navigation';
 import Input from '../components/Input';
-import { createBlog } from '../actions/blog.action.js';
+import { createBlog, draftBlog } from '../actions/blog.action.js';
 
 /* Global Variables */
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -71,21 +70,25 @@ function BlogForm() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
     setLoading(true);
     dispatch(createBlog(blogFormState, navigate));
     setLoading(false);
   };
 
+  const handleDraft = (e) => {
+    setLoading(true);
+    dispatch(draftBlog(blogFormState, navigate));
+    setLoading(false);
+  };
+
   return (
     <>
-      <Navigation />
       <Container component="main" maxWidth="sm" sx={{ my: 10 }}>
         <Paper elevation={5} sx={{ p: 5 }}>
           <Typography variant="h5" sx={{ textAlign: 'center', py: 3 }}>
             Add Blog
           </Typography>
-          <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <form encType="multipart/form-data">
             <Grid container sx={{ justifyContent: 'center', mb: 3 }}>
               <CardMedia
                 sx={{ border: '1px solid gray', borderRadius: '2%' }}
@@ -130,7 +133,7 @@ function BlogForm() {
               />
               <Grid item xs={12}>
                 <LoadingButton
-                  type="submit"
+                  onClick={handleSubmit}
                   loading={loading}
                   variant="contained"
                   color="primary"
@@ -138,6 +141,18 @@ function BlogForm() {
                   fullWidth
                 >
                   Submit
+                </LoadingButton>
+              </Grid>
+              <Grid item xs={12}>
+                <LoadingButton
+                  onClick={handleDraft}
+                  loading={loading}
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                  fullWidth
+                >
+                  Save to Draft
                 </LoadingButton>
               </Grid>
             </Grid>
