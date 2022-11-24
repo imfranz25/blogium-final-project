@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Grid, Typography } from '@mui/material';
 import Blog from './Blog.js';
 
-function Blogs({ ownBlog }) {
+function Blogs({ ownBlog, action }) {
   const blogs = useSelector((state) => {
     return state.blogReducer;
   });
@@ -18,7 +18,7 @@ function Blogs({ ownBlog }) {
     <Grid container>
       {blogs.map((blog) => (
         <Grid key={blog.id} xs={12} sm={6} md={4} xlg={3} sx={{ p: 3 }} item>
-          <Blog blog={blog} />
+          <Blog blog={blog} action={action} />
         </Grid>
       ))}
     </Grid>

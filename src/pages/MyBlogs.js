@@ -31,7 +31,7 @@ function MyBlogs() {
             </Grid>
           ) : (
             <Grid container justifyContent="center">
-              <Blogs ownBlog={true} />
+              <Blogs ownBlog={true} action={true} />
             </Grid>
           )}
         </Container>
