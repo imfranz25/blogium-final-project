@@ -3,6 +3,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 function Input({
+  value,
   half,
   name,
   handleChange,
@@ -50,6 +51,7 @@ function Input({
         inputProps={fileProps} // propsfor file input
         multiline={multiline}
         rows={rows}
+        value={value}
         fullWidth
       />
     </Grid>

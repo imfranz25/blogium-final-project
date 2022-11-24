@@ -85,7 +85,7 @@ function Blog({ blog, action }) {
         <VisibilityIcon sx={{ mr: 1 }} />
         View
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem component={Link} to={`/dashboard/blog/${blog.id}`}>
         <EditIcon sx={{ mr: 1 }} />
         Edit
       </MenuItem>
