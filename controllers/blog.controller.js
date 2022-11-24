@@ -97,16 +97,27 @@ exports.postBlog = async (req, res, next) => {
 exports.postDraftBlog = async (req, res, next) => {
   const title = req.body.title || '[Draft]';
   const description = req.body.description || '[Draft]';
+  const { files } = req;
+  let imagePath = null;
+
+  /* Get image path if user uplaoded a picture */
+  if (files['cover_picture_url']) {
+    imagePath = req.files['cover_picture_url'][0].path;
+  }
+
+  if (!imagePath) {
+    imagePath = path.join('public', 'uploads', 'blogs', 'default.jpg');
+  }
 
   try {
     const blogId = uuidv4();
-    const userId = req.user.userId;
     const newDraftBLog = await Blog.create({
       id: blogId,
       title: title,
       description: description,
-      user_id: userId,
+      user_id: req.user._id, // mongoose ID -> use to populate later on
       is_draft: true,
+      cover_picture_url: imagePath,
     });
 
     res.status(201).json({ message: 'Blog has been moved to draft', blog: newDraftBLog });
