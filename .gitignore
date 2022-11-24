@@ -5,11 +5,14 @@ node_modules
 package-lock.json
 faker.js
 
-
 # images
 *.png
 *.jpg
 *.jpeg
 
+# retain default images
+!default.jpg
+
 # API keys and secrets
 .env
+
