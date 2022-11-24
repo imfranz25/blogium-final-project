@@ -14,7 +14,7 @@ module.exports = (user) => {
       userId: user.id,
       email: user.email,
       username: user.username,
-      image: user.profile_picture_url,
+      profile_picture_url: user.profile_picture_url,
       first_name: user.first_name,
       last_name: user.last_name,
     },
