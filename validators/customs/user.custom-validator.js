@@ -1,5 +1,5 @@
 const { User } = require('../../models');
-const { passGen } = require('../../helpers');
+const { passGen } = require('../../utils');
 
 /**
  * Check if email input is already exist in the database
