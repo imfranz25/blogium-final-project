@@ -1,26 +1,27 @@
+/* 3rd Party Modules */
 import jwtDecode from 'jwt-decode';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
+import HomeIcon from '@mui/icons-material/Home';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PostAddIcon from '@mui/icons-material/PostAdd';
-import {
-  Avatar,
-  AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  MenuItem,
-  Menu,
-  InputBase,
-  Button,
-} from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import InputBase from '@mui/material/InputBase';
+import Box from '@mui/material/Box';
+
+/* Components */
+import LinkButton from './LinkButton';
 
 /* Action Type -> Dispatch Logout */
 import { LOGOUT } from '../constants/actionTypes';
@@ -69,15 +70,19 @@ function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
+  const [profileImage, setProfileImage] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
   useEffect(() => {
     const userData = localStorage.getItem('token');
     const decodedUserData = jwtDecode(userData);
+    const userProfile = decodedUserData.profile_picture_url;
+    const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
 
     setUser(decodedUserData);
+    setProfileImage(`${URL_BACKEND}/${userProfile}`);
   }, [location]);
 
   const handleProfileMenuOpen = (event) => {
@@ -135,29 +140,10 @@ function Navigation() {
           >
             <MenuIcon />
           </IconButton>
-          <Button
-            component={Link}
-            to="/"
-            sx={{
-              textTransform: 'unset',
-              alignItems: 'center',
-              color: 'white',
-              display: { xs: 'none', sm: 'block' },
-            }}
-          >
-            <Typography variant="h6" noWrap component="div">
-              Blogium
-            </Typography>
-          </Button>
-          <Button
-            component={Link}
-            to="/blog/add"
-            variant="text"
-            sx={{ textTransform: 'unset', alignItems: 'center', color: 'white' }}
-          >
-            <PostAddIcon sx={{ mr: 0.5 }} />
-            <Typography variant="body1">Add Blog</Typography>
-          </Button>
+          <LinkButton to="/" linkName="Blogium" brand />
+          <LinkButton to="/" linkName="Home" Icon={HomeIcon} />
+          <LinkButton to="/blog/add" linkName="Add Blog" Icon={PostAddIcon} />
+          <LinkButton to="/dashboard/blog" linkName="My Blogs" Icon={AllInboxIcon} />
           <Box sx={{ flexGrow: 1 }} />
           <Search>
             <SearchIconWrapper>
@@ -176,8 +162,8 @@ function Navigation() {
               color="inherit"
             >
               <Avatar
-                alt={user?.first_name}
-                src={user?.profile_picture_url}
+                alt={user.first_name}
+                src={profileImage}
                 sx={{
                   mx: 1,
                   width: { xs: 35, md: 40 },
@@ -185,7 +171,7 @@ function Navigation() {
                   backgroundColor: 'purple',
                 }}
               >
-                {user?.first_name.charAt(0)}
+                {user?.first_name?.charAt(0)}
               </Avatar>
             </IconButton>
           </Box>
