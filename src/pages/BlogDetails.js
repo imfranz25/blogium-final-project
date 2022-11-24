@@ -3,18 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { red } from '@mui/material/colors';
-import {
-  CircularProgress,
-  Typography,
-  Grid,
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  Avatar,
-  CardActions,
-  Button,
-} from '@mui/material';
+import { Typography, Grid, Card, CardHeader, CardMedia, CardContent, Avatar } from '@mui/material';
 
 /* Components & Actions */
 import { getBlog } from '../actions/blog.action';
