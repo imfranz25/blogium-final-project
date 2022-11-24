@@ -61,6 +61,16 @@ export const draftBlog = (blogData, token) =>
     },
   });
 
+export const updateBlog = (blogId, blogData, token) =>
+  axios({
+    method: 'patch',
+    url: `${API}/blog/add`,
+    data: blogData,
+    headers: {
+      Authorization: token,
+    },
+  });
+
 export const deleteBlog = (blogId, token) =>
   axios({
     method: 'delete',

@@ -56,6 +56,26 @@ const createBlog = (blogData, navigate) => async (dispatch) => {
   }
 };
 
+const updateBlog = (blogId, blogData, navigate) => async (dispatch) => {
+  const blogFormData = new FormData();
+
+  /* Append data -> newly created FormData */
+  blogFormData.append('title', blogData.title);
+  blogFormData.append('description', blogData.description);
+  blogFormData.append('cover_picture_url', blogData.cover_picture_url);
+
+  try {
+    const token = localStorage.getItem('token');
+    const { data } = await api.updateBlog(blogId, blogFormData, token);
+
+    alert(data.message);
+
+    navigate('/dashboard/blog');
+  } catch (error) {
+    errorHandler(error, navigate);
+  }
+};
+
 const deleteBlog = (blogId, navigate) => async (dispatch) => {
   try {
     const token = localStorage.getItem('token');
@@ -90,4 +110,4 @@ const draftBlog = (blogData, navigate) => async (_dispatch) => {
   }
 };
 
-export { getBlogs, createBlog, draftBlog, getMyBlogs, getBlog, deleteBlog };
+export { getBlogs, createBlog, draftBlog, getMyBlogs, getBlog, deleteBlog, updateBlog };
