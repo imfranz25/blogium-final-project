@@ -105,6 +105,7 @@ exports.postDraftBlog = async (req, res, next) => {
     imagePath = req.files['cover_picture_url'][0].path;
   }
 
+  /* If no image is selected -> set to default image */
   if (!imagePath) {
     imagePath = path.join('public', 'uploads', 'blogs', 'default.jpg');
   }
