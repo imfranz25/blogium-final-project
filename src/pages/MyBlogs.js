@@ -1,7 +1,7 @@
 /* Module Imports */
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Grid, Grow, CircularProgress } from '@mui/material';
+import { Container, Grid, Grow, CircularProgress, Tabs, Tab } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
 /* Components */
@@ -12,8 +12,13 @@ import { getMyBlogs } from '../actions/blog.action.js';
 
 function MyBlogs() {
   const [isLoading, setLoading] = useState(true);
+  const [tab, setTab] = useState('all');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleTabs = (event, newTab) => {
+    setTab(newTab);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -30,9 +35,18 @@ function MyBlogs() {
               <CircularProgress sx={{ py: 10 }} />
             </Grid>
           ) : (
-            <Grid container justifyContent="center">
-              <Blogs ownBlog={true} action={true} />
-            </Grid>
+            <>
+              <Grid container justifyContent="center">
+                <Tabs value={tab} onChange={handleTabs} aria-label="blog tabs">
+                  <Tab label="All" value="all" aria-label="all" />
+                  <Tab label="Drafts" value="drafts" aria-label="drafts" />
+                  <Tab label="Trash" value="deleted" aria-label="trash" />
+                </Tabs>
+              </Grid>
+              <Grid container justifyContent="center">
+                <Blogs tab={tab} />
+              </Grid>
+            </>
           )}
         </Container>
       </Grow>

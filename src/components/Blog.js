@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { red } from '@mui/material/colors';
 import moment from 'moment/moment';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -18,10 +19,20 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+
+/* Actions */
+import { deleteBlog } from '../actions/blog.action';
 
 function Blog({ blog, action }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -39,20 +50,34 @@ function Blog({ blog, action }) {
     setAnchorEl(null);
   };
 
+  const handleOpenDialog = () => {
+    setAnchorEl(null);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleDelete = () => {
+    setOpenDialog(false);
+    dispatch(deleteBlog(blog.id, navigate));
+  };
+
   const menuId = blog?.id;
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: 'right',
+        vertical: 'top',
         horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
       }}
       id={menuId}
       keepMounted
-      transformOrigin={{
-        vertical: 'left',
-        horizontal: 'left',
-      }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -64,11 +89,33 @@ function Blog({ blog, action }) {
         <EditIcon sx={{ mr: 1 }} />
         Edit
       </MenuItem>
-      <MenuItem sx={{ color: 'red' }} onClick={handleMenuClose}>
+      <MenuItem sx={{ color: 'red' }} onClick={handleOpenDialog}>
         <DeleteOutlineIcon sx={{ mr: 1 }} />
         Delete
       </MenuItem>
     </Menu>
+  );
+
+  const confirmDialog = (
+    <Dialog
+      open={openDialog}
+      onClose={handleCloseDialog}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">Title: {blog?.title}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete this blog?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCloseDialog}>Cancel</Button>
+        <Button onClick={handleDelete} autoFocus>
+          Yes
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 
   return (
@@ -112,6 +159,7 @@ function Blog({ blog, action }) {
         </Button>
       </CardActions>
       {renderMenu}
+      {confirmDialog}
     </Card>
   );
 }

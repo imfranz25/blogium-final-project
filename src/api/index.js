@@ -60,3 +60,12 @@ export const draftBlog = (blogData, token) =>
       Authorization: token,
     },
   });
+
+export const deleteBlog = (blogId, token) =>
+  axios({
+    method: 'delete',
+    url: `${API}/${blogId}`,
+    headers: {
+      Authorization: token,
+    },
+  });

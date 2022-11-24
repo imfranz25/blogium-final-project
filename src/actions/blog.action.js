@@ -1,5 +1,5 @@
 import * as api from '../api';
-import { FETCH_ALL, CREATE, FETCH_MY_BLOG, FETCH } from '../constants/actionTypes.js';
+import { FETCH_ALL, CREATE, FETCH, DELETE, FETCH_MY_BLOG } from '../constants/actionTypes.js';
 import errorHandler from '../utils/errorHandler';
 
 const getBlogs = (navigate) => async (dispatch) => {
@@ -56,7 +56,21 @@ const createBlog = (blogData, navigate) => async (dispatch) => {
   }
 };
 
-const draftBlog = (blogData, navigate) => async (dispatch) => {
+const deleteBlog = (blogId, navigate) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const { data } = await api.deleteBlog(blogId, token);
+
+    alert(data.message);
+
+    // navigate('/dashboard/blog')
+    dispatch({ type: DELETE, payload: data.blog });
+  } catch (error) {
+    errorHandler(error, navigate);
+  }
+};
+
+const draftBlog = (blogData, navigate) => async (_dispatch) => {
   const blogFormData = new FormData();
 
   /* Append data -> newly created FormData */
@@ -76,4 +90,4 @@ const draftBlog = (blogData, navigate) => async (dispatch) => {
   }
 };
 
-export { getBlogs, createBlog, draftBlog, getMyBlogs, getBlog };
+export { getBlogs, createBlog, draftBlog, getMyBlogs, getBlog, deleteBlog };
