@@ -56,7 +56,7 @@ const createBlog = (blogData, navigate) => async (dispatch) => {
   }
 };
 
-const updateBlog = (blogId, blogData, navigate) => async (dispatch) => {
+const updateBlog = (blogData, navigate) => async (dispatch) => {
   const blogFormData = new FormData();
 
   /* Append data -> newly created FormData */
@@ -66,7 +66,7 @@ const updateBlog = (blogId, blogData, navigate) => async (dispatch) => {
 
   try {
     const token = localStorage.getItem('token');
-    const { data } = await api.updateBlog(blogId, blogFormData, token);
+    const { data } = await api.updateBlog(blogData.id, blogFormData, token);
 
     alert(data.message);
 

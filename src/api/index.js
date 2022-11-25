@@ -64,7 +64,7 @@ export const draftBlog = (blogData, token) =>
 export const updateBlog = (blogId, blogData, token) =>
   axios({
     method: 'patch',
-    url: `${API}/blog/add`,
+    url: `${API}/blog/${blogId}`,
     data: blogData,
     headers: {
       Authorization: token,

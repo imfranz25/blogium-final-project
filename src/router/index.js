@@ -5,7 +5,8 @@ import PrivateRoutes from '../utils/PrivateRoutes';
 import Home from '../pages/Home.js';
 import SignUp from '../pages/SignUp';
 import Login from '../pages/Login';
-import BlogForm from '../pages/BlogForm';
+import AddBlog from '../pages/AddBlog';
+import UpdateBlog from '../pages/UpdateBlog';
 import MyBlogs from '../pages/MyBlogs';
 import BlogDetails from '../pages/BlogDetails';
 import Profile from '../pages/Profile';
@@ -29,7 +30,7 @@ const routes = [
       },
       {
         path: '/blog/add',
-        element: <BlogForm />,
+        element: <AddBlog />,
       },
       {
         path: '/:blogId',
@@ -45,7 +46,7 @@ const routes = [
       },
       {
         path: '/dashboard/blog/:blogId',
-        element: <BlogForm />,
+        element: <UpdateBlog />,
       },
     ],
   },
