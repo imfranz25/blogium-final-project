@@ -68,7 +68,7 @@ exports.postBlog = async (req, res, next) => {
 
   /* Check files property if it contains uplod from profile_picture_url field */
   if (!files['cover_picture_url']) {
-    const imgError = { msg: 'No uploaded profile, also check image size limit (10mb)' };
+    const imgError = { msg: 'No uploaded cover photo' };
     return res.status(422).json({ message: 'Invalid Input', errors: [imgError] });
   }
 
@@ -147,10 +147,12 @@ exports.postDraftBlog = async (req, res, next) => {
  * @route PATCH /blog/:blogId
  */
 exports.updateBlog = async (req, res, next) => {
+  const errors = validationResult(req);
   const { blogId } = req.params;
   const { title, description } = req.body;
-  const { userId } = req.user;
-  const errors = validationResult(req);
+  const { _id } = req.user; // user_id
+  const { files } = req;
+  let imagePath = null;
 
   if (!errors.isEmpty()) {
     return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });
@@ -163,13 +165,31 @@ exports.updateBlog = async (req, res, next) => {
       return res.status(404).json({ message: 'Blog not found' });
     }
 
+    if (existingBlog.is_draft) {
+      /* Check files property if it contains uplod from profile_picture_url field */
+      if (!files['cover_picture_url']) {
+        const imgError = { msg: 'No uploaded cover photo' };
+        return res.status(422).json({ message: 'Invalid Input', errors: [imgError] });
+      }
+    }
+
+    if (files['cover_picture_url']) {
+      /* Get File Image Properties */
+      imagePath = req.files['cover_picture_url'][0].path;
+    }
+
     /* Can only update user's own post blog */
-    if (userId !== existingBlog.user_id) {
+    if (_id.toString() !== existingBlog.user_id.toString()) {
       return res.status(401).json({ message: 'Unauthorized action' });
     }
 
     existingBlog.title = title;
     existingBlog.description = description;
+    existingBlog.is_draft = false;
+
+    if (imagePath) {
+      existingBlog.cover_picture_url = imagePath;
+    }
 
     await existingBlog.save();
 
