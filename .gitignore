@@ -9,6 +9,7 @@ faker.js
 *.png
 *.jpg
 *.jpeg
+*.jfif
 
 # retain default images
 !default.jpg
