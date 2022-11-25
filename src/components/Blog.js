@@ -81,7 +81,7 @@ function Blog({ blog, action }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem component={Link} to={`/${blog.id}`}>
         <VisibilityIcon sx={{ mr: 1 }} />
         View
       </MenuItem>
@@ -147,17 +147,19 @@ function Blog({ blog, action }) {
           {blog.description}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button
-          size="small"
-          color="primary"
-          sx={{ textTransform: 'unset' }}
-          component={Link}
-          to={`/${blog.id}`}
-        >
-          Read More
-        </Button>
-      </CardActions>
+      {!blog.deleted_at && (
+        <CardActions>
+          <Button
+            size="small"
+            color="primary"
+            sx={{ textTransform: 'unset' }}
+            component={Link}
+            to={`/${blog.id}`}
+          >
+            Read More
+          </Button>
+        </CardActions>
+      )}
       {renderMenu}
       {confirmDialog}
     </Card>

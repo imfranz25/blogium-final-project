@@ -1,7 +1,7 @@
 /* 3rd Party Modules */
 import jwtDecode from 'jwt-decode';
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
@@ -142,9 +142,13 @@ function Navigation() {
         },
       }}
     >
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem component={Link} to="/dashboard/profile" onClick={handleMenuClose}>
         <AccountCircle sx={{ mr: 1 }} />
         Profile
+      </MenuItem>
+      <MenuItem component={Link} to="/dashboard/blog" onClick={handleMenuClose}>
+        <AllInboxIcon sx={{ mr: 1 }} />
+        My blogs
       </MenuItem>
       <MenuItem onClick={handleLogout}>
         <LogoutIcon sx={{ mr: 1 }} />

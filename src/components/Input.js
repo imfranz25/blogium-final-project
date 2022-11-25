@@ -31,7 +31,7 @@ function Input({
     fileProps = { accept: 'image/*' };
   }
 
-  if (name !== 'password' && name !== 'confirm_password') {
+  if (name !== 'password' && name !== 'confirm_password' && name !== 'old_password') {
     inputProps = {};
   }
 
