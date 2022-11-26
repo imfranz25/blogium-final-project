@@ -1,15 +1,42 @@
+/* 3rd Party Modules */
 import axios from 'axios';
 
 /* Back-end API URL */
 const API = process.env.REACT_APP_BACKEND_URL;
 
 /* Auth */
-export const loginUser = (userCredentials) => axios.post(`${API}/login`, userCredentials);
+export const loginUser = (userCredentials) =>
+  axios({
+    method: 'post',
+    url: `${API}/login`,
+    data: userCredentials,
+  });
+
 export const signUpUser = (userData) =>
   axios({
     method: 'post',
     url: `${API}/signup`,
     data: userData,
+  });
+
+export const updatePassword = (userCredentials, token) =>
+  axios({
+    method: 'patch',
+    url: `${API}/password`,
+    data: userCredentials,
+    headers: {
+      Authorization: token,
+    },
+  });
+
+export const updateUser = (userData, token) =>
+  axios({
+    method: 'patch',
+    url: `${API}/profile`,
+    data: userData,
+    headers: {
+      Authorization: token,
+    },
   });
 
 /* Blogs */
