@@ -110,4 +110,9 @@ const draftBlog = (blogData, navigate) => async (_dispatch) => {
   }
 };
 
-export { getBlogs, createBlog, draftBlog, getMyBlogs, getBlog, deleteBlog, updateBlog };
+const searchBlog = (searchQuery, location) => (dispatch) => {
+  console.log(location.path);
+  console.log(searchQuery);
+};
+
+export { getBlogs, createBlog, draftBlog, getMyBlogs, getBlog, deleteBlog, updateBlog, searchBlog };
