@@ -35,7 +35,11 @@ exports.getBlog = async (req, res, next) => {
  */
 exports.getBlogs = async (_req, res, next) => {
   try {
-    const blogs = await Blog.find({ deleted_at: null, is_draft: false }).populate('user_id');
+    /* prettier-ignore */
+    const blogs = await Blog
+      .find({ deleted_at: null, is_draft: false })
+      .populate('user_id')
+      .sort({ updatedAt: -1 });
 
     res.status(200).json({ message: 'Blogs fetched', blogs });
   } catch (error) {
@@ -50,7 +54,11 @@ exports.getBlogs = async (_req, res, next) => {
 exports.getMyBlogs = async (req, res, next) => {
   try {
     const userId = req.user._id.toString();
-    const blogs = await Blog.find({ user_id: userId }).populate('user_id');
+    /* prettier-ignore */
+    const blogs = await Blog
+      .find({ user_id: userId })
+      .populate('user_id')
+      .sort({ updatedAt: -1 });
 
     res.status(200).json({ message: 'User Blogs fetched', blogs });
   } catch (error) {
