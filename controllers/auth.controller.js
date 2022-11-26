@@ -64,11 +64,28 @@ exports.postSignUp = async (req, res, next) => {
  * @route PATCH /profile
  */
 exports.updateProfile = async (req, res, next) => {
+  let image = null;
   const userId = req.user.userId;
   const { first_name, last_name, email, username } = req.body;
   const errors = validationResult(req);
+  const { files } = req;
+
+  if (files['profile_picture_url']) {
+    image = req.files['profile_picture_url'][0];
+  }
 
   if (!errors.isEmpty()) {
+    if (image) {
+      const imageFileName = req.imageId + '-' + image.originalname;
+      const uploadedImagePath = path.join('public', 'uploads', 'profiles', imageFileName);
+
+      fs.unlink(uploadedImagePath, (error) => {
+        if (error) {
+          return res.status(500).json({ message: 'Internal Server Error' });
+        }
+      });
+    }
+
     return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });
   }
 
@@ -80,6 +97,10 @@ exports.updateProfile = async (req, res, next) => {
     existingUser.last_name = last_name;
     existingUser.email = email;
     existingUser.username = username;
+
+    if (image) {
+      existingUser.profile_picture_url = image.path;
+    }
 
     const updatedUser = await existingUser.save();
     const token = tokenGenerator(updatedUser);
@@ -107,7 +128,7 @@ exports.updatePassword = async (req, res, next) => {
     const existingUser = await User.findOne({ id: userId });
     if (existingUser.password_chances === 0) {
       return res
-        .status(403)
+        .status(429)
         .json({ message: 'Unable to reset password, you have reached the limit' });
     }
 
