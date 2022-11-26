@@ -7,6 +7,10 @@ const errorHandler = (error, navigate) => {
     navigate('/login');
   }
 
+  if (status === 429) {
+    alert(error.response?.data?.message);
+  }
+
   if (status === 403) {
     alert('Session Timeout');
     localStorage.clear();
