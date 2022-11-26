@@ -6,7 +6,6 @@ const reducer = (state = { authData: null }, action) => {
     case AUTH:
       /* Store token -> localstorage  */
       localStorage.setItem('token', action.payload);
-      console.log({ ...state, authData: jwtDecode(action.payload) });
       return { ...state, authData: jwtDecode(action.payload) };
     case LOGOUT:
       /* Clear localstorage  */
