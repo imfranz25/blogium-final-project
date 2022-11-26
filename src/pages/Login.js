@@ -24,10 +24,14 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
+    document.title = 'Login';
+  }, []);
+
+  useEffect(() => {
     if (token) {
       navigate('/');
     }
-  });
+  }, [token, navigate]);
 
   const handleChange = (e) => {
     setLoginFormData({ ...loginFormData, [e.target.name]: e.target.value });

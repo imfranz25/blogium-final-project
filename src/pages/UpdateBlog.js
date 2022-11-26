@@ -18,6 +18,10 @@ function UpdateBlog() {
   });
 
   useEffect(() => {
+    document.title = 'Update blog';
+  }, []);
+
+  useEffect(() => {
     if (blogId) {
       dispatch(getBlog(blogId, navigate));
     }

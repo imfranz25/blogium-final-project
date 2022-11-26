@@ -28,6 +28,10 @@ function BlogDetails() {
     dispatch(getBlog(blogId, navigate));
   }, [blogId, navigate, dispatch]);
 
+  useEffect(() => {
+    document.title = blog?.title || 'Blog';
+  }, [blog]);
+
   return !blog ? (
     blogNotfound
   ) : (

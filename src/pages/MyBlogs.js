@@ -21,6 +21,10 @@ function MyBlogs() {
   };
 
   useEffect(() => {
+    document.title = 'My blogs';
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
     dispatch(getMyBlogs(navigate));
     setLoading(false);

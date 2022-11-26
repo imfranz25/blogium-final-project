@@ -1,5 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Avatar, Card, CardMedia, Container, Grid, CardContent, Button } from '@mui/material';
 import { red } from '@mui/material/colors';
 import ImageIcon from '@mui/icons-material/Image';
@@ -7,6 +9,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 /* Components */
 import Input from '../components/Input';
+import { updatePassword, updateUser } from '../actions/auth.action';
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 const initialPasswordChange = {
@@ -19,6 +22,8 @@ function Profile() {
   const userToken = localStorage.getItem('token');
   const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
   const userData = jwtDecode(userToken);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [userFormData, setUserFormData] = useState(userData);
   const [userPassState, setUserPassState] = useState({ ...initialPasswordChange });
@@ -44,15 +49,21 @@ function Profile() {
     setUserFormData({ ...userFormData, [e.target.name]: e.target.files[0] });
   };
 
-  const handleChangePassword = () => {
+  useEffect(() => {
+    document.title = 'Profile';
+  }, []);
+
+  const handleChangePassword = (e) => {
+    e.preventDefault();
     setLoading(true);
-    console.log(userPassState);
+    dispatch(updatePassword(userPassState, navigate));
     setLoading(false);
   };
 
-  const handleUserDataSubmit = () => {
+  const handleUserDataSubmit = (e) => {
+    e.preventDefault();
     setLoading(true);
-    console.log(userFormData);
+    dispatch(updateUser(userFormData, navigate));
     setLoading(false);
   };
 
@@ -139,99 +150,101 @@ function Profile() {
               </Button>
             </Grid>
 
-            <CardContent sx={{ px: 5, mb: 3 }}>
-              <Grid container>
-                <Grid xs={12} md={6} sx={{ px: 5 }}>
-                  <Grid container spacing={2}>
-                    <Input
-                      name="first_name"
-                      handleChange={handleUserChange}
-                      label="First Name"
-                      type="text"
-                      value={userFormData.first_name}
-                      autoFocus
-                      half
-                    />
-                    {/* prettier-ignore */}
-                    <Input 
-                      name="last_name" 
-                      handleChange={handleUserChange} 
-                      label="Last Name"
-                      value={userFormData.last_name} 
-                      type="text" 
-                      half 
-                    />
-                    {/* prettier-ignore */}
-                    <Input 
-                      name="email" 
-                      handleChange={handleUserChange} 
-                      value={userFormData.email}
-                      label="Email" 
-                      type="email" 
-                    />
-                    {/* prettier-ignore */}
-                    <Input 
-                      name="username" 
-                      handleChange={handleUserChange} 
-                      value={userFormData.username}
-                      label="Username" 
-                      type="text" 
-                    />
+            <CardContent sx={{ px: 5, mb: 3, display: 'flex', justifyContent: 'center' }}>
+              <Grid sx={{ maxWidth: 550 }} container>
+                <form onSubmit={handleUserDataSubmit}>
+                  <Grid item xs={12} sx={{ px: 5 }}>
+                    <Grid container spacing={2}>
+                      <Input
+                        name="first_name"
+                        handleChange={handleUserChange}
+                        label="First Name"
+                        type="text"
+                        value={userFormData.first_name}
+                        autoFocus
+                        half
+                      />
+                      {/* prettier-ignore */}
+                      <Input 
+                        name="last_name" 
+                        handleChange={handleUserChange} 
+                        label="Last Name"
+                        value={userFormData.last_name} 
+                        type="text" 
+                        half 
+                      />
+                      {/* prettier-ignore */}
+                      <Input 
+                        name="email" 
+                        handleChange={handleUserChange} 
+                        value={userFormData.email}
+                        label="Email" 
+                        type="email" 
+                      />
+                      {/* prettier-ignore */}
+                      <Input 
+                        name="username" 
+                        handleChange={handleUserChange} 
+                        value={userFormData.username}
+                        label="Username" 
+                        type="text" 
+                      />
+                    </Grid>
+                    <Grid item xs={12} sx={{ my: 5 }}>
+                      <LoadingButton
+                        type="submit"
+                        loading={isLoading}
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        sx={{ textTransform: 'unset' }}
+                        fullWidth
+                      >
+                        Update Details
+                      </LoadingButton>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sx={{ my: 5 }}>
-                    <LoadingButton
-                      type="button"
-                      loading={isLoading}
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      onClick={handleUserDataSubmit}
-                      sx={{ textTransform: 'unset' }}
-                      fullWidth
-                    >
-                      Update Details
-                    </LoadingButton>
+                </form>
+                <form onSubmit={handleChangePassword}>
+                  <Grid item xs={12} sx={{ px: 5 }}>
+                    <Grid container spacing={2}>
+                      <Input
+                        name="old_password"
+                        handleChange={handlePassChange}
+                        type={showOldPassword ? 'text' : 'password'}
+                        handleShowPassword={handleShowOldPassword}
+                        label="Current Password"
+                      />
+                      <Input
+                        name="password"
+                        handleChange={handlePassChange}
+                        handleShowPassword={handleShowNewPassword}
+                        label="New Password"
+                        type={showNewPassword ? 'text' : 'password'}
+                      />
+                      <Input
+                        name="confirm_password"
+                        handleChange={handlePassChange}
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        handleShowPassword={handleShowConfirmPassword}
+                        label="Confirm Password"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sx={{ my: 5 }}>
+                      <LoadingButton
+                        type="submit"
+                        loading={isLoading}
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        sx={{ textTransform: 'unset' }}
+                        fullWidth
+                      >
+                        Update Password
+                      </LoadingButton>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid xs={12} md={6} sx={{ px: 5 }}>
-                  <Grid container spacing={2}>
-                    <Input
-                      name="old_password"
-                      handleChange={handlePassChange}
-                      type={showOldPassword ? 'text' : 'password'}
-                      handleShowPassword={handleShowOldPassword}
-                      label="Current Password"
-                    />
-                    <Input
-                      name="password"
-                      handleChange={handlePassChange}
-                      handleShowPassword={handleShowNewPassword}
-                      label="New Password"
-                      type={showNewPassword ? 'text' : 'password'}
-                    />
-                    <Input
-                      name="confirm_password"
-                      handleChange={handlePassChange}
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      handleShowPassword={handleShowConfirmPassword}
-                      label="Confirm Password"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sx={{ my: 5 }}>
-                    <LoadingButton
-                      type="button"
-                      loading={isLoading}
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      onClick={handleChangePassword}
-                      sx={{ textTransform: 'unset' }}
-                      fullWidth
-                    >
-                      Update Password
-                    </LoadingButton>
-                  </Grid>
-                </Grid>
+                </form>
               </Grid>
             </CardContent>
           </Card>

@@ -47,6 +47,29 @@ function SignUp() {
     setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.files[0] });
   };
 
+  const handleChange = (e) => {
+    setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.value });
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    dispatch(signUpUser(signUpFormState, navigate));
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    document.title = 'Sign Up';
+  }, []);
+
   useEffect(() => {
     let fileReader,
       isCancel = false;
@@ -67,25 +90,6 @@ function SignUp() {
       }
     };
   }, [file]);
-
-  const handleChange = (e) => {
-    setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.value });
-  };
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleShowConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    dispatch(signUpUser(signUpFormState, navigate));
-    setLoading(false);
-  };
 
   return (
     <Container component="main" maxWidth="sm" sx={{ my: 10 }}>

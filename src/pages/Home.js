@@ -16,6 +16,10 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = 'Home';
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
     dispatch(getBlogs(navigate));
     setLoading(false);

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 /* Actions & Components */
 import BlogForm from '../components/BlogForm';
 
@@ -7,6 +9,10 @@ function AddBlog() {
     description: '',
     cover_picture_url: '',
   };
+
+  useEffect(() => {
+    document.title = 'Add blog';
+  }, []);
 
   return (
     <>
