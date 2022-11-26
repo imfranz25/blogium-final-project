@@ -24,6 +24,7 @@ import Box from '@mui/material/Box';
 import LinkButton from './LinkButton';
 
 /* Action Type -> Dispatch Logout */
+import { searchBlog } from '../actions/blog.action';
 import { LOGOUT } from '../constants/actionTypes';
 
 const Search = styled('div')(({ theme }) => ({
@@ -70,20 +71,38 @@ function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  const [querySearch, setQuerySearch] = useState('');
   const [user, setUser] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
   useEffect(() => {
+    searchBlog(querySearch, location);
+    console.log(querySearch);
+  }, [querySearch, location]);
+
+  useEffect(() => {
     const userData = localStorage.getItem('token');
-    const decodedUserData = jwtDecode(userData);
-    const userProfile = decodedUserData.profile_picture_url;
+    let decodedUserData = null;
+
+    try {
+      decodedUserData = jwtDecode(userData);
+    } catch (error) {
+      console.log(error);
+    }
+
+    const userProfile = decodedUserData?.profile_picture_url;
     const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
 
+    /* Set user data & image once location changed */
     setUser(decodedUserData);
     setProfileImage(`${URL_BACKEND}/${userProfile}`);
   }, [location]);
+
+  const handleSearch = (queryValue) => {
+    setQuerySearch(queryValue);
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -179,7 +198,12 @@ function Navigation() {
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+            <StyledInputBase
+              placeholder="Search…"
+              onChange={(e) => handleSearch(e.target.value)}
+              value={querySearch}
+              inputProps={{ 'aria-label': 'search' }}
+            />
           </Search>
           <Box>
             <IconButton
@@ -192,7 +216,7 @@ function Navigation() {
               color="inherit"
             >
               <Avatar
-                alt={user.first_name}
+                alt={user?.first_name}
                 src={profileImage}
                 sx={{
                   mx: 1,
