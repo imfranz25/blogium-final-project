@@ -5,7 +5,8 @@ export const FETCH_MY_BLOG = 'FETCH_MY_BLOG';
 export const CREATE = 'CREATE';
 export const DELETE = 'DELETE';
 export const UPDATE = 'UPDATE';
-export const SORT = 'SORT';
+export const SEARCH = 'SEARCH';
+export const CLEAR = 'CLEAR';
 
 // Authentication Type Constants
 export const AUTH = 'AUTH';

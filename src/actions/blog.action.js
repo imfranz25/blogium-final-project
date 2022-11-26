@@ -1,5 +1,12 @@
 import * as api from '../api';
-import { FETCH_ALL, CREATE, FETCH, DELETE, FETCH_MY_BLOG } from '../constants/actionTypes.js';
+import {
+  FETCH_ALL,
+  CREATE,
+  FETCH,
+  DELETE,
+  FETCH_MY_BLOG,
+  SEARCH,
+} from '../constants/actionTypes.js';
 import errorHandler from '../utils/errorHandler';
 
 const getBlogs = (navigate) => async (dispatch) => {
@@ -110,9 +117,15 @@ const draftBlog = (blogData, navigate) => async (_dispatch) => {
   }
 };
 
-const searchBlog = (searchQuery, location) => (dispatch) => {
-  console.log(location.path);
-  console.log(searchQuery);
+const searchBlog = (searchQuery, navigate) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('token');
+    const { data } = await api.fetchBlogs(token);
+
+    dispatch({ type: SEARCH, payload: data.blogs, searchQuery });
+  } catch (error) {
+    errorHandler(error, navigate);
+  }
 };
 
 export { getBlogs, createBlog, draftBlog, getMyBlogs, getBlog, deleteBlog, updateBlog, searchBlog };

@@ -1,9 +1,9 @@
 /* 3rd Party Modules */
 import jwtDecode from 'jwt-decode';
+import { debounce } from 'lodash';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { styled, alpha } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
 import HomeIcon from '@mui/icons-material/Home';
 import AllInboxIcon from '@mui/icons-material/AllInbox';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -17,70 +17,28 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
 
-/* Components */
-import LinkButton from './LinkButton';
+/* Components & Styles */
+import LinkButton from '../LinkButton';
+import { Search, SearchIconWrapper, StyledInputBase, paperPropStyles } from './style';
 
 /* Action Type -> Dispatch Logout */
-import { searchBlog } from '../actions/blog.action';
-import { LOGOUT } from '../constants/actionTypes';
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
+import { searchBlog } from '../../actions/blog.action';
+import { LOGOUT, CLEAR } from '../../constants/actionTypes';
+import { Card } from '@mui/material';
 
 function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const [querySearch, setQuerySearch] = useState('');
   const [user, setUser] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
-
-  useEffect(() => {
-    searchBlog(querySearch, location);
-    console.log(querySearch);
-  }, [querySearch, location]);
+  const searchResult = useSelector((state) => {
+    return state.searchReducer;
+  });
 
   useEffect(() => {
     const userData = localStorage.getItem('token');
@@ -89,7 +47,7 @@ function Navigation() {
     try {
       decodedUserData = jwtDecode(userData);
     } catch (error) {
-      console.log(error);
+      navigate('/login'); // not a valid jwt token
     }
 
     const userProfile = decodedUserData?.profile_picture_url;
@@ -98,11 +56,15 @@ function Navigation() {
     /* Set user data & image once location changed */
     setUser(decodedUserData);
     setProfileImage(`${URL_BACKEND}/${userProfile}`);
-  }, [location]);
+  }, [location, navigate]);
 
-  const handleSearch = (queryValue) => {
-    setQuerySearch(queryValue);
+  const clearSearchResult = () => {
+    dispatch({ type: CLEAR, payload: [] });
   };
+
+  const handleSearch = debounce((e) => {
+    dispatch(searchBlog(e.target.value));
+  }, 500);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -134,32 +96,7 @@ function Navigation() {
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
-      PaperProps={{
-        elevation: 0,
-        sx: {
-          overflow: 'visible',
-          filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-          mt: 0,
-          '& .MuiAvatar-root': {
-            width: 32,
-            height: 32,
-            ml: -0.5,
-            mr: 1,
-          },
-          '&:before': {
-            content: '""',
-            display: 'block',
-            position: 'absolute',
-            top: 0,
-            right: 32,
-            width: 10,
-            height: 10,
-            bgcolor: 'background.paper',
-            transform: 'translateY(-50%) rotate(45deg)',
-            zIndex: 0,
-          },
-        },
-      }}
+      PaperProps={paperPropStyles}
     >
       <MenuItem component={Link} to="/dashboard/profile" onClick={handleMenuClose}>
         <AccountCircle sx={{ mr: 1 }} />
@@ -199,11 +136,27 @@ function Navigation() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
-              onChange={(e) => handleSearch(e.target.value)}
-              value={querySearch}
+              id="searchInput"
+              placeholder="Search by title"
+              onChange={handleSearch}
+              onFocus={handleSearch}
               inputProps={{ 'aria-label': 'search' }}
             />
+            {searchResult.length > 0 && (
+              <Card sx={{ position: 'absolute', width: '100%', mt: 1, zIndex: 99999 }}>
+                {searchResult.map((blog) => (
+                  <MenuItem
+                    key={blog.id}
+                    component={Link}
+                    to={`/${blog.id}`}
+                    onClick={clearSearchResult}
+                  >
+                    <LogoutIcon sx={{ mr: 1 }} />
+                    {blog.title}
+                  </MenuItem>
+                ))}
+              </Card>
+            )}
           </Search>
           <Box>
             <IconButton
