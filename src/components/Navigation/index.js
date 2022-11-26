@@ -1,4 +1,5 @@
 /* 3rd Party Modules */
+import moment from 'moment';
 import jwtDecode from 'jwt-decode';
 import { debounce } from 'lodash';
 import React, { useState, useEffect } from 'react';
@@ -18,6 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 /* Components & Styles */
 import LinkButton from '../LinkButton';
@@ -26,7 +28,10 @@ import { Search, SearchIconWrapper, StyledInputBase, paperPropStyles } from './s
 /* Action Type -> Dispatch Logout */
 import { searchBlog } from '../../actions/blog.action';
 import { LOGOUT, CLEAR } from '../../constants/actionTypes';
-import { Card } from '@mui/material';
+import { Card, Typography } from '@mui/material';
+
+/* Global Variables */
+const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
 
 function Navigation() {
   const navigate = useNavigate();
@@ -51,7 +56,6 @@ function Navigation() {
     }
 
     const userProfile = decodedUserData?.profile_picture_url;
-    const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
 
     /* Set user data & image once location changed */
     setUser(decodedUserData);
@@ -63,7 +67,7 @@ function Navigation() {
   };
 
   const handleSearch = debounce((e) => {
-    dispatch(searchBlog(e.target.value));
+    dispatch(searchBlog(e.target.value, navigate));
   }, 500);
 
   const handleProfileMenuOpen = (event) => {
@@ -136,7 +140,7 @@ function Navigation() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              id="searchInput"
+              autoComplete="off"
               placeholder="Search by title"
               onChange={handleSearch}
               onFocus={handleSearch}
@@ -150,9 +154,29 @@ function Navigation() {
                     component={Link}
                     to={`/${blog.id}`}
                     onClick={clearSearchResult}
+                    sx={{ borderBottom: '1px solid lightgray', py: 1 }}
                   >
-                    <LogoutIcon sx={{ mr: 1 }} />
-                    {blog.title}
+                    <Grid>
+                      <Avatar
+                        alt={blog?.user_id?.first_name}
+                        src={URL_BACKEND + '/' + blog?.user_id?.profile_picture_url}
+                        sx={{
+                          backgroundColor: 'purple',
+                          border: '1px solid lightgray',
+                          mr: 2,
+                        }}
+                      >
+                        {blog?.user_id?.first_name?.charAt(0)}
+                      </Avatar>
+                      <Typography variant="caption">{blog?.user_id?.first_name}</Typography>
+                    </Grid>
+                    <Grid container>
+                      <Typography variant="body1">{blog.title}</Typography>
+                    </Grid>
+                    <Typography variant="caption">
+                      Created:
+                      {moment(blog.createdAt).format('M/D/YYYY, h:mm a')}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Card>
