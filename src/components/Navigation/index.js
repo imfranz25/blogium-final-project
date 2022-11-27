@@ -44,23 +44,6 @@ function Navigation() {
     return state.searchReducer;
   });
 
-  useEffect(() => {
-    const userData = localStorage.getItem('token');
-    let decodedUserData = null;
-
-    try {
-      decodedUserData = jwtDecode(userData);
-    } catch (error) {
-      navigate('/login'); // not a valid jwt token
-    }
-
-    const userProfile = decodedUserData?.profile_picture_url;
-
-    /* Set user data & image once location changed */
-    setUser(decodedUserData);
-    setProfileImage(`${URL_BACKEND}/${userProfile}`);
-  }, [location, navigate]);
-
   const clearSearchResult = () => {
     dispatch({ type: CLEAR, payload: [] });
   };
@@ -82,6 +65,24 @@ function Navigation() {
     setAnchorEl(null);
     navigate('/login');
   };
+
+  useEffect(() => {
+    const userData = localStorage.getItem('token');
+    let decodedUserData = null;
+
+    try {
+      decodedUserData = jwtDecode(userData);
+      dispatch({ type: CLEAR, payload: [] });
+    } catch (error) {
+      navigate('/login'); // not a valid jwt token
+    }
+
+    const userProfile = decodedUserData?.profile_picture_url;
+
+    /* Set user data & image once location changed */
+    setUser(decodedUserData);
+    setProfileImage(`${URL_BACKEND}/${userProfile}`);
+  }, [location, navigate, dispatch]);
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
