@@ -119,7 +119,7 @@ function Blog({ blog, action }) {
   );
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345, height: '100%' }}>
       <CardHeader
         avatar={
           <Avatar
@@ -140,11 +140,13 @@ function Blog({ blog, action }) {
       />
       <CardMedia component="img" height="194" image={blogImage} alt={blog.title} />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body1" color="text.secondary" sx={{ my: 1 }}>
           {blog.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {blog.description}
+        <Typography variant="body2" color="text.secondary" sx={{ minHeight: 40 }}>
+          {blog.description.length >= 80
+            ? blog.description.substring(0, 80).trim() + '...'
+            : blog.description}
         </Typography>
       </CardContent>
       {!blog.deleted_at && (
