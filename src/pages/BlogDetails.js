@@ -69,7 +69,13 @@ function BlogDetails() {
                   />
                 }
                 title={blog.user_id?.username}
-                subheader={moment(blog.createdAt).fromNow()}
+                subheader={
+                  <>
+                    <Typography variant="body6" color="text.secondary">
+                      Posted on: {moment(blog.createdAt).format('M/D/YYYY h:mm A')}
+                    </Typography>
+                  </>
+                }
               />
             </Grid>
             <CardContent>
