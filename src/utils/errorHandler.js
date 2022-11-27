@@ -13,8 +13,9 @@ const errorHandler = (error) => {
   }
 
   if (status === 403) {
-    alert('Session Timeout');
     localStorage.clear();
+    alert('Session Timeout');
+    window.location.reload();
   }
 
   if (error.response?.status === 422) {
