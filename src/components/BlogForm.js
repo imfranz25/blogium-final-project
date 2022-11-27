@@ -1,10 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-import { Container, Paper, Grid, Typography, Button, CardMedia } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ImageIcon from '@mui/icons-material/Image';
+import {
+  Container,
+  Paper,
+  Grid,
+  Typography,
+  Button,
+  CardMedia,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@mui/material';
 
 /* Components & Actions */
 import Input from './Input';
@@ -22,6 +33,7 @@ function Form({ isEdit, initialBlogState }) {
   const [blogFormState, setBlogFormState] = useState(initialBlogState);
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(defaultCover);
+  const [openDialog, setOpenDialog] = useState(false);
 
   /* Alert Message */
   const [alertState, setAlertState] = useState(false);
@@ -75,6 +87,10 @@ function Form({ isEdit, initialBlogState }) {
     setBlogFormState({ ...blogFormState, [e.target.name]: e.target.value });
   };
 
+  const handleAlertClose = () => {
+    setAlertState(false);
+  };
+
   const alertHandler = (res) => {
     setAlertType(res.type);
     setAlertMessage(res.message);
@@ -116,12 +132,39 @@ function Form({ isEdit, initialBlogState }) {
     alertHandler(res);
   };
 
-  const handleAlertClose = () => {
-    setAlertState(false);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const confirmDialog = (
+    <Dialog
+      open={openDialog}
+      onClose={handleCloseDialog}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">Save to Drafts</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure you want to save this blog as a draft?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCloseDialog}>Cancel</Button>
+        <LoadingButton onClick={handleDraft} loading={loading} autoFocus>
+          Yes
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
 
   return (
     <Container component="main" maxWidth="sm" sx={{ my: 2 }}>
+      {confirmDialog}
       <AlertMessage
         isOpen={alertState}
         message={alertMessage}
@@ -135,7 +178,7 @@ function Form({ isEdit, initialBlogState }) {
         <form encType="multipart/form-data">
           <Grid container sx={{ justifyContent: 'center', mb: 3 }}>
             <CardMedia
-              sx={{ border: '1px dashed lightgray', borderRadius: '2%' }}
+              sx={{ border: '2px dashed lightgray', borderRadius: '2%' }}
               component="img"
               alt="green iguana"
               height="300"
@@ -191,14 +234,14 @@ function Form({ isEdit, initialBlogState }) {
             {!isEdit && (
               <Grid item xs={12}>
                 <LoadingButton
-                  onClick={handleDraft}
+                  onClick={handleOpenDialog}
                   loading={loading}
                   variant="contained"
                   color="secondary"
                   size="large"
                   fullWidth
                 >
-                  Save to Draft
+                  Save to Drafts
                 </LoadingButton>
               </Grid>
             )}
