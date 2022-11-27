@@ -50,7 +50,7 @@ const signUpValidator = [
     .isLength({ min: 4 })
     .withMessage('Username must be 4 characters and above')
     .isAlphanumeric()
-    .withMessage('Special characters are not allowed')
+    .withMessage('Special characters in username are not allowed')
     .custom(userCustom.checkUsernameExistence)
     .withMessage('Username is already taken'),
 
@@ -58,7 +58,7 @@ const signUpValidator = [
   body('password')
     .trim()
     .isStrongPassword()
-    .withMessage('Weak Password'),
+    .withMessage('Password must be 8 characters above and have least one uppercase, lowercase, number, and a special character'),
 
   body('confirm_password')
     .trim()
@@ -83,7 +83,7 @@ const profileValidator = [
     .isLength({ min: 4 })
     .withMessage('Username must be 4 characters and above')
     .isAlphanumeric()
-    .withMessage('Special characters are not allowed')
+    .withMessage('Special characters in username are not allowed')
     .custom(userCustom.checkUsernameUpdate)
     .withMessage('Username is already taken'),
 ];
