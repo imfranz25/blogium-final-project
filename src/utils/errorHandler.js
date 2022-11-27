@@ -1,10 +1,11 @@
 const errorHandler = (error, navigate) => {
   const status = error.response?.status;
+  const type = 'error';
+  let message;
 
   if (status === 401) {
-    alert(error.response?.data?.message);
     localStorage.clear();
-    navigate('/login');
+    message = error.response?.data?.message;
   }
 
   if (status === 429) {
@@ -18,12 +19,14 @@ const errorHandler = (error, navigate) => {
   }
 
   if (error.response?.status === 422) {
-    alert(error.response?.data?.errors[0].msg);
+    message = error.response?.data?.errors[0].msg;
   }
 
   if (error.response?.status === 500) {
     alert(error.response?.data?.error?.message);
   }
+
+  return { type, message, status };
 };
 
 export default errorHandler;

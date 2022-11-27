@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 /* Components & Actions */
 import Input from '../components/Input';
+import AlertMessage from '../components/AlertMessage';
 import { loginUser } from '../actions/auth.action.js';
 
 /* Global Variable(s) */
@@ -20,8 +22,37 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const [loading, setLoading] = useState(false);
   const [loginFormData, setLoginFormData] = useState(initialLoginState);
   const [showPassword, setShowPassword] = useState(false);
+  const [alertState, setAlertState] = useState(false);
+  const [alertType, setAlertType] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
+
+  const handleAlertClose = () => {
+    setAlertState(false);
+  };
+
+  const handleChange = (e) => {
+    setLoginFormData({ ...loginFormData, [e.target.name]: e.target.value });
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    /* Check user Credentials */
+    const res = await dispatch(loginUser(loginFormData, navigate));
+
+    setAlertType(res.type);
+    setAlertMessage(res.message);
+    setAlertState(true);
+    setLoading(false);
+  };
 
   useEffect(() => {
     document.title = 'Login';
@@ -33,21 +64,14 @@ function Login() {
     }
   }, [token, navigate]);
 
-  const handleChange = (e) => {
-    setLoginFormData({ ...loginFormData, [e.target.name]: e.target.value });
-  };
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(loginUser(loginFormData, navigate));
-  };
-
   return (
     <Container component="main" maxWidth="xs" sx={{ my: 10 }}>
+      <AlertMessage
+        isOpen={alertState}
+        message={alertMessage}
+        handleClose={handleAlertClose}
+        type={alertType}
+      />
       <Paper elevation={3} sx={{ p: 5 }}>
         <Grid container sx={{ justifyContent: 'center' }}>
           <Avatar sx={{ backgroundColor: 'red' }}>
@@ -75,16 +99,17 @@ function Login() {
               handleShowPassword={handleShowPassword}
             />
             <Grid item sm={12}>
-              <Button
+              <LoadingButton
                 type="submit"
+                loading={loading}
                 variant="contained"
                 color="primary"
                 size="large"
-                fullWidth
                 sx={{ mt: 2 }}
+                fullWidth
               >
                 Login
-              </Button>
+              </LoadingButton>
             </Grid>
             <Grid justifyContent="center" marginTop={3} container>
               <Grid item>
