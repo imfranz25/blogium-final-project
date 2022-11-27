@@ -1,5 +1,5 @@
 import * as api from '../api';
-import { AUTH } from '../constants/actionTypes.js';
+import { AUTH, SUCCESS } from '../constants/actionTypes.js';
 import errorHandler from '../utils/errorHandler';
 
 const signUpUser = (userData, navigate) => async (_dispatch) => {
@@ -15,11 +15,11 @@ const signUpUser = (userData, navigate) => async (_dispatch) => {
   userFormData.append('profile_picture_url', userData.profile_picture_url);
 
   try {
-    await api.signUpUser(userFormData);
+    const { data } = await api.signUpUser(userFormData);
 
-    navigate('/login');
+    return { type: SUCCESS, message: data.message, status: 201 };
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -28,9 +28,9 @@ const updatePassword = (userCredentials, navigate) => async (_dispatch) => {
     const token = localStorage.getItem('token');
     const { data } = await api.updatePassword(userCredentials, token);
 
-    alert(data.message);
+    return { type: SUCCESS, message: data.message, status: 200 };
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -51,11 +51,11 @@ const updateUser = (userData, navigate) => async (_dispatch) => {
   try {
     const { data } = await api.updateUser(userFormData, token);
 
-    alert(data.message);
-
     localStorage.setItem('token', data.token);
+
+    return { type: SUCCESS, message: data.message, status: 200 };
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -65,9 +65,9 @@ const loginUser = (userCredentials, navigate) => async (dispatch) => {
 
     dispatch({ type: AUTH, payload: data.token });
 
-    return { type: 'success', message: data.message, status: 200 };
+    return { type: SUCCESS, message: data.message, status: 200 };
   } catch (error) {
-    return errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 

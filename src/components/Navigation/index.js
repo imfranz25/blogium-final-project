@@ -7,7 +7,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import HomeIcon from '@mui/icons-material/Home';
 import AllInboxIcon from '@mui/icons-material/AllInbox';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -121,15 +120,6 @@ function Navigation() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2, display: { xs: 'block', sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
           <LinkButton to="/" linkName="Blogium" brand />
           <LinkButton to="/" linkName="Home" Icon={HomeIcon} />
           <LinkButton to="/blog/add" linkName="Add Blog" Icon={PostAddIcon} />
@@ -156,27 +146,33 @@ function Navigation() {
                     onClick={clearSearchResult}
                     sx={{ borderBottom: '1px solid lightgray', py: 1 }}
                   >
-                    <Grid>
+                    <Grid
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        mr: 5,
+                      }}
+                    >
                       <Avatar
                         alt={blog?.user_id?.first_name}
                         src={URL_BACKEND + '/' + blog?.user_id?.profile_picture_url}
                         sx={{
                           backgroundColor: 'purple',
                           border: '1px solid lightgray',
-                          mr: 2,
                         }}
                       >
                         {blog?.user_id?.first_name?.charAt(0)}
                       </Avatar>
-                      <Typography variant="caption">{blog?.user_id?.first_name}</Typography>
+                      <Typography variant="caption">{blog?.user_id?.username}</Typography>
                     </Grid>
-                    <Grid container>
+                    <Grid>
                       <Typography variant="body1">{blog.title}</Typography>
+                      <Typography variant="caption">
+                        Created:
+                        {moment(blog.createdAt).format('M/D/YYYY')}
+                      </Typography>
                     </Grid>
-                    <Typography variant="caption">
-                      Created:
-                      {moment(blog.createdAt).format('M/D/YYYY, h:mm a')}
-                    </Typography>
                   </MenuItem>
                 ))}
               </Card>

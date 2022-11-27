@@ -51,6 +51,7 @@ function Login() {
     setAlertType(res.type);
     setAlertMessage(res.message);
     setAlertState(true);
+
     setLoading(false);
   };
 

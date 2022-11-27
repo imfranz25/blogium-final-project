@@ -21,7 +21,13 @@ function Home() {
 
   useEffect(() => {
     setLoading(true);
-    dispatch(getBlogs(navigate));
+
+    const fetchData = async () => {
+      return await dispatch(getBlogs(navigate));
+    };
+
+    fetchData();
+
     setLoading(false);
   }, [dispatch, navigate]);
 

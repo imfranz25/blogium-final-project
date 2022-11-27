@@ -1,4 +1,5 @@
 import * as api from '../api';
+import errorHandler from '../utils/errorHandler';
 import {
   FETCH_ALL,
   CREATE,
@@ -6,8 +7,8 @@ import {
   DELETE,
   FETCH_MY_BLOG,
   SEARCH,
+  SUCCESS,
 } from '../constants/actionTypes.js';
-import errorHandler from '../utils/errorHandler';
 
 const getBlogs = (navigate) => async (dispatch) => {
   try {
@@ -16,7 +17,7 @@ const getBlogs = (navigate) => async (dispatch) => {
 
     dispatch({ type: FETCH_ALL, payload: data.blogs });
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -27,7 +28,7 @@ const getMyBlogs = (navigate) => async (dispatch) => {
 
     dispatch({ type: FETCH_MY_BLOG, payload: data.blogs });
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -38,7 +39,7 @@ const getBlog = (blogId, navigate) => async (dispatch) => {
 
     dispatch({ type: FETCH, payload: data.blog });
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -54,12 +55,11 @@ const createBlog = (blogData, navigate) => async (dispatch) => {
     const token = localStorage.getItem('token');
     const { data } = await api.createBlog(blogFormData, token);
 
-    alert(data.message);
-
     dispatch({ type: CREATE, payload: data.blog });
-    navigate('/');
+
+    return { type: SUCCESS, message: data.message, status: 201 };
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -75,11 +75,9 @@ const updateBlog = (blogData, navigate) => async (dispatch) => {
     const token = localStorage.getItem('token');
     const { data } = await api.updateBlog(blogData.id, blogFormData, token);
 
-    alert(data.message);
-
-    navigate('/dashboard/blog');
+    return { type: SUCCESS, message: data.message, status: 200 };
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -88,12 +86,12 @@ const deleteBlog = (blogId, navigate) => async (dispatch) => {
     const token = localStorage.getItem('token');
     const { data } = await api.deleteBlog(blogId, token);
 
-    alert(data.message);
-
     // navigate('/dashboard/blog')
     dispatch({ type: DELETE, payload: data.blog });
+
+    return { type: SUCCESS, status: 200, message: data.message };
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -109,11 +107,9 @@ const draftBlog = (blogData, navigate) => async (_dispatch) => {
     const token = localStorage.getItem('token');
     const { data } = await api.draftBlog(blogFormData, token);
 
-    alert(data.message);
-
-    navigate('/dashboard/blog');
+    return { type: SUCCESS, status: 200, message: data.message };
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 
@@ -124,7 +120,7 @@ const searchBlog = (searchQuery, navigate) => async (dispatch) => {
 
     dispatch({ type: SEARCH, payload: data.blogs, searchQuery });
   } catch (error) {
-    errorHandler(error, navigate);
+    return errorHandler(error);
   }
 };
 

@@ -9,6 +9,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 /* Components */
 import Input from '../components/Input';
+import AlertMessage from '../components/AlertMessage';
 import { updatePassword, updateUser } from '../actions/auth.action';
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -30,6 +31,11 @@ function Profile() {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  /* Alert Message */
+  const [alertState, setAlertState] = useState(false);
+  const [alertType, setAlertType] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
 
   /* File */
   const [file, setFile] = useState(null);
@@ -53,18 +59,34 @@ function Profile() {
     document.title = 'Profile';
   }, []);
 
-  const handleChangePassword = (e) => {
+  const handleChangePassword = async (e) => {
     e.preventDefault();
     setLoading(true);
-    dispatch(updatePassword(userPassState, navigate));
+
+    const res = await dispatch(updatePassword(userPassState, navigate));
+
+    setAlertType(res.type);
+    setAlertMessage(res.message);
+    setAlertState(true);
+
     setLoading(false);
   };
 
-  const handleUserDataSubmit = (e) => {
+  const handleUserDataSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    dispatch(updateUser(userFormData, navigate));
+
+    const res = await dispatch(updateUser(userFormData, navigate));
+
+    setAlertType(res.type);
+    setAlertMessage(res.message);
+    setAlertState(true);
+
     setLoading(false);
+  };
+
+  const handleAlertClose = () => {
+    setAlertState(false);
   };
 
   const handleShowOldPassword = () => {
@@ -111,13 +133,18 @@ function Profile() {
   return (
     <>
       <Grid container>
+        <AlertMessage
+          isOpen={alertState}
+          message={alertMessage}
+          handleClose={handleAlertClose}
+          type={alertType}
+        />
         <CardMedia
           component="img"
           height="270"
           image={`https://i.picsum.photos/id/122/4147/2756.jpg?hmac=-B_1uAvYufznhjeA9xSSAJjqt07XrVzDWCf5VDNX0pQ`}
           sx={{ zIndex: 'modal' }}
         />
-
         <Container sx={{ mt: -10, zIndex: 'tooltip', mb: 10 }}>
           <Grid justifyContent="center" sx={{ zIndex: 'tooltip' }} container>
             <Avatar

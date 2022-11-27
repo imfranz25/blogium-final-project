@@ -4,7 +4,9 @@ const reducer = (blogs = [], action) => {
   switch (action.type) {
     case SEARCH:
       if (action.searchQuery.trim()) {
-        return action.payload.filter((blog) => blog.title.includes(action.searchQuery));
+        return action.payload.filter((blog) => {
+          return blog.title.toLowerCase().includes(action.searchQuery.toLowerCase());
+        });
       }
 
       return [];

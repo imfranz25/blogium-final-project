@@ -1,7 +1,7 @@
-const errorHandler = (error, navigate) => {
+const errorHandler = (error) => {
   const status = error.response?.status;
   const type = 'error';
-  let message;
+  let message = '';
 
   if (status === 401) {
     localStorage.clear();
@@ -9,13 +9,12 @@ const errorHandler = (error, navigate) => {
   }
 
   if (status === 429) {
-    alert(error.response?.data?.message);
+    message = error.response?.data?.message;
   }
 
   if (status === 403) {
     alert('Session Timeout');
     localStorage.clear();
-    navigate('/login');
   }
 
   if (error.response?.status === 422) {
@@ -23,7 +22,7 @@ const errorHandler = (error, navigate) => {
   }
 
   if (error.response?.status === 500) {
-    alert(error.response?.data?.error?.message);
+    message = error.response?.data?.error?.message;
   }
 
   return { type, message, status };

@@ -8,6 +8,7 @@ import ImageIcon from '@mui/icons-material/Image';
 
 /* Components & Actions */
 import Input from './Input';
+import AlertMessage from '../components/AlertMessage';
 import defaultCover from '../assets/images/default-cover.jpg';
 import { createBlog, draftBlog, updateBlog } from '../actions/blog.action.js';
 
@@ -21,6 +22,11 @@ function Form({ isEdit, initialBlogState }) {
   const [blogFormState, setBlogFormState] = useState(initialBlogState);
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(defaultCover);
+
+  /* Alert Message */
+  const [alertState, setAlertState] = useState(false);
+  const [alertType, setAlertType] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
 
   useEffect(() => {
     if (isEdit) {
@@ -69,37 +75,70 @@ function Form({ isEdit, initialBlogState }) {
     setBlogFormState({ ...blogFormState, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const alertHandler = (res) => {
+    setAlertType(res.type);
+    setAlertMessage(res.message);
+    setAlertState(true);
+    setLoading(false);
+  };
+
+  const handleSubmit = async (e) => {
+    let res;
     setLoading(true);
 
     if (isEdit) {
-      dispatch(updateBlog(blogFormState, navigate));
+      res = await dispatch(updateBlog(blogFormState, navigate));
     } else {
-      dispatch(createBlog(blogFormState, navigate));
+      res = await dispatch(createBlog(blogFormState, navigate));
     }
 
-    setLoading(false);
+    if (res?.type !== 'error') {
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+    }
+
+    alertHandler(res);
   };
 
-  const handleDraft = (e) => {
+  const handleDraft = async (e) => {
     setLoading(true);
-    dispatch(draftBlog(blogFormState, navigate));
-    setLoading(false);
+
+    /* Submit draft blog */
+    const res = await dispatch(draftBlog(blogFormState, navigate));
+
+    if (res?.type !== 'error') {
+      setTimeout(() => {
+        navigate('/dashboard/blog');
+      }, 500);
+    }
+
+    alertHandler(res);
+  };
+
+  const handleAlertClose = () => {
+    setAlertState(false);
   };
 
   return (
-    <Container component="main" maxWidth="sm" sx={{ my: 10 }}>
-      <Paper elevation={5} sx={{ p: 5 }}>
+    <Container component="main" maxWidth="sm" sx={{ my: 2 }}>
+      <AlertMessage
+        isOpen={alertState}
+        message={alertMessage}
+        handleClose={handleAlertClose}
+        type={alertType}
+      />
+      <Paper elevation={0} sx={{ p: 2 }}>
         <Typography variant="h5" sx={{ textAlign: 'center', py: 3 }}>
           {isEdit ? 'Edit blog' : 'Add Blog'}
         </Typography>
         <form encType="multipart/form-data">
           <Grid container sx={{ justifyContent: 'center', mb: 3 }}>
             <CardMedia
-              sx={{ border: '1px solid gray', borderRadius: '2%' }}
+              sx={{ border: '1px dashed lightgray', borderRadius: '2%' }}
               component="img"
               alt="green iguana"
-              height="200"
+              height="300"
               image={fileDataURL}
             />
           </Grid>

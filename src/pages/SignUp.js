@@ -8,6 +8,7 @@ import ImageIcon from '@mui/icons-material/Image';
 
 /* Components & Actions */
 import Input from '../components/Input';
+import AlertMessage from '../components/AlertMessage';
 import { signUpUser } from '../actions/auth.action.js';
 
 /* Global Variables */
@@ -29,12 +30,19 @@ function SignUp() {
   const [signUpFormState, setSignUpFormState] = useState(initialSignUpState);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
   /* File */
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(null);
 
+  /* Alert Message */
+  const [alertState, setAlertState] = useState(false);
+  const [alertType, setAlertType] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
+
   const imageChangeHandler = (e) => {
     const file = e.target.files[0];
+
     if (!file) {
       alert('No file selected');
       return;
@@ -43,8 +51,13 @@ function SignUp() {
       alert('Image type is not valid');
       return;
     }
+
     setFile(file);
     setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.files[0] });
+  };
+
+  const handleAlertClose = () => {
+    setAlertState(false);
   };
 
   const handleChange = (e) => {
@@ -59,11 +72,24 @@ function SignUp() {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    dispatch(signUpUser(signUpFormState, navigate));
-    setLoading(false);
+
+    /* Submit user details to back-end */
+    const res = await dispatch(signUpUser(signUpFormState, navigate));
+
+    setAlertType(res.type);
+    setAlertMessage(res.message);
+    setAlertState(true);
+
+    if (res?.type === 'error') {
+      setLoading(false);
+    } else {
+      setTimeout(() => {
+        navigate('/login');
+      }, 500);
+    }
   };
 
   useEffect(() => {
@@ -93,6 +119,12 @@ function SignUp() {
 
   return (
     <Container component="main" maxWidth="sm" sx={{ my: 10 }}>
+      <AlertMessage
+        isOpen={alertState}
+        message={alertMessage}
+        handleClose={handleAlertClose}
+        type={alertType}
+      />
       <Paper elevation={5} sx={{ p: 5 }}>
         <Typography variant="h5" sx={{ textAlign: 'center', py: 3 }}>
           Sign Up

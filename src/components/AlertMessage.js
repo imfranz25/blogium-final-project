@@ -8,8 +8,9 @@ function AlertMessage({ message, isOpen, handleClose, type = 'error' }) {
       autoHideDuration={4000}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      sx={{ zIndex: 999999999999 }}
     >
-      <Alert onClose={handleClose} severity={type} sx={{ width: '100%' }} variant="filled">
+      <Alert onClose={handleClose} severity={type} sx={{ width: 300 }} variant="filled">
         {message}
       </Alert>
     </Snackbar>
