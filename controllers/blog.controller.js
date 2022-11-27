@@ -23,6 +23,10 @@ exports.getBlog = async (req, res, next) => {
       return res.status(404).json({ message: 'Blog not found' });
     }
 
+    if (blog.is_draft && blog.user_id._id.toString() !== req.user._id) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+
     res.status(200).json({ message: 'Blog fetched', blog });
   } catch (error) {
     next(error);
