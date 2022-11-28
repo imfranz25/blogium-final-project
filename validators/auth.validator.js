@@ -27,7 +27,7 @@ const signUpValidator = [
     .isEmpty()
     .withMessage('First name is required')
     .isAlpha('en-US', { ignore: ' ' })
-    .withMessage('Invalid first name'),
+    .withMessage('Invalid first name, must only contain letters'),
 
   body('last_name')
     .trim()
@@ -35,7 +35,7 @@ const signUpValidator = [
     .isEmpty()
     .withMessage('Last name is required')
     .isAlpha('en-US', { ignore: ' ' })
-    .withMessage('Invalid last name'),
+    .withMessage('Invalid last name, must only contain letters'),
 
   body('email')
     .trim()
@@ -96,7 +96,7 @@ const passwordValidator = [
   body('old_password')
     .trim()
     .custom(userCustom.checkOldPassword)
-    .withMessage('Incorrect Password'),
+    .withMessage('Incorrect current Password'),
 ];
 
 module.exports = {
