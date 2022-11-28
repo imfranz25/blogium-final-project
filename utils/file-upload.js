@@ -54,9 +54,9 @@ const fileDelete = (req, image, folder) => {
       if (error) {
         return false;
       }
-
-      return true;
     });
+
+    return true;
   }
 };
 
