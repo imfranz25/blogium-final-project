@@ -136,7 +136,7 @@ function Blog({ blog, action }) {
             </IconButton>
           )
         }
-        title={`${blog.user_id?.username} ${blog.is_draft && '[Draft]'}`}
+        title={`${blog.user_id?.username} ${blog.is_draft ? '[Draft]' : ''}`}
         subheader={moment(blog.createdAt).fromNow()}
       />
       <CardMedia component="img" height="194" image={blogImage} alt={blog.title} />
