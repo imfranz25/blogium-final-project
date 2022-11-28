@@ -4,13 +4,17 @@ test
 
 # Files
 package-lock.json
-faker.js
+seeds.js
 
 # images
 *.png
 *.jpg
 *.jpeg
 *.jfif
+
+# for seeds images
+!?.png
+!?.jpg
 
 # retain default images
 !default.jpg
