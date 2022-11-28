@@ -1,6 +1,5 @@
 /* Core Modules */
 const path = require('path');
-const fs = require('fs');
 
 /* 3rd Party Module(s) */
 const { validationResult } = require('express-validator');
@@ -8,6 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 
 /* Models & Helpers */
 const { Blog } = require('../models');
+const { multerUpload } = require('../utils');
 
 /**
  * Create a new user
@@ -89,14 +89,9 @@ exports.postBlog = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     if (image) {
-      const imageFileName = req.imageId + '-' + image.originalname;
-      const imagePath = path.join('public', 'uploads', 'blogs', imageFileName);
-
-      fs.unlink(imagePath, (error) => {
-        if (error) {
-          return res.status(500).json({ message: 'Internal Server Error' });
-        }
-      });
+      if (!multerUpload.fileDelete(req, image, 'blogs')) {
+        return res.status(500).json({ message: 'Internal Server Error' });
+      }
     }
     return res.status(422).json({ message: 'Invalid Inputs', errors: errors.array() });
   }

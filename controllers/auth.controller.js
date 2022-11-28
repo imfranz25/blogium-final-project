@@ -8,8 +8,8 @@ const { v4: uuidv4 } = require('uuid');
 
 /* Models & Helpers */
 const { User } = require('../models');
-const { passGen, tokenGenerator } = require('../utils');
-const { request } = require('../app');
+const { passGen, tokenGenerator, multerUpload } = require('../utils');
+
 /**
  * Create a new user
  * @route POST /signup
@@ -30,15 +30,11 @@ exports.postSignUp = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     if (image) {
-      const imageFileName = req.imageId + '-' + image.originalname;
-      const imagePath = path.join('public', 'uploads', 'profiles', imageFileName);
-
-      fs.unlink(imagePath, (error) => {
-        if (error) {
-          return res.status(500).json({ message: 'Internal Server Error' });
-        }
-      });
+      if (!multerUpload.fileDelete(req, image, 'profiles')) {
+        return res.status(500).json({ message: 'Internal Server Error' });
+      }
     }
+
     return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });
   }
 
@@ -76,14 +72,9 @@ exports.updateProfile = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     if (image) {
-      const imageFileName = req.imageId + '-' + image.originalname;
-      const uploadedImagePath = path.join('public', 'uploads', 'profiles', imageFileName);
-
-      fs.unlink(uploadedImagePath, (error) => {
-        if (error) {
-          return res.status(500).json({ message: 'Internal Server Error' });
-        }
-      });
+      if (!multerUpload.fileDelete(req, image, 'profiles')) {
+        return res.status(500).json({ message: 'Internal Server Error' });
+      }
     }
 
     return res.status(422).json({ message: 'Invalid Input', errors: errors.array() });

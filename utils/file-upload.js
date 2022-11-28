@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
@@ -44,9 +45,25 @@ const fileFields = [
   },
 ];
 
+const fileDelete = (req, image, folder) => {
+  if (image) {
+    const imageFileName = req.imageId + '-' + image.originalname;
+    const imagePath = path.join('public', 'uploads', folder, imageFileName);
+
+    fs.unlink(imagePath, (error) => {
+      if (error) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+};
+
 module.exports = {
   fileStorage,
   fileFilter,
   fileFields,
   fileLimits,
+  fileDelete,
 };
