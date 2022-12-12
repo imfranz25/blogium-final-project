@@ -8,7 +8,7 @@ const createUserValidator = {
       type: String,
       options: val => {
         if (!validator.isAlpha(val.trim())) {
-          throw new parseValidationError('First Name must contain letters only');
+          throw parseValidationError('First Name must contain letters only');
         }
 
         return true;
@@ -19,7 +19,7 @@ const createUserValidator = {
       type: String,
       options: val => {
         if (!validator.isAlpha(val.trim())) {
-          throw new parseValidationError('First Name must contain letters only');
+          throw parseValidationError('First Name must contain letters only');
         }
 
         return true;
@@ -30,7 +30,7 @@ const createUserValidator = {
       type: String,
       options: val => {
         if (!validator.isEmail(val.trim())) {
-          throw new parseValidationError('Invalid email format');
+          throw parseValidationError('Invalid email format');
         }
 
         return true;
@@ -41,7 +41,7 @@ const createUserValidator = {
       type: String,
       options: val => {
         if (!validator.isAlphanumeric(val.trim())) {
-          throw new parseValidationError('Special characters in username are not allowed');
+          throw parseValidationError('Special characters in username are not allowed');
         }
 
         return true;
@@ -52,7 +52,7 @@ const createUserValidator = {
       type: String,
       options: val => {
         if (!validator.isStrongPassword(val.trim())) {
-          throw new parseValidationError(
+          throw parseValidationError(
             'Password must be 8 characters above and have least one uppercase, lowercase, number, and a special character'
           );
         }
@@ -67,11 +67,4 @@ const createUserValidator = {
   },
 };
 
-const editUserValidator = {
-  email: {
-    required: true,
-    type: String,
-  },
-};
-
-module.exports = { createUserValidator, editUserValidator };
+module.exports = { createUserValidator };
