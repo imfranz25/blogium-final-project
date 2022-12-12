@@ -2,7 +2,7 @@
 // compatible API routes.
 require('dotenv').config();
 const express = require('express');
-const { ParseServer, ParseGraphQLServer } = require('parse-server');
+const { ParseServer } = require('parse-server');
 const path = require('path');
 const cors = require('cors');
 const args = process.argv || [];
