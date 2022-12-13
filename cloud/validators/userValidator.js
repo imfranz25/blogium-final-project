@@ -31,6 +31,10 @@ const userNameValidator = {
   required: true,
   type: String,
   options: val => {
+    if (!validator.isLength(val.trim(), { min: 4 })) {
+      throw new Parse.Error(Parse.Error.VALIDATION_ERROR, 'Username must be 4 characters above');
+    }
+
     if (!validator.isAlphanumeric(val.trim())) {
       throw new Parse.Error(
         Parse.Error.VALIDATION_ERROR,
