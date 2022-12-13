@@ -1,25 +1,25 @@
+/* 3rd Party Modules */
 const validator = require('validator');
-const parseValidationError = require('../helpers/parseErrorHandler');
 
 const createUserValidator = {
   fields: {
-    first_name: {
+    firstName: {
       required: true,
       type: String,
       options: val => {
-        if (!validator.isAlpha(val.trim())) {
-          throw parseValidationError('First Name must contain letters only');
+        if (!validator.isAlpha(val.trim(), 'en-US', { ignore: ' ' })) {
+          throw new Parse.Error(Parse.Error.VALIDATION_ERROR, 'First name must contain letters');
         }
 
         return true;
       },
     },
-    last_name: {
+    lastName: {
       required: true,
       type: String,
       options: val => {
-        if (!validator.isAlpha(val.trim())) {
-          throw parseValidationError('First Name must contain letters only');
+        if (!validator.isAlpha(val.trim(), 'en-US', { ignore: ' ' })) {
+          throw new Parse.Error(Parse.Error.VALIDATION_ERROR, 'Last name must contain letters');
         }
 
         return true;
@@ -30,7 +30,7 @@ const createUserValidator = {
       type: String,
       options: val => {
         if (!validator.isEmail(val.trim())) {
-          throw parseValidationError('Invalid email format');
+          throw new Parse.Error(Parse.Error.VALIDATION_ERROR, 'Invalid email format');
         }
 
         return true;
@@ -41,7 +41,10 @@ const createUserValidator = {
       type: String,
       options: val => {
         if (!validator.isAlphanumeric(val.trim())) {
-          throw parseValidationError('Special characters in username are not allowed');
+          throw new Parse.Error(
+            Parse.Error.VALIDATION_ERROR,
+            'Special characters in username are not allowed'
+          );
         }
 
         return true;
@@ -52,7 +55,8 @@ const createUserValidator = {
       type: String,
       options: val => {
         if (!validator.isStrongPassword(val.trim())) {
-          throw parseValidationError(
+          throw new Parse.Error(
+            Parse.Error.VALIDATION_ERROR,
             'Password must be 8 characters above and have least one uppercase, lowercase, number, and a special character'
           );
         }
@@ -60,7 +64,7 @@ const createUserValidator = {
         return true;
       },
     },
-    confirm_password: {
+    confirmPassword: {
       required: true,
       type: String,
     },
