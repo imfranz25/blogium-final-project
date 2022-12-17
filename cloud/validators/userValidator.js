@@ -1,13 +1,17 @@
 /* 3rd Party Modules */
 const validator = require('validator');
 
-const nameValidator = errorMsg => {
+const nameValidator = field => {
   return {
     required: true,
     type: String,
     options: val => {
+      if (validator.isEmpty(val.trim())) {
+        throw new Parse.Error(Parse.Error.VALIDATION_ERROR, `${field} is required`);
+      }
+
       if (!validator.isAlpha(val.trim(), 'en-US', { ignore: ' ' })) {
-        throw new Parse.Error(Parse.Error.VALIDATION_ERROR, errorMsg);
+        throw new Parse.Error(Parse.Error.VALIDATION_ERROR, `${field} must only contain letters`);
       }
 
       return true;
@@ -63,10 +67,10 @@ const strongPasswordValidator = {
 
 const createUserValidator = {
   fields: {
-    firstName: nameValidator('First name must only contain letters'),
-    lastName: nameValidator('Last name must only contain letters'),
+    firstName: nameValidator('First name'),
+    lastName: nameValidator('Last name'),
     email: emailValidator,
-    username: userNameValidator,
+    userName: userNameValidator,
     password: strongPasswordValidator,
     confirmPassword: {
       required: true,

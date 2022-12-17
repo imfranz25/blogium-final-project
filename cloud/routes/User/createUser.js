@@ -6,10 +6,7 @@ const createUser = async req => {
     const { firstName, lastName, userName, email, password, confirmPassword } = req.params;
 
     if (password !== confirmPassword) {
-      throw Parse.Error(
-        Parse.Error.VALIDATION_ERROR,
-        'Password and Confirm Password does not match'
-      );
+      throw new Parse.Error(422, 'Password and Confirm Password does not match');
     }
 
     const newACL = new Parse.ACL();
@@ -28,9 +25,15 @@ const createUser = async req => {
 
     await newUser.signUp();
 
-    return 'Sign up Success';
+    return 'Sign up success';
   } catch (error) {
-    throw Parse.Error(Parse.Error.INTERNAL_SERVER_ERROR, error.message);
+    let errorType = Parse.Error.INTERNAL_SERVER_ERROR;
+
+    if (error.code === 422) {
+      errorType = Parse.Error.VALIDATION_ERROR;
+    }
+
+    throw new Parse.Error(errorType, error.message);
   }
 };
 
