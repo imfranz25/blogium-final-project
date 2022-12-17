@@ -1,5 +1,6 @@
 /* 3rd Party Modules */
 import React from 'react';
+import Parse from 'parse';
 import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -11,10 +12,18 @@ import router from './router';
 import rootReducer from './reducers';
 import './index.css';
 
-/* React & Strore Set-up */
+/* React & Store Set-up */
+const store = configureStore({ reducer: rootReducer });
 const container = document.getElementById('root');
 const root = createRoot(container);
-const store = configureStore({ reducer: rootReducer });
+
+/* Parse Server Config */
+const PARSE_APPLICATION_ID = process.env.PARSE_APPLICATION_ID || 'myAppId';
+const PARSE_SERVER_URL = process.env.PARSE_SERVER_URL || 'http://localhost:1337/parse/';
+const PARSE_JAVASCRIPT_KEY = process.env.PARSE_JAVASCRIPT_KEY || 'myJSKey';
+
+Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
+Parse.serverURL = PARSE_SERVER_URL;
 
 /* Render App */
 root.render(
