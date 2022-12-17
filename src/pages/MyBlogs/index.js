@@ -1,14 +1,14 @@
 /* Module Imports */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Grid, Grow, CircularProgress, Tabs, Tab } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
 /* Components */
-import Blogs from '../components/Blogs';
+import Blogs from '../../components/Blogs';
 
 /* Actions */
-import { getMyBlogs } from '../actions/blog.action.js';
+import { getMyBlogs } from '../../actions/blog.action.js';
 
 function MyBlogs() {
   const [isLoading, setLoading] = useState(true);

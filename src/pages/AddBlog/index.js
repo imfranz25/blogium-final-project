@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 /* Actions & Components */
-import BlogForm from '../components/BlogForm';
+import BlogForm from '../../components/BlogForm';
 
 function AddBlog() {
   const initialBlogState = {

@@ -8,9 +8,9 @@ import ImageIcon from '@mui/icons-material/Image';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 /* Components */
-import Input from '../components/Input';
-import AlertMessage from '../components/AlertMessage';
-import { updatePassword, updateUser } from '../actions/auth.action';
+import Input from '../../components/Input';
+import AlertMessage from '../../components/AlertMessage';
+import { updatePassword, updateUser } from '../../actions/auth.action';
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 const initialPasswordChange = {

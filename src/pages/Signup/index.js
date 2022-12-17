@@ -7,9 +7,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import ImageIcon from '@mui/icons-material/Image';
 
 /* Components & Actions */
-import Input from '../components/Input';
-import AlertMessage from '../components/AlertMessage';
-import { signUpUser } from '../actions/auth.action.js';
+import Input from '../../components/Input';
+import AlertMessage from '../../components/AlertMessage';
+import { signUpUser } from '../../actions/auth.action.js';
 
 /* Global Variables */
 const imageMimeType = /image\/(png|jpg|jpeg)/i;

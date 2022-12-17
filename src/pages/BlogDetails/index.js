@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 
 /* Components & Actions */
-import { getBlog } from '../actions/blog.action';
+import { getBlog } from '../../actions/blog.action';
 
 /* Global variables */
 const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;

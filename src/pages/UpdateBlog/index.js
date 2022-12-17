@@ -5,8 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Typography, Grid } from '@mui/material';
 
 /* Actions & Components */
-import BlogForm from '../components/BlogForm';
-import { getBlog } from '../actions/blog.action.js';
+import BlogForm from '../../components/BlogForm';
+import { getBlog } from '../../actions/blog.action.js';
 
 function UpdateBlog() {
   const params = useParams();

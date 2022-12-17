@@ -7,9 +7,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 /* Components & Actions */
-import Input from '../components/Input';
-import AlertMessage from '../components/AlertMessage';
-import { loginUser } from '../actions/auth.action.js';
+import Input from '../../components/Input';
+import AlertMessage from '../../components/AlertMessage';
+import { loginUser } from '../../actions/auth.action.js';
 
 /* Global Variable(s) */
 const initialLoginState = {
@@ -115,7 +115,7 @@ function Login() {
             <Grid justifyContent="center" marginTop={3} container>
               <Grid item>
                 <Link to="/signup" style={{ textDecoration: 'none' }}>
-                  <Button sx={{ textTransform: 'unset' }}>Don't have an account?</Button>
+                  <Button sx={{ textTransform: 'unset' }}>Don&apos;t have an account?</Button>
                 </Link>
               </Grid>
             </Grid>
