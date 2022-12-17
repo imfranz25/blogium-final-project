@@ -15,9 +15,6 @@ import {
   Container,
 } from '@mui/material';
 
-/* Components & Actions */
-import { getBlog } from '../../actions/blog.action';
-
 /* Global variables */
 const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
 
@@ -37,7 +34,7 @@ function BlogDetails() {
   );
 
   useEffect(() => {
-    dispatch(getBlog(blogId, navigate));
+    // getBlog(blogId);
   }, [blogId, navigate, dispatch]);
 
   useEffect(() => {

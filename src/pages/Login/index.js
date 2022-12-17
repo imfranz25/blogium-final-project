@@ -1,6 +1,5 @@
 /* 3rd Party Libraries */
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -9,7 +8,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 /* Components & Actions */
 import Input from '../../components/Input';
 import AlertMessage from '../../components/AlertMessage';
-import { loginUser } from '../../actions/auth.action.js';
 
 /* Global Variable(s) */
 const initialLoginState = {
@@ -19,7 +17,6 @@ const initialLoginState = {
 };
 
 function Login() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const [loading, setLoading] = useState(false);
@@ -46,7 +43,8 @@ function Login() {
     setLoading(true);
 
     /* Check user Credentials */
-    const res = await dispatch(loginUser(loginFormData, navigate));
+    // loginUser(loginFormData);
+    const res = {};
 
     setAlertType(res.type);
     setAlertMessage(res.message);

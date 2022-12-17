@@ -1,7 +1,6 @@
 /* 3rd party Modules */
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ImageIcon from '@mui/icons-material/Image';
@@ -9,23 +8,21 @@ import ImageIcon from '@mui/icons-material/Image';
 /* Components & Actions */
 import Input from '../../components/Input';
 import AlertMessage from '../../components/AlertMessage';
-import { signUpUser } from '../../actions/auth.action.js';
+import signUpUser from './api';
 
 /* Global Variables */
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 const initialSignUpState = {
-  first_name: '',
-  last_name: '',
-  username: '',
+  firstName: '',
+  lastName: '',
+  userName: '',
   email: '',
   password: '',
-  confirm_password: '',
-  profile_picture_url: '',
+  confirmPassword: '',
+  profilePictureUrl: '',
 };
 
 function SignUp() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [signUpFormState, setSignUpFormState] = useState(initialSignUpState);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -76,20 +73,18 @@ function SignUp() {
     e.preventDefault();
     setLoading(true);
 
-    /* Submit user details to back-end */
-    const res = await dispatch(signUpUser(signUpFormState, navigate));
+    try {
+      const response = await signUpUser(signUpFormState);
 
-    setAlertType(res.type);
-    setAlertMessage(res.message);
-    setAlertState(true);
-
-    if (res?.type === 'error') {
-      setLoading(false);
-    } else {
-      setTimeout(() => {
-        navigate('/login');
-      }, 500);
+      setAlertType('success');
+      setAlertMessage(response);
+    } catch (error) {
+      setAlertType('error');
+      setAlertMessage(error.message);
     }
+
+    setAlertState(true);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -146,7 +141,7 @@ function SignUp() {
             >
               Upload Picture
               <Input
-                name="profile_picture_url"
+                name="profilePictureUrl"
                 handleChange={imageChangeHandler}
                 type="file"
                 hidden
@@ -155,7 +150,7 @@ function SignUp() {
           </Grid>
           <Grid container spacing={2}>
             <Input
-              name="first_name"
+              name="firstName"
               handleChange={handleChange}
               label="First Name"
               type="text"
@@ -164,7 +159,7 @@ function SignUp() {
             />
             {/* prettier-ignore */}
             <Input 
-              name="last_name" 
+              name="lastName" 
               handleChange={handleChange} 
               label="Last Name" 
               type="text" 
@@ -179,7 +174,7 @@ function SignUp() {
             />
             {/* prettier-ignore */}
             <Input 
-              name="username" 
+              name="userName" 
               handleChange={handleChange} 
               label="Username" 
               type="text" 
@@ -192,7 +187,7 @@ function SignUp() {
               handleShowPassword={handleShowPassword}
             />
             <Input
-              name="confirm_password"
+              name="confirmPassword"
               label="Confirm Password"
               handleChange={handleChange}
               type={showConfirmPassword ? 'text' : 'password'}

@@ -7,9 +7,6 @@ import { useDispatch } from 'react-redux';
 /* Components */
 import Blogs from '../../components/Blogs';
 
-/* Actions */
-import { getBlogs } from '../../actions/blog.action.js';
-
 function Home() {
   const [isLoading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -23,7 +20,7 @@ function Home() {
     setLoading(true);
 
     const fetchData = async () => {
-      return await dispatch(getBlogs(navigate));
+      // getBlogs(navigate);
     };
 
     fetchData();

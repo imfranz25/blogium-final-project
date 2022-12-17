@@ -1,8 +1,7 @@
 /* 3rd party Modules */
 import moment from 'moment/moment';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { red } from '@mui/material/colors';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -27,12 +26,7 @@ import {
   DialogActions,
 } from '@mui/material';
 
-/* Actions & Components */
-import { deleteBlog } from '../actions/blog.action';
-
 function Blog({ blog, action }) {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -62,7 +56,7 @@ function Blog({ blog, action }) {
 
   const handleDelete = () => {
     setOpenDialog(false);
-    dispatch(deleteBlog(blog.id, navigate));
+    // deleteBlog(blog.id);
   };
 
   const menuId = blog?.id;

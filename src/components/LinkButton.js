@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Button, Avatar } from '@mui/material';
 import blogiumLogo from '../assets/images/blogium.png';

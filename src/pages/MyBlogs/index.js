@@ -7,9 +7,6 @@ import { useDispatch } from 'react-redux';
 /* Components */
 import Blogs from '../../components/Blogs';
 
-/* Actions */
-import { getMyBlogs } from '../../actions/blog.action.js';
-
 function MyBlogs() {
   const [isLoading, setLoading] = useState(true);
   const [tab, setTab] = useState('all');
@@ -26,7 +23,9 @@ function MyBlogs() {
 
   useEffect(() => {
     setLoading(true);
-    dispatch(getMyBlogs(navigate));
+
+    // getMyBlogs(navigate);
+
     setLoading(false);
   }, [dispatch, navigate]);
 

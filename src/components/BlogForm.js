@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ImageIcon from '@mui/icons-material/Image';
@@ -21,13 +20,11 @@ import {
 import Input from './Input';
 import AlertMessage from '../components/AlertMessage';
 import defaultCover from '../assets/images/default-cover.jpg';
-import { createBlog, draftBlog, updateBlog } from '../actions/blog.action.js';
 
 /* Global Variables */
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 function Form({ isEdit, initialBlogState }) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [blogFormState, setBlogFormState] = useState(initialBlogState);
@@ -98,14 +95,14 @@ function Form({ isEdit, initialBlogState }) {
     setLoading(false);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     let res;
     setLoading(true);
 
     if (isEdit) {
-      res = await dispatch(updateBlog(blogFormState, navigate));
+      // updateBlog(blogFormState);
     } else {
-      res = await dispatch(createBlog(blogFormState, navigate));
+      // createBlog(blogFormState);
     }
 
     if (res?.type !== 'error') {
@@ -117,11 +114,12 @@ function Form({ isEdit, initialBlogState }) {
     alertHandler(res);
   };
 
-  const handleDraft = async (e) => {
+  const handleDraft = async () => {
     setLoading(true);
 
     /* Submit draft blog */
-    const res = await dispatch(draftBlog(blogFormState, navigate));
+    // const res = await draftBlog(blogFormState);
+    const res = {};
 
     if (res?.type !== 'error') {
       setTimeout(() => {

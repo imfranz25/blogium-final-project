@@ -20,8 +20,9 @@ const root = createRoot(container);
 /* Parse Server Config */
 const PARSE_APPLICATION_ID = process.env.PARSE_APPLICATION_ID || 'myAppId';
 const PARSE_SERVER_URL = process.env.PARSE_SERVER_URL || 'http://localhost:1337/parse/';
-const PARSE_JAVASCRIPT_KEY = process.env.PARSE_JAVASCRIPT_KEY || 'myJSKey';
+const PARSE_JAVASCRIPT_KEY = process.env.PARSE_JAVASCRIPT_KEY || 'myMasterKey';
 
+/* Initialize Parse Server */
 Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY);
 Parse.serverURL = PARSE_SERVER_URL;
 

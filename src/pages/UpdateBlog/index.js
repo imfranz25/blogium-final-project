@@ -1,17 +1,15 @@
 /* 3rd party Modules */
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Typography, Grid } from '@mui/material';
 
 /* Actions & Components */
 import BlogForm from '../../components/BlogForm';
-import { getBlog } from '../../actions/blog.action.js';
 
 function UpdateBlog() {
   const params = useParams();
   const blogId = params.blogId;
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const existingBlog = useSelector((state) => {
     return state.blogReducer[0];
@@ -23,9 +21,9 @@ function UpdateBlog() {
 
   useEffect(() => {
     if (blogId) {
-      dispatch(getBlog(blogId, navigate));
+      // getBlog(blogId);
     }
-  }, [dispatch, navigate, blogId]);
+  }, [navigate, blogId]);
 
   return (
     <>

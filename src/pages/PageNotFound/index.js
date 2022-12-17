@@ -1,6 +1,6 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import blogiumLogo from '../assets/images/blogium.png';
+import blogiumLogo from '../../assets/images/blogium.png';
 import { Link } from 'react-router-dom';
 
 export default function Error() {

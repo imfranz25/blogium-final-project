@@ -2,7 +2,7 @@
 import moment from 'moment';
 import jwtDecode from 'jwt-decode';
 import { debounce } from 'lodash';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import HomeIcon from '@mui/icons-material/Home';
@@ -25,8 +25,6 @@ import LinkButton from '../LinkButton';
 import { Search, SearchIconWrapper, StyledInputBase, paperPropStyles } from './style';
 
 /* Action Type -> Dispatch Logout */
-import { searchBlog } from '../../actions/blog.action';
-import { LOGOUT, CLEAR } from '../../constants/actionTypes';
 import { Card, Typography } from '@mui/material';
 
 /* Global Variables */
@@ -45,11 +43,11 @@ function Navigation() {
   });
 
   const clearSearchResult = () => {
-    dispatch({ type: CLEAR, payload: [] });
+    // dispatch({ type: CLEAR, payload: [] });
   };
 
-  const handleSearch = debounce((e) => {
-    dispatch(searchBlog(e.target.value, navigate));
+  const handleSearch = debounce(() => {
+    // searchBlog(e.target.value);
   }, 500);
 
   const handleProfileMenuOpen = (event) => {
@@ -61,7 +59,7 @@ function Navigation() {
   };
 
   const handleLogout = () => {
-    dispatch({ type: LOGOUT });
+    // dispatch({ type: LOGOUT });
     setAnchorEl(null);
     navigate('/login');
   };
@@ -72,7 +70,7 @@ function Navigation() {
 
     try {
       decodedUserData = jwtDecode(userData);
-      dispatch({ type: CLEAR, payload: [] });
+      // dispatch({ type: CLEAR, payload: [] });
     } catch (error) {
       navigate('/login'); // not a valid jwt token
     }

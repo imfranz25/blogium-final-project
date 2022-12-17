@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 /* Pages */
 import PrivateRoutes from '../utils/PrivateRoutes';
-import Home from '../pages/Home.js';
+import Home from '../pages/Home';
 import SignUp from '../pages/SignUp';
 import Login from '../pages/Login';
 import AddBlog from '../pages/AddBlog';
