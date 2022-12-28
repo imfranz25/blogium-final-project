@@ -3,7 +3,8 @@ const bcrypt = require('bcrypt');
 
 const createUser = async req => {
   try {
-    const { firstName, lastName, userName, email, password, confirmPassword } = req.params;
+    const { firstName, lastName, userName, email, password, confirmPassword, profilePicture } =
+      req.params;
 
     if (password !== confirmPassword) {
       throw new Parse.Error(422, 'Password and Confirm Password does not match');
@@ -13,10 +14,20 @@ const createUser = async req => {
     const newUser = new Parse.User();
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    /* Useer Profile Picture */
+    // const filePicture = { base64: profilePicture };
+    const filePicture = { base64: profilePicture };
+    const fileExtension = profilePicture.split(';')[0].split('/')[1];
+    const fileName = `${userName}.${fileExtension}`;
+    const savedProfilePicture = await new Parse.File(fileName, filePicture).save({
+      useMasterKey: true,
+    });
+
     newACL.setPublicReadAccess(true);
     newACL.setPublicWriteAccess(true);
 
     newUser.setACL(newACL);
+    newUser.set('profile_picture', savedProfilePicture._url);
     newUser.set('first_name', firstName);
     newUser.set('last_name', lastName);
     newUser.set('username', userName);
