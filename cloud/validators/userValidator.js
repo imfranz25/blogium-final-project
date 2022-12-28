@@ -1,6 +1,11 @@
 /* 3rd Party Modules */
 const validator = require('validator');
 
+const stringValidator = {
+  required: true,
+  type: String,
+};
+
 const nameValidator = field => {
   return {
     required: true,
@@ -72,10 +77,8 @@ const createUserValidator = {
     email: emailValidator,
     userName: userNameValidator,
     password: strongPasswordValidator,
-    confirmPassword: {
-      required: true,
-      type: String,
-    },
+    profilePicture: stringValidator,
+    confirmPassword: stringValidator,
   },
 };
 
@@ -90,18 +93,9 @@ const editUserValidator = {
 
 const editPasswordValidator = {
   fields: {
-    currentPassword: {
-      required: true,
-      type: String,
-    },
-    newPassword: {
-      required: true,
-      type: String,
-    },
-    confirmPassword: {
-      required: true,
-      type: String,
-    },
+    currentPassword: stringValidator,
+    newPassword: stringValidator,
+    confirmPassword: stringValidator,
   },
 };
 
