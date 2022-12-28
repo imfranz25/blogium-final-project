@@ -37,3 +37,6 @@ package.lock.json
 
 # Environment variables
 .env
+
+# Docker Volume
+volume
