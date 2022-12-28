@@ -19,7 +19,7 @@ const initialSignUpState = {
   email: '',
   password: '',
   confirmPassword: '',
-  profilePictureUrl: '',
+  profilePicture: '',
 };
 
 function SignUp() {
@@ -140,10 +140,11 @@ function SignUp() {
               sx={{ textTransform: 'unset' }}
             >
               Upload Picture
-              <Input
-                name="profilePictureUrl"
-                handleChange={imageChangeHandler}
-                type="file"
+              {/* prettier-ignore */}
+              <Input 
+                name="profilePicture" 
+                handleChange={imageChangeHandler} 
+                type="file" 
                 hidden
               />
             </Button>
