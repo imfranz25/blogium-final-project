@@ -50,7 +50,6 @@ function SignUp() {
     }
 
     setFile(file);
-    setSignUpFormState({ ...signUpFormState, [e.target.name]: e.target.files[0] });
   };
 
   const handleAlertClose = () => {
@@ -100,6 +99,7 @@ function SignUp() {
         const { result } = e.target;
         if (result && !isCancel) {
           setFileDataURL(result);
+          setSignUpFormState({ ...signUpFormState, profilePicture: result });
         }
       };
       fileReader.readAsDataURL(file);
