@@ -1,3 +1,4 @@
+const otherOptions = require('./parse.config.optional');
 const databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
 
 if (!databaseUri) {
@@ -9,6 +10,7 @@ if (!databaseUri) {
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 
 const config = {
+  logLevel: 'error',
   databaseURI: databaseUri || 'postgres://postgres:stratpoint@localhost:5432/blogium',
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
   appId: process.env.APP_ID || 'myAppId',
@@ -30,6 +32,15 @@ const config = {
   //     fromAddress: process.env.EMAIL_FROM || 'test@gmail.com',
   //     domain: process.env.MAILGUN_DOMAIN || 'gmail.com',
   //     apiKey: process.env.MAILGUN_API_KEY || 'apiKey',
+  //   },
+  // },
+
+  // filesAdapter: {
+  //   module: '@parse/fs-files-adapter',
+  //   options: {
+  //     directAccess: true, // default value
+  //     filesSubDirectory: './public/uploads', // optional, defaults to ./files
+  //     // "encryptionKey": "someKey" //optional, but mandatory if you want to encrypt files
   //   },
   // },
 
@@ -61,7 +72,7 @@ const config = {
       },
     },
   },
-  maxUploadSize: '2MB',
+  ...otherOptions,
 };
 
 console.log(config);
