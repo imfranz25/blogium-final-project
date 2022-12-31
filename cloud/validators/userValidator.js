@@ -1,9 +1,18 @@
 /* 3rd Party Modules */
 const validator = require('validator');
 
-const stringValidator = {
-  required: true,
-  type: String,
+const stringValidator = field => {
+  return {
+    required: true,
+    type: String,
+    options: val => {
+      if (validator.isEmpty(val.trim())) {
+        throw new Parse.Error(Parse.Error.VALIDATION_ERROR, `${field} is required`);
+      }
+
+      return true;
+    },
+  };
 };
 
 const nameValidator = field => {
@@ -77,8 +86,8 @@ const createUserValidator = {
     email: emailValidator,
     userName: userNameValidator,
     password: strongPasswordValidator,
-    profilePicture: stringValidator,
-    confirmPassword: stringValidator,
+    profilePicture: stringValidator('Profile picture'),
+    confirmPassword: stringValidator('Confirm Password'),
   },
 };
 
@@ -93,9 +102,9 @@ const editUserValidator = {
 
 const editPasswordValidator = {
   fields: {
-    currentPassword: stringValidator,
-    newPassword: stringValidator,
-    confirmPassword: stringValidator,
+    currentPassword: stringValidator('Current password'),
+    newPassword: stringValidator('New password'),
+    confirmPassword: stringValidator('Confirm password'),
   },
 };
 
