@@ -108,4 +108,16 @@ const editPasswordValidator = {
   },
 };
 
-module.exports = { createUserValidator, editUserValidator, editPasswordValidator };
+const loginUserValidator = {
+  fields: {
+    email: emailValidator,
+    password: stringValidator('Password'),
+  },
+};
+
+module.exports = {
+  createUserValidator,
+  editUserValidator,
+  editPasswordValidator,
+  loginUserValidator,
+};
