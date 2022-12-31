@@ -9,9 +9,7 @@ export const createUser = async (userData) => {
       Parse.User.logOut();
     }
 
-    const result = await Parse.Cloud.run('createUser', params, {
-      useMasterKey: true,
-    });
+    const result = await Parse.Cloud.run('createUser', params);
 
     return Promise.resolve(result);
   } catch (error) {

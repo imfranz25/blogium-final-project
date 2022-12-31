@@ -1,6 +1,6 @@
 /* 3rd party Modules */
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Avatar, Paper, Grid, Typography, Button } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ImageIcon from '@mui/icons-material/Image';
@@ -23,6 +23,7 @@ const initialSignUpState = {
 };
 
 function SignUp() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [signUpFormState, setSignUpFormState] = useState(initialSignUpState);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -77,13 +78,17 @@ function SignUp() {
 
       setAlertType('success');
       setAlertMessage(response);
+
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
     } catch (error) {
       setAlertType('error');
       setAlertMessage(error.message);
+      setLoading(false);
     }
 
     setAlertState(true);
-    setLoading(false);
   };
 
   useEffect(() => {
