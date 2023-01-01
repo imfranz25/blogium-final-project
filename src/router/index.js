@@ -10,7 +10,7 @@ import UpdateBlog from '../pages/UpdateBlog';
 import MyBlogs from '../pages/MyBlogs';
 import BlogDetails from '../pages/BlogDetails';
 import Profile from '../pages/Profile';
-import PageNotFound from '../pages/PageNotFound';
+// import PageNotFound from '../pages/PageNotFound';
 
 const routes = [
   {
@@ -23,7 +23,7 @@ const routes = [
   },
   {
     element: <PrivateRoutes />,
-    errorElement: <PageNotFound />,
+    // errorElement: <PageNotFound />,
     children: [
       {
         path: '/',

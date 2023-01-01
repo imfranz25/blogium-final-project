@@ -1,9 +1,8 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { Grid, Typography } from '@mui/material';
 import Blog from './Blog.js';
 
-function Blogs({ action, tab }) {
+function Blogs({ tab }) {
   let noBlogMessage = 'No blogs available';
   let haveAction = false;
   const blogs = useSelector((state) => {

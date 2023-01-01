@@ -2,7 +2,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 
 const PrivateRoutes = () => {
-  let token = localStorage.getItem('token');
+  let token = localStorage.getItem('blogiumUser');
 
   return token ? (
     <>

@@ -1,10 +1,9 @@
 /* 3rd Party Modules */
 import moment from 'moment';
-import jwtDecode from 'jwt-decode';
 import { debounce } from 'lodash';
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import HomeIcon from '@mui/icons-material/Home';
 import AllInboxIcon from '@mui/icons-material/AllInbox';
 import SearchIcon from '@mui/icons-material/Search';
@@ -27,12 +26,8 @@ import { Search, SearchIconWrapper, StyledInputBase, paperPropStyles } from './s
 /* Action Type -> Dispatch Logout */
 import { Card, Typography } from '@mui/material';
 
-/* Global Variables */
-const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
-
 function Navigation() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
   const [user, setUser] = useState({});
   const [profileImage, setProfileImage] = useState(null);
@@ -65,22 +60,21 @@ function Navigation() {
   };
 
   useEffect(() => {
-    const userData = localStorage.getItem('token');
-    let decodedUserData = null;
-
     try {
-      decodedUserData = jwtDecode(userData);
-      // dispatch({ type: CLEAR, payload: [] });
-    } catch (error) {
-      navigate('/login'); // not a valid jwt token
+      const userData = JSON.parse(localStorage.getItem('blogiumUser'));
+
+      if (!userData) {
+        navigate('/login');
+      }
+
+      /* Set user data & image once location changed */
+      setUser(userData);
+      setProfileImage(userData?.profilePicture);
+    } catch (e) {
+      localStorage.clear();
+      navigate('/');
     }
-
-    const userProfile = decodedUserData?.profile_picture_url;
-
-    /* Set user data & image once location changed */
-    setUser(decodedUserData);
-    setProfileImage(`${URL_BACKEND}/${userProfile}`);
-  }, [location, navigate, dispatch]);
+  }, [location, navigate]);
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -154,14 +148,14 @@ function Navigation() {
                       }}
                     >
                       <Avatar
-                        alt={blog?.user_id?.first_name}
-                        src={URL_BACKEND + '/' + blog?.user_id?.profile_picture_url}
+                        alt={blog?.first_name}
+                        src={blog.profile_picture_url}
                         sx={{
                           backgroundColor: 'purple',
                           border: '1px solid lightgray',
                         }}
                       >
-                        {blog?.user_id?.first_name?.charAt(0)}
+                        {blog?.first_name?.charAt(0)}
                       </Avatar>
                       <Typography variant="caption">{blog?.user_id?.username}</Typography>
                     </Grid>
@@ -188,7 +182,7 @@ function Navigation() {
               color="inherit"
             >
               <Avatar
-                alt={user?.first_name}
+                alt={user?.firstName}
                 src={profileImage}
                 sx={{
                   mx: 1,
@@ -197,7 +191,7 @@ function Navigation() {
                   backgroundColor: 'purple',
                 }}
               >
-                {user?.first_name?.charAt(0)}
+                {user?.firstName?.charAt(0)}
               </Avatar>
             </IconButton>
           </Box>
