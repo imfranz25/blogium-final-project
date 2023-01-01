@@ -8,12 +8,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 /* Components & Actions */
 import Input from '../../components/Input';
 import AlertMessage from '../../components/AlertMessage';
+import loginUser from './api';
 
 /* Global Variable(s) */
 const initialLoginState = {
   email: '',
   password: '',
-  confirmPassword: '',
 };
 
 function Login() {
@@ -42,15 +42,21 @@ function Login() {
     e.preventDefault();
     setLoading(true);
 
-    /* Check user Credentials */
-    // loginUser(loginFormData);
-    const res = {};
+    try {
+      const response = await loginUser(loginFormData);
 
-    setAlertType(res.type);
-    setAlertMessage(res.message);
+      setAlertType('success');
+      setAlertMessage('Login Success');
+      localStorage.setItem('blogiumUser', JSON.stringify(response));
+    } catch (error) {
+      setAlertType('error');
+      setAlertMessage(error.message);
+    }
+
     setAlertState(true);
-
-    setLoading(false);
+    setTimeout(() => {
+      navigate('/');
+    }, 1000);
   };
 
   useEffect(() => {
