@@ -3,12 +3,6 @@ import Parse from 'parse';
 export const loginUser = async (userData) => {
   try {
     const params = { ...userData };
-    let currentUser = Parse.User.current();
-
-    if (currentUser) {
-      Parse.User.logOut();
-    }
-
     const result = await Parse.Cloud.run('loginUser', params);
 
     return Promise.resolve(result);
@@ -17,4 +11,7 @@ export const loginUser = async (userData) => {
   }
 };
 
-export default loginUser;
+export const registerSession = async (session) => {
+  Parse.User.enableUnsafeCurrentUser();
+  Parse.User.become(session, { useMasterKey: false });
+};

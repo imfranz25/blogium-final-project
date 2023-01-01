@@ -8,7 +8,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 /* Components & Actions */
 import Input from '../../components/Input';
 import AlertMessage from '../../components/AlertMessage';
-import loginUser from './api';
+import { loginUser, registerSession } from './api';
 
 /* Global Variable(s) */
 const initialLoginState = {
@@ -45,18 +45,21 @@ function Login() {
     try {
       const response = await loginUser(loginFormData);
 
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+
       setAlertType('success');
       setAlertMessage('Login Success');
+      await registerSession(response?.sessionToken);
       localStorage.setItem('blogiumUser', JSON.stringify(response));
     } catch (error) {
       setAlertType('error');
       setAlertMessage(error.message);
+      setLoading(false);
     }
 
     setAlertState(true);
-    setTimeout(() => {
-      navigate('/');
-    }, 1000);
   };
 
   useEffect(() => {
