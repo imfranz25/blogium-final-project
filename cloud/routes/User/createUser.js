@@ -1,6 +1,3 @@
-/* 3rd Party Modules */
-const bcrypt = require('bcrypt');
-
 const createUser = async req => {
   try {
     const { firstName, lastName, userName, email, password, confirmPassword, profilePicture } =
@@ -12,10 +9,8 @@ const createUser = async req => {
 
     const newACL = new Parse.ACL();
     const newUser = new Parse.User();
-    const hashedPassword = await bcrypt.hash(password, 12);
 
     /* Useer Profile Picture */
-    // const filePicture = { base64: profilePicture };
     const filePicture = { base64: profilePicture };
     const fileExtension = profilePicture.split(';')[0].split('/')[1];
     const fileName = `${userName}.${fileExtension}`;
@@ -32,7 +27,7 @@ const createUser = async req => {
     newUser.set('last_name', lastName);
     newUser.set('username', userName);
     newUser.set('email', email);
-    newUser.set('password', hashedPassword);
+    newUser.set('password', password);
 
     await newUser.signUp();
 
