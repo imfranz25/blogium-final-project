@@ -1,16 +1,23 @@
 /* Module Imports */
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Container, Grid, Grow, CircularProgress } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
 /* Components */
 import Blogs from '../../components/Blogs';
 
+/* Actions & Constants */
+import { FETCH_ALL } from '../../constants/actionTypes';
+import getBlogs from './api';
+
+const fetchBlogs = async (dispatch) => {
+  const response = await getBlogs();
+  dispatch({ type: FETCH_ALL, payload: response.blogs });
+};
+
 function Home() {
   const [isLoading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = 'Home';
@@ -19,14 +26,14 @@ function Home() {
   useEffect(() => {
     setLoading(true);
 
-    const fetchData = async () => {
-      // getBlogs(navigate);
-    };
-
-    fetchData();
+    try {
+      fetchBlogs(dispatch);
+    } catch (error) {
+      console.log(error);
+    }
 
     setLoading(false);
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 
   return (
     <>

@@ -31,12 +31,6 @@ function Blog({ blog, action }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
-  /* Concat -> backend url + image path */
-  const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
-  const userProfile = blog.user_id?.profile_picture_url;
-  const profileImage = `${URL_BACKEND}/${userProfile}`;
-  const blogImage = `${URL_BACKEND}/${blog.cover_picture_url}`;
-
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -119,8 +113,8 @@ function Blog({ blog, action }) {
         avatar={
           <Avatar
             sx={{ bgcolor: red[500], border: '1px solid lightgray' }}
-            src={profileImage}
-            alt={blog.user_id?.first_name?.charAt(0)}
+            src={blog.owner?.profilePicture}
+            alt={blog.owner?.firstName?.charAt(0)}
           />
         }
         action={
@@ -130,10 +124,10 @@ function Blog({ blog, action }) {
             </IconButton>
           )
         }
-        title={`${blog.user_id?.username} ${blog.is_draft ? '[Draft]' : ''}`}
+        title={`${blog.owner?.userName} ${blog.is_draft ? '[Draft]' : ''}`}
         subheader={moment(blog.createdAt).fromNow()}
       />
-      <CardMedia component="img" height="194" image={blogImage} alt={blog.title} />
+      <CardMedia component="img" height="194" image={blog.blogCover} alt={blog.title} />
       <CardContent>
         <Typography variant="body1" color="text.secondary" sx={{ my: 1 }}>
           {blog.title}

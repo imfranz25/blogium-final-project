@@ -50,7 +50,7 @@ function BlogDetails() {
           <Grid md={7} item>
             <CardMedia
               component="img"
-              image={`${URL_BACKEND}/${blog?.cover_picture_url}`}
+              image={blog?.blogCover}
               alt={blog.title}
               sx={{ height: '100vh' }}
             />

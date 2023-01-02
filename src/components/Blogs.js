@@ -10,19 +10,19 @@ function Blogs({ tab }) {
       haveAction = true;
       noBlogMessage = 'No drafted blogs';
       return state.blogReducer.filter((blog) => {
-        return blog.is_draft === true && blog.deleted_at === null;
+        return blog.is_draft === true && blog.deleted_At === null;
       });
     }
 
     if (tab === 'deleted') {
       noBlogMessage = 'No deleted blogs';
-      return state.blogReducer.filter((blog) => blog.deleted_at !== null);
+      return state.blogReducer.filter((blog) => blog.deleted_At !== null);
     }
 
     if (tab === 'all') {
       haveAction = true;
       noBlogMessage = "You don't have any posted blogs";
-      return state.blogReducer.filter((blog) => blog.deleted_at === null);
+      return state.blogReducer.filter((blog) => blog.deleted_At === null);
     }
 
     return state.blogReducer;
