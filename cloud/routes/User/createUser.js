@@ -10,7 +10,7 @@ const createUser = async req => {
     const newACL = new Parse.ACL();
     const newUser = new Parse.User();
 
-    /* Useer Profile Picture */
+    /* User Profile Picture */
     const filePicture = { base64: profilePicture };
     const fileExtension = profilePicture.split(';')[0].split('/')[1];
     const fileName = `${userName}.${fileExtension}`;
@@ -18,8 +18,8 @@ const createUser = async req => {
       useMasterKey: true,
     });
 
-    newACL.setPublicReadAccess(true);
-    newACL.setPublicWriteAccess(true);
+    newACL.setPublicReadAccess(false);
+    newACL.setPublicWriteAccess(false);
 
     newUser.setACL(newACL);
     newUser.set('profile_picture', savedProfilePicture._url);
@@ -31,7 +31,7 @@ const createUser = async req => {
 
     await newUser.signUp();
 
-    return 'Sign up success';
+    return { message: 'Sign up success', type: 'success' };
   } catch (error) {
     let errorType = Parse.Error.INTERNAL_SERVER_ERROR;
 

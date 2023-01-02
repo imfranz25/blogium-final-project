@@ -1,6 +1,3 @@
-/* Use custom parse functions */
-require('./routes/User')();
-
 /* Boilerplate parse functions */
 Parse.Cloud.define('hello', req => {
   req.log.info(req);

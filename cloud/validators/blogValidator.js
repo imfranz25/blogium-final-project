@@ -24,14 +24,15 @@ const fieldValidator = (min, errorMsg) => {
 const createBlogValidator = {
   fields: {
     title: fieldValidator(4, 'Blog title must be 4 characters above'),
-    description: fieldValidator(10, 'Blog description must be 4 characters above'),
+    description: fieldValidator(10, 'Blog description must be 10 characters above'),
+    blogCover: fieldValidator(1, 'Blog cover is required'),
   },
 };
 
 const editBlogValidator = {
   fields: {
     title: fieldValidator(4, 'Blog title must be 4 characters above'),
-    description: fieldValidator(10, 'Blog description must be 4 characters above'),
+    description: fieldValidator(10, 'Blog description must be 10 characters above'),
     blogId: {
       required: true,
       type: String,
