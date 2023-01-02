@@ -20,6 +20,7 @@ import {
 import Input from './Input';
 import AlertMessage from '../components/AlertMessage';
 import defaultCover from '../assets/images/default-cover.jpg';
+import createBlog from '../pages/AddBlog/api';
 
 /* Global Variables */
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -39,25 +40,27 @@ function Form({ isEdit, initialBlogState }) {
 
   useEffect(() => {
     if (isEdit) {
-      const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
       setBlogFormState(initialBlogState);
-      setFileDataURL(`${URL_BACKEND}/${initialBlogState.cover_picture_url}`);
+      setFileDataURL(initialBlogState?.blogCover);
     }
   }, [initialBlogState, isEdit]);
 
   useEffect(() => {
-    let fileReader,
-      isCancel = false;
+    let fileReader;
+    let isCancel = false;
+
     if (file) {
       fileReader = new FileReader();
       fileReader.onload = (e) => {
         const { result } = e.target;
         if (result && !isCancel) {
           setFileDataURL(result);
+          setBlogFormState({ ...blogFormState, blogCover: result });
         }
       };
       fileReader.readAsDataURL(file);
     }
+
     return () => {
       isCancel = true;
       if (fileReader && fileReader.readyState === 1) {
@@ -68,16 +71,18 @@ function Form({ isEdit, initialBlogState }) {
 
   const imageChangeHandler = (e) => {
     const file = e.target.files[0];
+
     if (!file) {
       alert('No file selected');
       return;
     }
+
     if (!file.type.match(imageMimeType)) {
       alert('Image type is not valid');
       return;
     }
+
     setFile(file);
-    setBlogFormState({ ...blogFormState, [e.target.name]: e.target.files[0] });
   };
 
   const handleChange = (e) => {
@@ -88,30 +93,39 @@ function Form({ isEdit, initialBlogState }) {
     setAlertState(false);
   };
 
-  const alertHandler = (res) => {
-    setAlertType(res.type);
-    setAlertMessage(res.message);
+  const alertHandler = (response) => {
+    setAlertType(response.type);
+    setAlertMessage(response.message);
     setAlertState(true);
-    setLoading(false);
   };
 
   const handleSubmit = async () => {
-    let res;
+    let response = {};
     setLoading(true);
 
-    if (isEdit) {
-      // updateBlog(blogFormState);
-    } else {
-      // createBlog(blogFormState);
+    try {
+      if (isEdit) {
+        // updateBlog(blogFormState);
+      } else {
+        response = await createBlog(blogFormState);
+      }
+    } catch (error) {
+      response.type = 'error';
+      response.message = error.message;
+      setLoading(false);
+
+      if (error.message === 'Invalid session token') {
+        localStorage.clear();
+      }
     }
 
-    if (res?.type !== 'error') {
+    if (response.type !== 'error') {
       setTimeout(() => {
         navigate('/');
       }, 1000);
     }
 
-    alertHandler(res);
+    alertHandler(response);
   };
 
   const handleDraft = async () => {
@@ -191,12 +205,7 @@ function Form({ isEdit, initialBlogState }) {
               sx={{ textTransform: 'unset' }}
             >
               Upload Picture
-              <Input
-                name="cover_picture_url"
-                handleChange={imageChangeHandler}
-                type="file"
-                hidden
-              />
+              <Input name="blogCover" handleChange={imageChangeHandler} type="file" hidden />
             </Button>
           </Grid>
           <Grid container spacing={2}>

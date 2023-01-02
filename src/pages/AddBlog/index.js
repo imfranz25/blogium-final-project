@@ -7,7 +7,7 @@ function AddBlog() {
   const initialBlogState = {
     title: '',
     description: '',
-    cover_picture_url: '',
+    blogCover: '',
   };
 
   useEffect(() => {

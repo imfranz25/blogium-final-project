@@ -54,9 +54,8 @@ function Navigation() {
   };
 
   const handleLogout = () => {
-    // dispatch({ type: LOGOUT });
-    setAnchorEl(null);
-    navigate('/login');
+    localStorage.clear();
+    navigate('/');
   };
 
   useEffect(() => {

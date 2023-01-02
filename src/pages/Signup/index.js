@@ -76,8 +76,8 @@ function SignUp() {
     try {
       const response = await signUpUser(signUpFormState);
 
-      setAlertType('success');
-      setAlertMessage(response);
+      setAlertType(response.type);
+      setAlertMessage(response.message);
 
       setTimeout(() => {
         navigate('/');
