@@ -23,12 +23,16 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs12.x
-  # profile: FrancisAdmin
+  profile: FrancisAdmin
+  region: region, 'us-east-1'
 
 plugins:
   - serverless-s3-sync
+  - serverless-webpack
 
 custom:
+  blogTableName: blogs
+  userTableName: users
   s3Sync:
     - bucketName: blogium-blog-cover-upload
       localDir: uploads/blogs
@@ -58,8 +62,9 @@ custom:
 #                - "/*"
 
 # you can define service wide environment variables here
-#  environment:
-#    variable1: value1
+environment:
+  blogTableName: ${self:custom.blogTableName}
+  userTableName: ${self:custom.userTableName}
 
 # you can add packaging information here
 #package:
@@ -69,9 +74,18 @@ custom:
 #    - include-me.js
 #    - include-me-dir/**
 
+package:
+  excludeDevDependencies: true
+  individually: true
+
 functions:
-  hello:
-    handler: handler.hello
+  getBlog:
+    handler: lambdas/endpoints/blogs/getBlog.handler
+    events:
+      - http:
+          path: blogs/get-blog/{blogId}
+          method: GET
+          cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -113,17 +127,39 @@ functions:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-# resources:
-#   Resources:
-#     ProfileUpload:
-#       Type: AWS::S3::Bucket
-#       Properties:
-#         BucketName: blogium-profile-upload
-#     BLogCoverUpload:
-#       Type: AWS::S3::Bucket
-#       Properties:
-#         BucketName: blogium-blog-cover-upload
-#   Outputs:
-#     NewOutput:
-#       Description: 'Description for the output'
-#       Value: 'Some output value'
+resources:
+  Resources:
+    ProfileUpload:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: blogium-profile-upload
+    BlogCoverUpload:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: blogium-blog-cover-upload
+    BlogiumDynamoBlog:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.blogTableName}
+        AttributeDefinitions:
+          - AttributeName: ID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    BlogiumDynamoUser:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.userTablename}
+        AttributeDefinitions:
+          - AttributeName: ID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+  Outputs:
+    NewOutput:
+      Description: 'Description for the output'
+      Value: 'Some output value'
