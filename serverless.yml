@@ -25,6 +25,14 @@ provider:
   runtime: nodejs12.x
   profile: FrancisAdmin
   region: region, 'us-east-1'
+  environment:
+    BLOG_TABLE_NAME: ${self:custom.blogTableName}
+    USER_TABLE_NAME: ${self:custom.userTableName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynmodb:*
+      Resource: '*'
 
 plugins:
   - serverless-s3-sync
@@ -62,9 +70,6 @@ custom:
 #                - "/*"
 
 # you can define service wide environment variables here
-environment:
-  blogTableName: ${self:custom.blogTableName}
-  userTableName: ${self:custom.userTableName}
 
 # you can add packaging information here
 #package:
@@ -85,6 +90,13 @@ functions:
       - http:
           path: blogs/get-blog/{blogId}
           method: GET
+          cors: true
+  createBlog:
+    handler: lambdas/endpoints/blogs/createBlog.handler
+    events:
+      - http:
+          path: blogs/create-blog
+          method: POST
           cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
