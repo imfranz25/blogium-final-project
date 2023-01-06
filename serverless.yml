@@ -28,10 +28,13 @@ provider:
   environment:
     BLOG_TABLE_NAME: ${self:custom.blogTableName}
     USER_TABLE_NAME: ${self:custom.userTableName}
+    USER_BUCKET: ${self:custom.userBucketName}
+    BLOG_BUCKET: ${self:custom.blogBucketName}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynmodb:*
+        - s3:*
       Resource: '*'
 
 plugins:
@@ -41,10 +44,12 @@ plugins:
 custom:
   blogTableName: blogs
   userTableName: users
+  userBucketName: blogium-user-profile-025
+  blogBucketName: blogium-blog-cover-025
   s3Sync:
-    - bucketName: blogium-blog-cover-upload
+    - bucketName: b${self:custom.blogBucketName}
       localDir: uploads/blogs
-    - bucketName: blogium-profile-upload
+    - bucketName: ${self:custom.userBucketName}
       localDir: uploads/profiles
 
 # you can overwrite defaults here
@@ -144,11 +149,11 @@ resources:
     ProfileUpload:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: blogium-profile-upload
+        BucketName: ${self:custom.userBucketName}
     BlogCoverUpload:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: blogium-blog-cover-upload
+        BucketName: ${self:custom.blogBucketName}
     BlogiumDynamoBlog:
       Type: AWS::DynamoDB::Table
       Properties:

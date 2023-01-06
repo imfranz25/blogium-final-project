@@ -1,5 +1,4 @@
 /* 3rd Party Modules */
-const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 
 /* Constructors & Initialization */
@@ -20,18 +19,17 @@ const Dynamo = {
     return data.Item;
   },
   async write(fields, TableName) {
-    const data = { ...fields, ID: uuidv4() };
     const params = {
       TableName,
-      Item: data,
+      Item: fields,
     };
     const response = await documentClient.put(params, TableName).promise();
 
     if (!response) {
-      throw new Error(`An error occurred from ${TableName} with ID: ${data.ID}`);
+      throw new Error(`An error occurred from ${TableName} with ID: ${fields?.ID}`);
     }
 
-    return data;
+    return fields;
   },
 };
 
