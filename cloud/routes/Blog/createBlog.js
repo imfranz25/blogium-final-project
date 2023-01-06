@@ -27,6 +27,7 @@ const createBlog = async req => {
     newBlog.set('title', title);
     newBlog.set('description', description);
     newBlog.set('deleted_At', null);
+    newBlog.set('is_draft', false);
 
     await newBlog.save(null, { useMasterKey: true });
 

@@ -18,7 +18,7 @@ const createUser = async req => {
       useMasterKey: true,
     });
 
-    newACL.setPublicReadAccess(false);
+    newACL.setPublicReadAccess(true);
     newACL.setPublicWriteAccess(false);
 
     newUser.setACL(newACL);
