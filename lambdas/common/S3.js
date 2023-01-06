@@ -5,8 +5,19 @@ const AWS = require('aws-sdk');
 const s3Client = new AWS.S3();
 
 const S3 = {
-  async get() {
-    return true;
+  async get(fileName, bucketName) {
+    const params = {
+      Bucket: bucketName,
+      Key: fileName,
+    };
+
+    const fileData = await s3Client.getObject(params).promise();
+
+    if (!fileData) {
+      throw new Error('File not found');
+    }
+
+    return fileData;
   },
   async write(data, fileName, bucketName) {
     const params = {

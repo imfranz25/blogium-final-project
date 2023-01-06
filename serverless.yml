@@ -22,7 +22,7 @@ frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   profile: FrancisAdmin
   region: region, 'us-east-1'
   environment:
@@ -47,10 +47,30 @@ custom:
   userBucketName: blogium-user-profile-025
   blogBucketName: blogium-blog-cover-025
   s3Sync:
-    - bucketName: b${self:custom.blogBucketName}
+    - bucketName: ${self:custom.blogBucketName}
       localDir: uploads/blogs
     - bucketName: ${self:custom.userBucketName}
       localDir: uploads/profiles
+  apiKeys:
+    - name: dev
+      value: Stratpoint123!
+      usagePlan:
+        name: production-api-key
+        quota:
+          limit: 5000
+          period: DAY
+        throttle:
+          burstLimit: 100
+          rateLimit: 20
+    - name: prod
+      usagePlan:
+        name: production-api-key
+        quota:
+          limit: 1000
+          period: DAY
+        throttle:
+          burstLimit: 100
+          rateLimit: 20
 
 # you can overwrite defaults here
 #  stage: dev
@@ -96,6 +116,7 @@ functions:
           path: blogs/get-blog/{blogId}
           method: GET
           cors: true
+          private: true
   createBlog:
     handler: lambdas/endpoints/blogs/createBlog.handler
     events:
@@ -103,6 +124,7 @@ functions:
           path: blogs/create-blog
           method: POST
           cors: true
+          private: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
