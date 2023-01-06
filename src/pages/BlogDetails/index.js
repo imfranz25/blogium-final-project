@@ -2,7 +2,7 @@
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { red } from '@mui/material/colors';
 import {
   Typography,
@@ -16,11 +16,11 @@ import {
 } from '@mui/material';
 
 /* Global variables */
-const URL_BACKEND = process.env.REACT_APP_BACKEND_URL;
+import { FETCH } from '../../constants/actionTypes';
+import getBlog from './api';
 
 function BlogDetails() {
   const params = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const blog = useSelector((state) => state.blogReducer[0]);
   const blogId = params.blogId;
@@ -33,9 +33,18 @@ function BlogDetails() {
     </Grid>
   );
 
+  const fetchBlog = async (dispatch, id) => {
+    const response = await getBlog(id);
+    dispatch({ type: FETCH, payload: response.blog });
+  };
+
   useEffect(() => {
-    // getBlog(blogId);
-  }, [blogId, navigate, dispatch]);
+    try {
+      fetchBlog(dispatch, blogId);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [blogId, dispatch]);
 
   useEffect(() => {
     document.title = blog?.title || 'Blog';
@@ -51,7 +60,7 @@ function BlogDetails() {
             <CardMedia
               component="img"
               image={blog?.blogCover}
-              alt={blog.title}
+              alt={blog?.title}
               sx={{ height: '100vh' }}
             />
           </Grid>
@@ -61,8 +70,8 @@ function BlogDetails() {
                 avatar={
                   <Avatar
                     sx={{ bgcolor: red[500], border: '1px solid lightgray' }}
-                    src={`${URL_BACKEND}/${blog?.user_id?.profile_picture_url}`}
-                    alt={blog.user_id?.first_name?.charAt(0)}
+                    src={blog?.owner?.profilePicture}
+                    alt={blog?.owner?.firstName?.charAt(0)}
                   />
                 }
                 title={blog.user_id?.username}
