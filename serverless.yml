@@ -35,6 +35,7 @@ provider:
       Action:
         - dynmodb:*
         - s3:*
+        - ses:*
       Resource: '*'
 
 plugins:
@@ -117,6 +118,7 @@ functions:
           method: GET
           cors: true
           private: true
+
   createBlog:
     handler: lambdas/endpoints/blogs/createBlog.handler
     events:
@@ -125,6 +127,30 @@ functions:
           method: POST
           cors: true
           private: true
+
+  sendEmail:
+    handler: lambdas/endpoints/emails/sendEmail.handler
+    events:
+      - http:
+          path: email/send
+          method: POST
+          cors: true
+          private: true
+
+  # Endpoint redirection (Proxy)
+  # proxy:
+  #   handler: lambdas/endpoints/proxy.handler
+  #   events:
+  #     - http:
+  #         path: chuck-norris/{proxy+}
+  #         method: ANY
+  #         integration: http-proxy
+  #         request:
+  #           uri: http://api.icndb.com/{proxy}
+  #           paramerters:
+  #             path:
+  #               proxy: true
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -172,10 +198,12 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.userBucketName}
+
     BlogCoverUpload:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.blogBucketName}
+
     BlogiumDynamoBlog:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -187,6 +215,7 @@ resources:
           - AttributeName: ID
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+
     BlogiumDynamoUser:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -198,6 +227,22 @@ resources:
           - AttributeName: ID
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+
+    MyAssumeRole:
+      Type: AWS::IAM:Role
+      Properties:
+        RoleName: myAssumeRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - labmda.amazonaws.com
+                  - apigateway.amazonaws.com
+              Action:
+                - sts:AssumeRole
+
   Outputs:
     NewOutput:
       Description: 'Description for the output'

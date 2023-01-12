@@ -12,6 +12,7 @@
     },
     "rules": {
         // windows linebreaks when not in production environment
-        "linebreak-style": ["error", "windows"]
+        "linebreak-style": ["error", "windows"],
+        "multiline": "never"
     }
 }
